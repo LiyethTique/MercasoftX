@@ -1,7 +1,8 @@
 const Home = () => {
-    return(
+
+    return (
         <>
-        <h1>Hola, Soy la Pagina Inicial del web site</h1>
+            <h1>Bienvenidos a la pagina de Mercasenasoftx</h1>
         </>
     )
 }

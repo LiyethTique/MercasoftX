@@ -1,0 +1,81 @@
+import CarritoModel from "../models/carritoModel.js";
+import logger from "../config/logger.js";
+
+// Mostrar todos los registros
+export const getAllCarrito = async (req, res, next) => {
+    try {
+        const carritos = await CarritoModel.findAll();
+        logger.info('Todos los carritos recuperados');
+        res.status(200).json(carritos);
+    } catch (error) {
+        logger.error(`Error al recuperar todos los carritos: ${error.message}`);
+        next(error);
+    }
+};
+
+// Mostrar un registro
+export const getCarrito = async (req, res, next) => {
+    try {
+        const carrito = await CarritoModel.findByPk(req.params.id);
+        if (carrito) {
+            logger.info(`Carrito recuperado: ${carrito.Id_Carrito}`);
+            res.status(200).json(carrito);
+        } else {
+            logger.warn(`Carrito no encontrado con id: ${req.params.id}`);
+            res.status(404).json({ message: 'Carrito no encontrado' });
+        }
+    } catch (error) {
+        logger.error(`Error al recuperar el carrito: ${error.message}`);
+        next(error);
+    }
+};
+
+// Crear un carrito
+export const createCarrito = async (req, res, next) => {
+    try {
+        const nuevoCarrito = await CarritoModel.create(req.body);
+        logger.info(`Carrito creado: ${nuevoCarrito.Id_Carrito}`);
+        res.status(201).json({ message: '¡Carrito creado exitosamente!', carrito: nuevoCarrito });
+    } catch (error) {
+        logger.error(`Error al crear el carrito: ${error.message}`);
+        next(error);
+    }
+};
+
+// Actualizar un registro
+export const updateCarrito = async (req, res, next) => {
+    try {
+        const [updated] = await CarritoModel.update(req.body, {
+            where: { Id_Carrito: req.params.id }
+        });
+        if (updated) {
+            logger.info(`Carrito actualizado: ${req.params.id}`);
+            res.status(200).json({ message: '¡Carrito actualizado exitosamente!' });
+        } else {
+            logger.warn(`Carrito no encontrado con id: ${req.params.id}`);
+            res.status(404).json({ message: 'Carrito no encontrado' });
+        }
+    } catch (error) {
+        logger.error(`Error al actualizar el carrito: ${error.message}`);
+        next(error);
+    }
+};
+
+// Borrar un registro
+export const deleteCarrito = async (req, res, next) => {
+    try {
+        const deleted = await CarritoModel.destroy({
+            where: { Id_Carrito: req.params.id }
+        });
+        if (deleted) {
+            logger.info(`Carrito borrado: ${req.params.id}`);
+            res.status(200).json({ message: '¡Carrito borrado exitosamente!' });
+        } else {
+            logger.warn(`Carrito no encontrado con id: ${req.params.id}`);
+            res.status(404).json({ message: 'Carrito no encontrado' });
+        }
+    } catch (error) {
+        logger.error(`Error al borrar el carrito: ${error.message}`);
+        next(error);
+    }
+};

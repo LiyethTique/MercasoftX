@@ -1,15 +1,30 @@
 import express from "express";
 import { createCarrito, deleteCarrito, getAllCarrito, getCarrito, updateCarrito } from "../controllers/carritoController.js";
+import winston from "winston";
+import DailyRotateFile from "winston-daily-rotate-file";
 
 const router = express.Router();
 
-// Middleware de logging
+const logger = winston.createLogger({
+    level: "error",
+    format: winston.format.combine(
+        winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
+        winston.format.printf(info => `${info.timestamp}: ${info.level}: ${info.message}`)
+    ),
+    transports: [
+        new DailyRotateFile({
+            filename: 'logs/carrito-%DATE%.log',
+            datePattern: 'YYYY-MM-DD',
+            maxFiles: '14d'
+        })
+    ]
+});
+
 const logError = (err, req, res, next) => {
-    console.error(`[${new Date().toISOString()}] Error: ${err.message}`);
+    logger.error(err.message);
     res.status(500).json({ error: 'Internal Server Error' });
 };
 
-// Define tus rutas
 router.get('/', getAllCarrito);
 router.get('/:id', getCarrito);
 router.post('/', createCarrito);

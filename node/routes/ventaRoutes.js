@@ -1,25 +1,37 @@
 import express from "express";
 import { createVenta, deleteVenta, getAllVenta, getVenta, updateVenta, getQueryVenta } from "../controllers/ventaController.js";
+import winston from "winston";
+import DailyRotateFile from "winston-daily-rotate-file";
 
-const router = express.Router()
-//Middleware de logging
+const router = express.Router();
+
+const logger = winston.createLogger({
+    level: "error",
+    format: winston.format.combine(
+        winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
+        winston.format.printf(info => `${info.timestamp}: ${info.level}: ${info.message}`)
+    ),
+    transports: [
+        new DailyRotateFile({
+            filename: 'logs/venta-%DATE%.log',
+            datePattern: 'YYYY-MM-DD',
+            maxFiles: '14d'
+        })
+    ]
+});
+
 const logError = (err, req, res, next) => {
-    console.error(`[${new Date().toISOString()}] Error: ${err.message}`);
-    res.status(500).json({error: `Internal Server error`});
+    logger.error(err.message);
+    res.status(500).json({ error: 'Internal Server Error' });
 };
 
-//define tus rutas
-
-
-
-//ruta raíz http://localhost:8000/venta/
-router.get('/', getAllVenta)    
-router.get('/:id', getVenta)
-router.post('/', createVenta)
-router.put('/:id', updateVenta)
-router.delete('/:id', deleteVenta)
-
-router.get('/consulta/:id', getQueryVenta)
+router.get('/', getAllVenta);
+router.get('/:id', getVenta);
+router.post('/', createVenta);
+router.put('/:id', updateVenta);
+router.delete('/:id', deleteVenta);
+router.get('/consulta/:id', getQueryVenta);
 
 router.use(logError);
-export default router
+
+export default router;

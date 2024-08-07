@@ -1,5 +1,5 @@
 import express from "express";
-import { createPedido, deletePedido, getAllPedido, getPedido, updatePedido } from "../controllers/pedidoController.js";
+import { createUnidad, deleteUnidad, getAllUnidades, getUnidad, updateUnidad } from "../controllers/unidadController.js";
 import winston from "winston";
 import DailyRotateFile from "winston-daily-rotate-file";
 
@@ -13,7 +13,7 @@ const logger = winston.createLogger({
     ),
     transports: [
         new DailyRotateFile({
-            filename: 'logs/pedido-%DATE%.log',
+            filename: 'logs/unidad-%DATE%.log',
             datePattern: 'YYYY-MM-DD',
             maxFiles: '14d'
         })
@@ -25,11 +25,11 @@ const logError = (err, req, res, next) => {
     res.status(500).json({ error: 'Internal Server Error' });
 };
 
-router.get('/', getAllPedido);
-router.get('/:id', getPedido);
-router.post('/', createPedido);
-router.put('/:id', updatePedido);
-router.delete('/:id', deletePedido);
+router.get('/', getAllUnidades);
+router.get('/:id', getUnidad);
+router.post('/', createUnidad);
+router.put('/:id', updateUnidad);
+router.delete('/:id', deleteUnidad);
 
 router.use(logError);
 

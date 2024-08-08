@@ -1,89 +1,92 @@
-import { Sequelize } from "sequelize";
-import ProductoModel from "../models/productoModel.js";
+import { Sequelize } from 'sequelize';
+import ProductoModel from '../models/productoModel.js';
 
-//muestra todos los registros del producto
+// Obtener todos los productos
 export const getAllProductos = async (req, res) => {
-	try {
-		const productos = await ProductoModel.findAll()
-		res.json(productos)
-	} catch (error){
-		res.json({message: error.message })
-	}
-}
-//mostrar un registro
+    try {
+        const productos = await ProductoModel.findAll();
+        if (productos.length > 0) {
+            res.status(200).json(productos);
+        } else {
+            res.status(404).json({ message: 'No se encontraron productos' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// Obtener un producto por ID
 export const getProducto = async (req, res) => {
-	try {
-		const producto = await ProductoModel.findAll({
-			where: { id: req.params.id}
-		})
-		res.json(producto[0])
-	} catch (error) {
-		res.json({message: error.message })
-	}
-}
-//crear un producto
+    try {
+        const producto = await ProductoModel.findByPk(req.params.id);
+        if (producto) {
+            res.status(200).json(producto);
+        } else {
+            res.status(404).json({ message: 'Producto no encontrado' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// Crear un nuevo producto
 export const createProducto = async (req, res) => {
-	try {
-		//nuevo
-		const{Nom_Producto, Car_Producto, Pre_Promedio, Exi_Producto, Fec_Vencimiento, Pre_Anterior, Uni_DeMedida, Pre_Producto} = req.body
-		const Ima_Producto = req.file ? req.file.filename : null
-		
-		await ProductoModel.create({
-			Nom_Producto,
-			Car_Producto,
-			Pre_Promedio,
-			Exi_Producto,
-			Ima_Producto,
-			Fec_Vencimiento,
-			Pre_Anterior,
-			Uni_DeMedida,
-			Pre_Producto
-			
-		})
-		res.json({"message": "¡Registro De Producto Creado Exitosamente!"})	
-	} catch (error) {
-		res.json({message: error.message})
-	}
-}
-//Actualizar un registro
+    try {
+        const producto = await ProductoModel.create(req.body);
+        res.status(201).json({ message: '¡Registro del producto creado exitosamente!', producto });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+
+// Actualizar un producto
 export const updateProducto = async (req, res) => {
-	try {
-		await ProductoModel.update(req.body, { 
-			where: {id: req.params.id}
-		})
-			
-		res.json({"message": "¡Registro De Producto Actualizado Exitosamente!"})	
-	} catch (error) {
-		res.json({message: error.message})
-	}
-}
-//borrar un  registro
+    try {
+        const [updated] = await ProductoModel.update(req.body, {
+            where: { id: req.params.id }
+        });
+        if (updated) {
+            res.status(200).json({ message: '¡Registro del producto actualizado exitosamente!' });
+        } else {
+            res.status(404).json({ message: 'Producto no encontrado' });
+        }
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+
+// Borrar un producto
 export const deleteProducto = async (req, res) => {
-	try {
-		await ProductoModel.destroy ({ 
-			where: {id:req.params.id}
-		})
-			
-		res.json({"message": "¡Registro De Producto Borrado Exitosamente!"})	
-	} catch (error) {
-		res.json({message: error.message})
-	}
-}
-//consultar player por nom_producto
+    try {
+        const deleted = await ProductoModel.destroy({
+            where: { id: req.params.id }
+        });
+        if (deleted) {
+            res.status(200).json({ message: '¡Registro del producto borrado exitosamente!' });
+        } else {
+            res.status(404).json({ message: 'Producto no encontrado' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// Consultar productos por nombre
 export const getQueryProducto = async (req, res) => {
-
-	try{
-		const producto = await ProductoModel.findAll({
-			where: {
-				Nom_Producto: {
-					[Sequelize.Op.like]: `%${req.params.Nom_Producto}%`
-				}
-			}
-			
-		})
-
-		res.json(producto)	
-	} catch (error) {
-		res.json({ message: error.message})
-	}
-}
+    try {
+        const productos = await ProductoModel.findAll({
+            where: {
+                Nom_Producto: {
+                    [Sequelize.Op.like]: `%${req.params.Nom_Producto}%`
+                }
+            }
+        });
+        if (productos.length > 0) {
+            res.status(200).json(productos);
+        } else {
+            res.status(404).json({ message: 'No se encontraron productos con ese nombre' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};

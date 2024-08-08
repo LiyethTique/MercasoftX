@@ -1,27 +1,30 @@
 import db from "../database/db.js";
 import {DataTypes} from "sequelize";
- 
-const ClienteModel = db.define('cliente', {
-	Id_Cliente: {
+
+const ResponsableModel = db.define('responsable', {
+    Id_Responsable: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
-    Nom_Cliente: {
+    Nom_Responsable: {
         type: DataTypes.STRING(100)
     },
-    Cor_Cliente: {
+    Cor_Responsable: {
         type: DataTypes.STRING(100)
     },
-    Tel_Cliente: {
+    Tel_Responsable: {
         type: DataTypes.STRING(15)
     },
-    Id_Carrito: {
-        type: DataTypes.INTEGER
+    Tip_Responsable: {
+        type: DataTypes.STRING(50)
+    },
+    Tip_Genero: {
+        type: DataTypes.STRING(10)
     }
 }, {
     freezeTableName: true
 });
-	
-	
-export default ClienteModel
+
+
+export default ResponsableModel

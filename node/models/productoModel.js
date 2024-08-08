@@ -2,21 +2,42 @@ import db from "../database/db.js";
 import {DataTypes} from "sequelize";
  
 const ProductoModel = db.define('producto', {
-	
-	Nom_Producto: { type: DataTypes.STRING},
-	Car_Producto: { type: DataTypes.STRING},
-	Pre_Promedio: { type: DataTypes.FLOAT},
-	Exi_Producto: { type: DataTypes.CHAR},
-	Ima_Producto: { type: DataTypes.STRING},
-    Fec_Vencimiento: { type: DataTypes.DATEONLY},
-	Pre_Anterior: { type: DataTypes.FLOAT},
-	Uni_DeMedida: { type: DataTypes.STRING},
-	Pre_Producto: { type: DataTypes.FLOAT}
-	
-
-},
-{
-	freezeTableName:true
-}
-)
+    Id_Producto: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    Nom_Producto: {
+        type: DataTypes.STRING(100)
+    },
+    Car_Producto: {
+        type: DataTypes.STRING(255)
+    },
+    Pre_Promedio: {
+        type: DataTypes.DECIMAL(10, 2)
+    },
+    Exi_Producto: {
+        type: DataTypes.INTEGER
+    },
+    Ima_Producto: {
+        type: DataTypes.STRING(255)
+    },
+    Fec_Vencimiento: {
+        type: DataTypes.DATEONLY
+    },
+    Id_Categoria: {
+        type: DataTypes.INTEGER
+    },
+    Pre_Anterior: {
+        type: DataTypes.DECIMAL(10, 2)
+    },
+    Uni_DeMedida: {
+        type: DataTypes.STRING(50)
+    },
+    Pre_Producto: {
+        type: DataTypes.DECIMAL(10, 2)
+    }
+}, {
+    freezeTableName: true
+});
 export default ProductoModel

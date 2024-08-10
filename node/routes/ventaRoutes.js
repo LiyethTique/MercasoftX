@@ -32,6 +32,6 @@ router.put('/:id', updateVenta);
 router.delete('/:id', deleteVenta);
 router.get('/consulta/:id', getQueryVenta);
 
-router.use(logError);
+// router.use(logError);
 
 export default router;

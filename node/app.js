@@ -5,17 +5,19 @@ import dotenv from 'dotenv'
 import db from './database/db.js'
 import ventaRoutes from './routes/ventaRoutes.js'
 import authRoutes from './routes/routesAuth.js'
-
+import routerTraslados from './routes/trasladosRoutes.js'
+// Carga las variables de entorno antes de conectar a la base de datos
+dotenv.config({ path: './.env'})
 const app = express();
-const port = 3001
+const port = process.env.PORT || 3000;
 
 app.use(cors())
 app.use(express.json())
 app.use('/venta', ventaRoutes)
 app.use('/auth', authRoutes)
+app.use('/traslados', routerTraslados)
 
-// Carga las variables de entorno antes de conectar a la base de datos
-dotenv.config({ path: './env/.env'})
+
 
 try {
   await db.authenticate()

@@ -1,9 +1,9 @@
 import express from "express";
-import { createTraslado, deleteTraslado, getAllTraslados, getTraslado, updateTraslado } from "../controllers/trasladoController.js";
+import { createTraslado, deleteTraslado, getAllTraslados, getTraslado, updateTraslado } from "../controllers/trasladosController.js";
 import winston from "winston";
 import DailyRotateFile from "winston-daily-rotate-file";
 
-const router = express.Router();
+const routerTraslados = express.Router();
 
 const logger = winston.createLogger({
     level: "error",
@@ -25,12 +25,12 @@ const logError = (err, req, res, next) => {
     res.status(500).json({ error: 'Internal Server Error' });
 };
 
-router.get('/', getAllTraslados);
-router.get('/:id', getTraslado);
-router.post('/', createTraslado);
-router.put('/:id', updateTraslado);
-router.delete('/:id', deleteTraslado);
+routerTraslados.get('/', getAllTraslados);
+routerTraslados.get('/:id', getTraslado);
+routerTraslados.post('/', createTraslado);
+routerTraslados.put('/:id', updateTraslado);
+routerTraslados.delete('/:id', deleteTraslado);
 
-router.use(logError);
+routerTraslados.use(logError);
 
-export default router;
+export default routerTraslados;

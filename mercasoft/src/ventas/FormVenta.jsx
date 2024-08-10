@@ -51,7 +51,7 @@ const FormVenta = ({buttonForm, venta, URI, updateTextButton}) => {
 
     return (
         <>
-            <form id="ventaForm" action="" onSubmit={sendForm} class="table table-striped">
+            <form id="ventaForm" action="" onSubmit={sendForm} className="table table-striped">
             <label htmlFor="fechaVenta">Fecha Venta</label>
             <input type="date" id="fechaVenta" value={Fec_Venta} onChange={(e) => setFecha(e.target.value)} />
             <br />
@@ -63,7 +63,7 @@ const FormVenta = ({buttonForm, venta, URI, updateTextButton}) => {
             <label htmlFor="valorVenta"> Valor Venta</label>
             <input type="number" id="valorVenta" value={Val_Venta} onChange={(e) => setValor(e.target.value)}/>
             <br />
-            <input class="btn btn-warning" type="submit" id="boton" value={buttonForm} className="btn btn-success" />
+            <input type="submit" id="boton" value={buttonForm} className="btn btn-success" />
 
             </form>
         </>

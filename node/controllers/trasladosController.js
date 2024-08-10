@@ -1,4 +1,4 @@
-import Traslado from "../models/trasladoModel.js";
+import Traslado from "../models/trasladosModel.js";
 import winston from "winston";
 import DailyRotateFile from "winston-daily-rotate-file";
 
@@ -20,7 +20,11 @@ const logger = winston.createLogger({
 export const getAllTraslados = async (req, res) => {
     try {
         const traslados = await Traslado.findAll();
-        res.status(200).json(traslados);
+        if (traslados.length > 0) {
+            res.status(200).json(traslados);
+            return
+        }
+        res.status(400).json({ message: 'No hay traslados' });
     } catch (error) {
         logger.error(error.message);
         res.status(500).json({ message: 'Error al obtener traslados' });

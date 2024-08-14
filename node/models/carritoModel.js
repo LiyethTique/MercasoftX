@@ -1,10 +1,11 @@
 import db from "../database/db.js";
 import { DataTypes } from "sequelize";
 
-const CarritoModel = db.define('carrito', {
+const carritoModel = db.define('carrito', {
     Id_Carrito: {
         type: DataTypes.INTEGER,
         primaryKey: true,
+        autoIncrement: true,
         allowNull: false
     },
     Can_Producto: {
@@ -16,4 +17,4 @@ const CarritoModel = db.define('carrito', {
     tableName: 'carrito'
 });
 
-export default CarritoModel;
+export default carritoModel;

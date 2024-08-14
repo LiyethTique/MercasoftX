@@ -66,13 +66,15 @@ export const getQueryPedido = async (req, res) => {
     try {
         const pedidos = await PedidosModel.findAll({
             where: {
-                Id_Cliente: req.params.Id_Cliente
+                Fec_Pedido: {
+                    [Sequelize.Op.like]: `%${req.params.Fec_Pedido}%`
+                }
             }
         });
         if (pedidos.length > 0) {
             res.status(200).json(pedidos);
         } else {
-            res.status(404).json({ message: "No se encontraron registros para el cliente especificado" });
+            res.status(404).json({ message: "No se encontraron registros para la fecha especificada" });
         }
     } catch (error) {
         res.status(500).json({ message: error.message });

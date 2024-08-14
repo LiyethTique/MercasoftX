@@ -61,3 +61,22 @@ export const deleteCarrito = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+export const getQueryCarrito = async (req, res) => {
+    try {
+        const carrito = await CarritosModel.findAll({
+            where: {
+                Id_Carrito: {
+                    [Sequelize.Op.like]: `%${req.params.Id_carrito}%`
+                }
+            }
+        })
+        if(carrito.length > 0){
+            res.status(200).json(carrito)
+        } else {
+            res.status(404).json({ message: "No se encontraron registros para la Id especificada" })
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+    }
+}

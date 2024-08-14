@@ -1,14 +1,17 @@
 import axios from 'axios'
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import FormEntrada from './formEntrada'
+import FormQueryEntrada from './formQueryEntrada'
+// import { Link } from 'react-router-dom'
 
 import Swal from 'sweetalert2'
 
-const URI = 'http://localhost:3306/entradas'
+const URI = process.env.SERVER_BACK + '/entrada/'
+console.log(URI)
 
-const crudEntradas = () => {
+const crudEntrada = () => {
 
-    const [entradaList, setEntradasList] = useState([])
+    const [entradaList, setEntradaList] = useState([])
 
     const [buttonForm, setButtonForm] = useState('Enviar')
 
@@ -28,10 +31,14 @@ const crudEntradas = () => {
     }, [entradaList]);
 
     const getAllEntradas = async () => {
-        const respuesta = await axios.get(URI)
-        console.log(respuesta)
-        if (respuesta.status == 200) {
-            setEntradasList(respuesta.data)
+        try {
+            const respuesta = await axios.get(URI)
+            if (respuesta.status == 200) {
+                setEntradaList(respuesta.data)
+            }
+            console.log(respuesta)
+        } catch (error) {
+            alert(error.response.data.message)
         }
     }
 
@@ -106,9 +113,10 @@ const crudEntradas = () => {
             </table>
             <hr />
             <FormEntrada buttonForm={buttonForm} entrada={entrada} URI={URI} updateTextButton={updateTextButton} />
+            <hr />
             <FormQueryEntrada URI={URI} getEntrada={getEntrada} deleteEntrada={deleteEntrada} buttonForm={buttonForm} />
         </>
     )
 }
 
-export default crudEntradas
+export default crudEntrada

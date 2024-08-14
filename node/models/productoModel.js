@@ -5,6 +5,7 @@ const ProductoModel = db.define('producto', {
     Id_Producto: {
         type: DataTypes.INTEGER,
         primaryKey: true,
+        autoIncrement: true,
         allowNull: false
     },
     Nom_Producto: {

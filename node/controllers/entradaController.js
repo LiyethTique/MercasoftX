@@ -72,7 +72,9 @@ export const getQueryEntrada = async (req, res) => {
     try {
         const entrada = await EntradasModel.findAll({
             where: {
-                Fec_Entrada: req.params.Fec_Entrada
+                Fec_Entrada: {
+                    [Sequelize.Op.like]: `%${req.params.Fec_Entrada}%`
+                }
             }
         })
         if(entrada.length > 0){

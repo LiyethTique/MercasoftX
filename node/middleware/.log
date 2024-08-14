@@ -1,0 +1,28 @@
+import winston from 'winston';
+import DailyRotateFile from 'winston-daily-rotate-file';
+import db from '../database/db.js'; // Asegúrate de que la ruta es correcta
+
+// Configuración de Winston para la rotación de logs
+const logger = winston.createLogger({
+  level: 'error',
+  format: winston.format.combine(
+    winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+    winston.format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`)
+  ),
+  transports: [
+    new DailyRotateFile({
+      filename: 'logs/entradas-%DATE%.log',
+      datePattern: 'YYYY-MM-DD',
+      maxFiles: '14d' // Guardar logs por 14 días
+    })
+  ]
+});
+
+// Middleware de logging de errores
+const logError = (err, req, res, next) => {
+  logger.error(err.message);
+  res.status(500).json({ error: 'Internal Server Error' });
+};
+
+// Uso del middleware de manejo de errores
+router.use(logError);

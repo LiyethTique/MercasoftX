@@ -66,13 +66,15 @@ export const getQueryPedidoProducto = async (req, res) => {
     try {
         const pedidoproductos = await PedidoProductosModel.findAll({
             where: {
-                Id_Pedido: req.params.Id_Pedido
+                Id_PedidoProducto: {
+                    [Sequelize.Op.like]: `%${req.params.Id_PedidoProducto}%`
+                }
             }
         });
         if (pedidoproductos.length > 0) {
             res.status(200).json(pedidoproductos);
         } else {
-            res.status(404).json({ message: "No se encontraron registros para el pedido especificado" });
+            res.status(404).json({ message: "No se encontraron registros para el Id especificado" });
         }
     } catch (error) {
         res.status(500).json({ message: error.message });

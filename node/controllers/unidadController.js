@@ -61,3 +61,22 @@ export const deleteUnidad = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+export const getQueryUnidad = async (req, res) => {
+    try {
+        const unidad = await UnidadesModel.findAll({
+            where: {
+                Nom_Unidad: {
+                    [Sequelize.Op.like]: `%${req.params.Nom_Unidad}%`
+                }
+            }
+        });
+        if (unidad.length > 0) {
+            res.status(200).json(unidad);
+        } else {
+            res.status(404).json({ message: "No se encontraron registros para el nombre especificado" });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};

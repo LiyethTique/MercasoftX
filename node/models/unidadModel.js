@@ -5,6 +5,7 @@ const UnidadModel = db.define('unidad', {
     Id_Unidad: {
         type: DataTypes.INTEGER,
         primaryKey: true,
+        autoIncrement: true,
         allowNull: false
     },
     Nom_Unidad: {

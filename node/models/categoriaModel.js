@@ -5,6 +5,7 @@ const CategoriaModel = db.define('categoria', {
     Id_Categoria: {
         type: DataTypes.INTEGER,
         primaryKey: true,
+        autoIncrement: true,
         allowNull: false
     },
     Nom_Categoria: {

@@ -61,3 +61,22 @@ export const deleteCategoria = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+export const getQueryCategoria = async (req, res) => {
+    try {
+        const categoria = await CategoriasModel.findAll({
+            where: {
+                Nom_Categoria: {
+                    [Sequelize.Op.like]: `%${req.params.Nom_Categoria}%`
+                }
+            }
+        })
+        if(categoria.length > 0){
+            res.status(200).json(categoria)
+        } else {
+            res.status(404).json({ message: "No se encontraron registros para el nombre especificado" })
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+    }
+}

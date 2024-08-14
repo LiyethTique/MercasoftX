@@ -5,6 +5,7 @@ const PedidosModel = db.define('pedido', {
     Id_Pedido: {
         type: DataTypes.INTEGER,
         primaryKey: true,
+        autoIncrement: true,
         allowNull: false
     },
     Fec_Pedido: {

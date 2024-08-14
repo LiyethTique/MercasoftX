@@ -6,6 +6,7 @@ const EntradasModel = db.define('Entradas', {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
+        autoIncrement: true,
         allowNull: false
     },
     Fec_Entrada: {

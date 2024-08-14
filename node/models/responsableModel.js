@@ -5,6 +5,7 @@ const ResponsableModel = db.define('responsable', {
     Id_Responsable: {
         type: DataTypes.INTEGER,
         primaryKey: true,
+        autoIncrement: true,
         allowNull: false
     },
     Nom_Responsable: {

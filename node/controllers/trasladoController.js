@@ -66,13 +66,15 @@ export const getQueryTraslado = async (req, res) => {
     try {
         const traslados = await TrasladosModel.findAll({
             where: {
-                Id_Producto: req.params.Id_Producto
+                Fec_Traslado: {
+                    [Sequelize.Op.like]: `%${req.params.Fec_Traslado}%`
+                }
             }
         });
         if (traslados.length > 0) {
             res.status(200).json(traslados);
         } else {
-            res.status(404).json({ message: "No se encontraron registros para el producto especificado" });
+            res.status(404).json({ message: "No se encontraron registros para la fecha especificada" });
         }
     } catch (error) {
         res.status(500).json({ message: error.message });

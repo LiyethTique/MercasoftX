@@ -11,19 +11,10 @@ const db = new Sequelize(
     process.env.DB_PASSWORD,// Contraseña de la base de datos
     {
         host: process.env.DB_HOST,      // Host de la base de datos
-        dialect: process.env.DB_DIALECT // Dialecto de la base de datos, en este caso 'mysql'
+        dialect: process.env.DB_DIALECT,// Dialecto de la base de datos, en este caso 'mysql'
+        port: process.env.DB_PORT       // Port de la base de datos
     }
 );
 
 // Exporta la instancia de Sequelize para que pueda ser utilizada en otros módulos
 export default db;
-
-
-// import { Sequelize } from "sequelize";
-
-// const db = new Sequelize('', 'root', '', {
-//     host: "localhost",
-//     dialect: "mysql"
-// })
-
-// export default db

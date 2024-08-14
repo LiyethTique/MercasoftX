@@ -1,35 +1,35 @@
-import db from "../database/db.js";
-import { DataTypes } from "sequelize";
+import { DataTypes } from 'sequelize';
+import db from '../database/db.js';
 
-const ResponsableModel = db.define('responsable', {
+const Responsable = db.define('responsable', {
     Id_Responsable: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        allowNull: false
+        autoIncrement: true
     },
     Nom_Responsable: {
         type: DataTypes.STRING(100),
-        allowNull: true // Ajusta según sea necesario
+        allowNull: false
     },
     Cor_Responsable: {
         type: DataTypes.STRING(100),
-        allowNull: true // Ajusta según sea necesario
+        allowNull: false
     },
     Tel_Responsable: {
         type: DataTypes.STRING(15),
-        allowNull: true // Ajusta según sea necesario
+        allowNull: false
     },
     Tip_Responsable: {
         type: DataTypes.STRING(50),
-        allowNull: true // Ajusta según sea necesario
+        allowNull: false
     },
     Tip_Genero: {
         type: DataTypes.STRING(10),
-        allowNull: true // Ajusta según sea necesario
+        allowNull: false
     }
 }, {
-    freezeTableName: true,
-    tableName: 'responsable'
+    tableName: 'responsable',
+    timestamps: false
 });
 
-export default ResponsableModel;
+export default Responsable;

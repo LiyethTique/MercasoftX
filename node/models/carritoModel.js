@@ -1,18 +1,17 @@
+import { Sequelize } from "sequelize";
 import db from "../database/db.js";
-import { DataTypes } from "sequelize";
 
 const CarritoModel = db.define('carrito', {
     Id_Carrito: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
         primaryKey: true,
-        allowNull: false
+        autoIncrement: true
     },
     Can_Producto: {
-        type: DataTypes.INTEGER,
-        allowNull: true // Ajusta según sea necesario
+        type: Sequelize.INTEGER
     }
 }, {
-    freezeTableName: true,
+    timestamps: false,
     tableName: 'carrito'
 });
 

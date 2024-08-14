@@ -1,63 +1,85 @@
-import { Sequelize, Op } from "sequelize";
-import UnidadesModel from "../models/unidadModel.js";
+import Unidad from "../models/unidadModel.js";
+import winston from "winston";
+import DailyRotateFile from "winston-daily-rotate-file";
+
+const logger = winston.createLogger({
+    level: "error",
+    format: winston.format.combine(
+        winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
+        winston.format.printf(info => `${info.timestamp}: ${info.level}: ${info.message}`)
+    ),
+    transports: [
+        new DailyRotateFile({
+            filename: 'logs/unidad-%DATE%.log',
+            datePattern: 'YYYY-MM-DD',
+            maxFiles: '14d'
+        })
+    ]
+});
 
 export const getAllUnidades = async (req, res) => {
     try {
-        const unidades = await UnidadesModel.findAll();
+        const unidades = await Unidad.findAll();
         res.status(200).json(unidades);
     } catch (error) {
-        res.status(404).json({ message: "No se encontraron registros" });
+        logger.error(error.message);
+        res.status(500).json({ message: 'Error al obtener unidades' });
     }
 };
 
 export const getUnidad = async (req, res) => {
     try {
-        const unidad = await UnidadesModel.findByPk(req.params.id);
+        const unidad = await Unidad.findByPk(req.params.id);
         if (unidad) {
             res.status(200).json(unidad);
         } else {
-            res.status(404).json({ message: "Registro no encontrado!" });
+            res.status(404).json({ message: 'Unidad no encontrada' });
         }
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        logger.error(error.message);
+        res.status(500).json({ message: 'Error al obtener la unidad' });
     }
 };
 
 export const createUnidad = async (req, res) => {
     try {
-        await UnidadesModel.create(req.body);
-        res.status(201).json({ message: "¡Registro creado exitosamente!" });
+        const unidad = await Unidad.create(req.body);
+        res.status(201).json({ message: 'Unidad creada exitosamente', unidad });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        logger.error(error.message);
+        res.status(500).json({ message: 'Error al crear la unidad' });
     }
 };
 
 export const updateUnidad = async (req, res) => {
     try {
-        const respuesta = await UnidadesModel.update(req.body, {
+        const [updated] = await Unidad.update(req.body, {
             where: { Id_Unidad: req.params.id }
         });
-        if (respuesta[0] > 0) {
-            res.status(200).json({ message: "¡Registro actualizado exitosamente!" });
+        if (updated) {
+            const updatedUnidad = await Unidad.findByPk(req.params.id);
+            res.status(200).json({ message: 'Unidad actualizada exitosamente', updatedUnidad });
         } else {
-            res.status(404).json({ message: "Registro no encontrado" });
+            res.status(404).json({ message: 'Unidad no encontrada' });
         }
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        logger.error(error.message);
+        res.status(500).json({ message: 'Error al actualizar la unidad' });
     }
 };
 
 export const deleteUnidad = async (req, res) => {
     try {
-        const respuesta = await UnidadesModel.destroy({
+        const deleted = await Unidad.destroy({
             where: { Id_Unidad: req.params.id }
         });
-        if (respuesta > 0) {
-            res.status(200).json({ message: "¡Registro eliminado exitosamente!" });
+        if (deleted) {
+            res.status(200).json({ message: 'Unidad eliminada exitosamente' });
         } else {
-            res.status(404).json({ message: "Registro no encontrado!" });
+            res.status(404).json({ message: 'Unidad no encontrada' });
         }
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        logger.error(error.message);
+        res.status(500).json({ message: 'Error al eliminar la unidad' });
     }
 };

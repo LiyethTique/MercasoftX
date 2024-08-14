@@ -1,31 +1,27 @@
-import db from "../database/db.js";
-import { DataTypes } from "sequelize";
+import { Sequelize } from "sequelize";
+import db from "../config/database.js";
 
-const PedidosModel = db.define('pedido', {
+const PedidoModel = db.define('pedido', {
     Id_Pedido: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
         primaryKey: true,
-        allowNull: false
+        autoIncrement: true
     },
     Fec_Pedido: {
-        type: DataTypes.DATE,
-        allowNull: true // Si la columna puede ser NULL, de lo contrario, establece en false
+        type: Sequelize.DATE
     },
     Id_Cliente: {
-        type: DataTypes.INTEGER,
-        allowNull: true // Si la columna puede ser NULL, de lo contrario, establece en false
+        type: Sequelize.INTEGER
     },
     Est_Pedido: {
-        type: DataTypes.STRING(50),
-        allowNull: true // Si la columna puede ser NULL, de lo contrario, establece en false
+        type: Sequelize.STRING
     },
     Val_Pedido: {
-        type: DataTypes.DECIMAL(10, 2),
-        allowNull: true // Si la columna puede ser NULL, de lo contrario, establece en false
+        type: Sequelize.DECIMAL(10, 2)
     }
 }, {
-    freezeTableName: true,
+    timestamps: false,
     tableName: 'pedido'
 });
 
-export default PedidosModel
+export default PedidoModel;

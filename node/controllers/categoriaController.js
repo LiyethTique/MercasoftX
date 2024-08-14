@@ -1,63 +1,83 @@
-import { Sequelize, Op } from "sequelize";
-import CategoriasModel from "../models/categoriaModel.js";
+import { Sequelize } from "sequelize";
+import CategoriaModel from "../models/categoriaModel.js";
 
-export const getAllCategorias = async (req, res) => {
+// Mostrar todos los registros
+export const getAllCategoria = async (req, res) => {
     try {
-        const categorias = await CategoriasModel.findAll();
+        const categorias = await CategoriaModel.findAll();
+        
         res.status(200).json(categorias);
     } catch (error) {
-        res.status(404).json({ message: "No se encontraron registros" });
+        
+        res.status(500).json({ message: 'Error al recuperar todas las categorías', error: error.message });
     }
-};
+}
 
+// Mostrar un registro
 export const getCategoria = async (req, res) => {
     try {
-        const categoria = await CategoriasModel.findByPk(req.params.id);
-        if (categoria) {
-            res.status(200).json(categoria);
+        const categoria = await CategoriaModel.findAll({
+            where: { Id_Categoria: req.params.id }
+        });
+        if (categoria.length > 0) {
+            
+            res.status(200).json(categoria[0]);
         } else {
-            res.status(404).json({ message: "Registro no encontrado!" });
+            
+            res.status(404).json({ message: 'Categoría no encontrada' });
         }
     } catch (error) {
-        res.status(500).json({ message: error.message });
+       
+        res.status(500).json({ message: 'Error al recuperar la categoría', error: error.message });
     }
-};
+}
 
+// Crear una Categoría
 export const createCategoria = async (req, res) => {
     try {
-        await CategoriasModel.create(req.body);
-        res.status(201).json({ message: "¡Registro creado exitosamente!" });
+        const nuevaCategoria = await CategoriaModel.create(req.body);
+        
+        res.status(201).json({ message: '¡Registro Creado Exitosamente!', categoria: nuevaCategoria });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        
+        res.status(400).json({ message: 'Error al crear la categoría', error: error.message });
     }
-};
+}
 
+// Actualizar un registro 
 export const updateCategoria = async (req, res) => {
     try {
-        const respuesta = await CategoriasModel.update(req.body, {
+        const [updated] = await CategoriaModel.update(req.body, {
             where: { Id_Categoria: req.params.id }
         });
-        if (respuesta[0] > 0) {
-            res.status(200).json({ message: "¡Registro actualizado exitosamente!" });
+        if (updated) {
+           
+            res.status(200).json({ message: '¡Registro Actualizado Exitosamente!' });
         } else {
-            res.status(404).json({ message: "Registro no encontrado" });
+           
+            res.status(404).json({ message: 'Categoría no encontrada' });
         }
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        
+        res.status(400).json({ message: 'Error al actualizar la categoría', error: error.message });
     }
-};
+}
 
+// Borrar un registro
 export const deleteCategoria = async (req, res) => {
     try {
-        const respuesta = await CategoriasModel.destroy({
+        const deleted = await CategoriaModel.destroy({
             where: { Id_Categoria: req.params.id }
         });
-        if (respuesta > 0) {
-            res.status(200).json({ message: "¡Registro eliminado exitosamente!" });
+        if (deleted) {
+            
+            res.status(200).json({ message: '¡Registro Borrado Exitosamente!' });
         } else {
-            res.status(404).json({ message: "Registro no encontrado!" });
+            
+            res.status(404).json({ message: 'Categoría no encontrada' });
         }
     } catch (error) {
-        res.status(500).json({ message: error.message });
+
+        res.status(500).json({ message: 'Error al borrar la categoría', error: error.message });
     }
-};
+}

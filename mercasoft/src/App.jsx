@@ -1,49 +1,39 @@
 import { useEffect, useState } from 'react';
 import { Routes, Route, Link, useNavigate, Navigate } from 'react-router-dom';
 import axios from 'axios';
-// import dotenv from 'dotenv';
-
-// dotenv.config()
-// import 'dotenv/config'
-
-// dotenv.config()
-
 import Home from './Home/Home';
-import CrudVenta from './Ventas/crudVenta';
-import  Traslados  from "./Traslados/Traslados";
-import Auth from './Auth/auth'; // Asegúrate de importar Auth
+import CrudVenta from './ventas/crudVenta.jsx';
+import Traslados from "./Traslados/Traslados.jsx";
+import Auth from './Auth/auth';
 
-// const URI_AUTH = 'tu_uri_auth'; // Define URI_AUTH correctamente
-const URI_AUTH = process.env.SERVER_BACK + '/Auth'; // Define URI_AUTH correctamente
-
-console.log(URI_AUTH)
+const URI_AUTH = `${import.meta.env.VITE_SERVER_BACK}/Auth`;
 
 function App() {
   const [isAuth, setIsAuth] = useState(false);
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   const user = JSON.parse(localStorage.getItem('userMercasoft'));
-  //   if (!user) {
-  //     setIsAuth(false);
-  //   } else {
-  //     axios.get(`${URI_AUTH}/verify`, {
-  //       headers: { Authorization: `Bearer ${user.tokenUser}` }
-  //     }).then(response => {
-  //       if (response.status === 200) {
-  //         setIsAuth(true);
-  //       }
-  //     }).catch(() => {
-  //       setIsAuth(false);
-  //     });
-  //   }
-  // }, []);
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('userMercasoft'));
+    if (!user) {
+      setIsAuth(false);
+    } else {
+      axios.get(`${URI_AUTH}/verify`, {
+        headers: { Authorization: `Bearer ${user.tokenUser}` }
+      }).then(response => {
+        if (response.status === 200) {
+          setIsAuth(true);
+        }
+      }).catch(() => {
+        setIsAuth(false);
+      });
+    }
+  }, []);
 
-  // const logOutUser = () => {
-  //   localStorage.removeItem('userMercasoft');
-  //   setIsAuth(false);
-  //   navigate('/auth');
-  // };
+  const logOutUser = () => {
+    localStorage.removeItem('userMercasoft');
+    setIsAuth(false);
+    navigate('/auth');
+  };
 
   return (
     <>
@@ -58,7 +48,7 @@ function App() {
           <li>
             <Link to="/Ventas">Ventas</Link>
           </li>
-          {/* {!isAuth && (
+          {!isAuth && (
             <li>
               <Link to="/auth">Sesión</Link>
             </li>
@@ -69,21 +59,20 @@ function App() {
                 <i className="fa-solid fa-door-closed">Cerrar Sesión</i>
               </button>
             </li>
-          )} */}
+          )}
         </ul>
       </nav>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/Traslados" element={<Traslados />} />
-        <Route path="/Ventas" element={<CrudVenta />} />
-        {/* {isAuth ? (
+        {isAuth ? (
           <>
             <Route path="/Ventas" element={<CrudVenta />} />
+            <Route path="/Traslados" element={<Traslados />} />
           </>
         ) : (
           <Route path="*" element={<Navigate to="/" />} />
         )}
-        {!isAuth && <Route path="/auth" element={<Auth />} />} */}
+        {!isAuth && <Route path="/auth" element={<Auth />} />}
       </Routes>
     </>
   );

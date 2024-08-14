@@ -5,8 +5,8 @@ import FormQueryVenta from './formQueryVenta'
 
 import Swal from 'sweetalert2'
 
-const URI = process.env.SERVER_BACK + '/venta/'
-console.log(URI)
+const URI = process.env.SERVER_BACK + '/Venta/'
+// console.log(URI)
 
 const CrudVenta = () => {
 

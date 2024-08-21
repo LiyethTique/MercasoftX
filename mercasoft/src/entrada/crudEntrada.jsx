@@ -95,7 +95,7 @@ const crudEntrada = () => {
                 </thead>
                 <tbody>
                     {entradaList.map((entrada) => {
-                        <tr key={entrada.id}>
+                        <tr key={entrada.Id_Emtrada}>
                             <td>{entrada.Fec_Entrada}</td>
                             <td>{entrada.Hor_Entrada}</td>
                             <td>{entrada.Id_Unidad}</td>

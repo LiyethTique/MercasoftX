@@ -1,33 +1,35 @@
-import { useState } from 'react'
-import { Routes, Route, Link } from 'react-router-dom'
-import dotenv from 'dotenv'
+import { useState } from 'react';
+import { Routes, Route, Link, useNavigate } from 'react-router-dom';
+import crudEntrada from './entrada/crudEntrada';
+import crudPedido from './pedido/crudPedido';
 
-import crudEntrada from './entrada/crudEntrada'
-import crudPedido from './pedido/crudPedido'
+// Usa import.meta.env para acceder a la variable de entorno
+const URI_USUARIO = import.meta.env.VITE_SERVER_BACK || 'https://localhost:3001';
 
-URI_AUTH = process.env.SERVER_PACK('/Auth.js')
+console.log(URI_USUARIO);
+
 function App() {
+  const [isAuth, setIsAuth] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <>
       <nav>
         <ul>
           <li>
-            <Link to="../src/entrada/crudentrada.jsx">Entrada</Link>
+            <Link to="/entrada">Entrada</Link>
           </li>
           <li>
-            <Link to="../src/pedido/crudPedido.jsx">Pedido</Link>
+            <Link to="/pedido">Pedido</Link>
           </li>
         </ul>
       </nav>
       <Routes>
-        <Route path='../src/entrada/crudentrada.jsx' element={<crudEntrada/>} />
-      </Routes>
-      <Routes>
-        <Route path='../src/pedido/crudPedido.jsx' element={<crudPedido/>} />
+        <Route path='/entrada' element={<crudEntrada />} />
+        <Route path='/pedido' element={<crudPedido />} />
       </Routes>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

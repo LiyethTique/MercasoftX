@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { useState, useEffect } from 'react'
-import FormVenta from './FormVenta'
+import FormTraslados from './FormVenta'
 import FormQueryVenta from './formQueryVenta'
 
 import Swal from 'sweetalert2'
@@ -9,8 +9,11 @@ const URI = process.env.SERVER_BACK + '/venta/'
 console.log(URI)
 
 const CrudVenta = () => {
+
     const [ventaList, setVentaList] = useState([])
+
     const [buttonForm, setButtonForm] = useState('Enviar')
+
     const [venta, setVenta] = useState({
         Id_Venta: '',
         Fec_Venta: '',

@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react';
 import { Routes, Route, Link, useNavigate, Navigate } from 'react-router-dom';
+import dotenv from 'dotenv'
+
 import axios from 'axios';
-// import dotenv from 'dotenv';
 
-// dotenv.config()
-// import 'dotenv/config'
-
-// dotenv.config()
+dotenv.config()
 
 import Home from './Home/Home';
-import CrudVenta from './Ventas/crudVenta';
-import  Traslados  from "./Traslados/Traslados";
-import Auth from './Auth/auth'; // Asegúrate de importar Auth
+import CrudVenta from './ventas/crudVenta';
+import  Traslados  from "./Traslados/Formtraslados";
+import CrudResponsables from './responsables/CrudResponsables';
+import CrudPedido from './pedidos/crudPedido';
+
 
 // const URI_AUTH = 'tu_uri_auth'; // Define URI_AUTH correctamente
 const URI_AUTH = process.env.SERVER_BACK + '/Auth'; // Define URI_AUTH correctamente
@@ -58,24 +58,22 @@ function App() {
           <li>
             <Link to="/Ventas">Ventas</Link>
           </li>
-          {/* {!isAuth && (
-            <li>
-              <Link to="/auth">Sesión</Link>
-            </li>
-          )}
-          {isAuth && (
-            <li>
-              <button onClick={logOutUser} className="btn btn-secundary">
-                <i className="fa-solid fa-door-closed">Cerrar Sesión</i>
-              </button>
-            </li>
-          )} */}
+          <li>
+            <Link to="/Responsables">Responsables</Link>
+          </li>
+          <li>
+            <Link to="/Pedidos">Pedidos</Link>
+          </li>
+          
+
         </ul>
       </nav>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/Traslados" element={<Traslados />} />
         <Route path="/Ventas" element={<CrudVenta />} />
+        <Route path="/Responsables" element={<CrudResponsables />} />
+        <Route path="/Pedidos" element={<CrudPedido />} />
         {/* {isAuth ? (
           <>
             <Route path="/Ventas" element={<CrudVenta />} />

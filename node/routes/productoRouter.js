@@ -1,9 +1,9 @@
 import express from "express";
-import { createTraslado, deleteTraslado, getAllTraslados, getTraslado, updateTraslado } from "../controllers/trasladosController.js";
+import { createProducto, deleteProducto, getAllProducto, getProducto, updateProducto, getQueryProducto } from "../controllers/productoController.js";
 import winston from "winston";
 import DailyRotateFile from "winston-daily-rotate-file";
 
-const routerTraslados = express.Router();
+const router = express.Router();
 
 const logger = winston.createLogger({
     level: "error",
@@ -13,7 +13,7 @@ const logger = winston.createLogger({
     ),
     transports: [
         new DailyRotateFile({
-            filename: 'logs/traslado-%DATE%.log',
+            filename: 'logs/producto-%DATE%.log',
             datePattern: 'YYYY-MM-DD',
             maxFiles: '14d'
         })
@@ -25,12 +25,11 @@ const logError = (err, req, res, next) => {
     res.status(500).json({ error: 'Internal Server Error' });
 };
 
-routerTraslados.get('/', getAllTraslados);
-routerTraslados.get('/:id', getTraslado);
-routerTraslados.post('/', createTraslado);
-routerTraslados.put('/:id', updateTraslado);
-routerTraslados.delete('/:id', deleteTraslado);
+router.get('/', getAllProducto);
+router.get('/:id', getProducto);
+router.post('/', createProducto);
+router.put('/:id', updateProducto);
+router.delete('/:id', deleteProducto);
+router.get('/Nom_Responsable/:Nom_Responsable', getQueryProducto);
 
-routerTraslados.use(logError);
-
-export default routerTraslados;
+export default router;

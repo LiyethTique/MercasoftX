@@ -7,7 +7,7 @@ const Traslado = db.define('traslado', {
         primaryKey: true,
         autoIncrement: true
     },
-    Traslado: {
+    Fec_Traslado: {
         type: DataTypes.DATE,
         allowNull: false
     },

@@ -1,13 +1,18 @@
 import PedidoModel from "../models/pedidoModel.js";
-import logger from "../config/logger.js";
+import logger from "../logs/logger.js";
 
 // Mostrar todos los registros
 export const getAllPedido = async (req, res, next) => {
     try {
         const pedidos = await PedidoModel.findAll();
         logger.info('Todos los pedidos recuperados');
-        res.status(200).json(pedidos);
+        if(pedidos.length > 0){
+            res.status(200).json(pedidos);
+            return
+        }
+        res.status(400).json({ message: "No existen Pedidos" });
     } catch (error) {
+        res.status(500).json({ message: error.message });
         logger.error(`Error al recuperar todos los pedidos: ${error.message}`);
         next(error);
     }
@@ -32,6 +37,14 @@ export const getPedido = async (req, res, next) => {
 
 // Crear un pedido
 export const createPedido = async (req, res, next) => {
+
+    const { Fec_Pedido, Id_Cliente, Est_Pedido, Val_Pedido } = req.body;
+
+    if (!Fec_Pedido || !Id_Cliente || !Est_Pedido || !Val_Pedido) {
+        logger.warn('Todos los campos son obligatorios');
+        return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+    }
+
     try {
         const nuevoPedido = await PedidoModel.create(req.body);
         logger.info(`Pedido creado: ${nuevoPedido.Id_Pedido}`);
@@ -44,6 +57,14 @@ export const createPedido = async (req, res, next) => {
 
 // Actualizar un registro
 export const updatePedido = async (req, res, next) => {
+
+    const { Fec_Pedido, Id_Cliente, Est_Pedido, Val_Pedido } = req.body;
+
+    if (!Fec_Pedido || !Id_Cliente || !Est_Pedido || !Val_Pedido) {
+        logger.warn('Todos los campos son obligatorios');
+        return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+    }
+
     try {
         const [updated] = await PedidoModel.update(req.body, {
             where: { Id_Pedido: req.params.id }
@@ -77,5 +98,24 @@ export const deletePedido = async (req, res, next) => {
     } catch (error) {
         logger.error(`Error al borrar el pedido: ${error.message}`);
         next(error);
+    }
+};
+
+export const getQueryPedido = async (req, res) => {
+    try {
+        const pedidos = await PedidosModel.findAll({
+            where: {
+                Fec_Pedido: {
+                    [Sequelize.Op.like]: `%${req.params.Fec_Pedido}%`
+                }
+            }
+        });
+        if (pedidos.length > 0) {
+            res.status(200).json(pedidos);
+        } else {
+            res.status(404).json({ message: "No se encontraron registros para la fecha especificada" });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
 };

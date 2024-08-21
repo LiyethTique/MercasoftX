@@ -20,7 +20,11 @@ const logger = winston.createLogger({
 export const getAllUnidades = async (req, res) => {
     try {
         const unidades = await Unidad.findAll();
-        res.status(200).json(unidades);
+        if(unidades.length > 0) {
+            res.status(200).json(unidades);
+            return
+        }
+        res.status(400).json({ message: 'No existen unidades' });
     } catch (error) {
         logger.error(error.message);
         res.status(500).json({ message: 'Error al obtener unidades' });
@@ -42,6 +46,14 @@ export const getUnidad = async (req, res) => {
 };
 
 export const createUnidad = async (req, res) => {
+
+    const { Nom_Unidad } = req.body;
+
+    if (!Nom_Unidad) {
+        logger.warn('El campo Nom_Unidad es obligatorio');
+        return res.status(400).json({ message: 'El campo Nom_Unidad es obligatorio' });
+    }
+
     try {
         const unidad = await Unidad.create(req.body);
         res.status(201).json({ message: 'Unidad creada exitosamente', unidad });
@@ -52,6 +64,14 @@ export const createUnidad = async (req, res) => {
 };
 
 export const updateUnidad = async (req, res) => {
+
+    const { Nom_Unidad } = req.body;
+
+    if (!Nom_Unidad) {
+        logger.warn('El campo Nom_Unidad es obligatorio');
+        return res.status(400).json({ message: 'El campo Nom_Unidad es obligatorio' });
+    }
+
     try {
         const [updated] = await Unidad.update(req.body, {
             where: { Id_Unidad: req.params.id }
@@ -81,5 +101,24 @@ export const deleteUnidad = async (req, res) => {
     } catch (error) {
         logger.error(error.message);
         res.status(500).json({ message: 'Error al eliminar la unidad' });
+    }
+};
+
+export const getQueryUnidad = async (req, res) => {
+    try {
+        const unidad = await UnidadesModel.findAll({
+            where: {
+                Nom_Unidad: {
+                    [Sequelize.Op.like]: `%${req.params.Nom_Unidad}%`
+                }
+            }
+        });
+        if (unidad.length > 0) {
+            res.status(200).json(unidad);
+        } else {
+            res.status(404).json({ message: "No se encontraron registros para el nombre especificado" });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
 };

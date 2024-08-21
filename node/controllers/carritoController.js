@@ -1,5 +1,5 @@
 import CarritoModel from "../models/carritoModel.js";
-import logger from "../config/logger.js";
+import logger from "../logs/logger.js";
 
 // Mostrar todos los registros
 export const getAllCarrito = async (req, res, next) => {
@@ -32,6 +32,15 @@ export const getCarrito = async (req, res, next) => {
 
 // Crear un carrito
 export const createCarrito = async (req, res, next) => {
+
+    const { Can_Producto } = req.body;
+
+    if (!Can_Producto) {
+        logger.warn('El campo Can_Producto es obligatorio');
+        return res.status(400).json({ message: 'El campo Can_Producto es obligatorio' });
+    }
+
+
     try {
         const nuevoCarrito = await CarritoModel.create(req.body);
         logger.info(`Carrito creado: ${nuevoCarrito.Id_Carrito}`);
@@ -44,6 +53,14 @@ export const createCarrito = async (req, res, next) => {
 
 // Actualizar un registro
 export const updateCarrito = async (req, res, next) => {
+
+    const { Can_Producto } = req.body;
+
+    if (!Can_Producto) {
+        logger.warn('El campo Can_Producto es obligatorio');
+        return res.status(400).json({ message: 'El campo Can_Producto es obligatorio' });
+    }
+
     try {
         const [updated] = await CarritoModel.update(req.body, {
             where: { Id_Carrito: req.params.id }
@@ -79,3 +96,23 @@ export const deleteCarrito = async (req, res, next) => {
         next(error);
     }
 };
+
+
+export const getQueryCarrito = async (req, res) => {
+    try {
+        const carrito = await CarritosModel.findAll({
+            where: {
+                Id_Carrito: {
+                    [Sequelize.Op.like]: `%${req.params.Id_carrito}%`
+                }
+            }
+        })
+        if(carrito.length > 0){
+            res.status(200).json(carrito)
+        } else {
+            res.status(404).json({ message: "No se encontraron registros para la Id especificada" })
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+    }
+}

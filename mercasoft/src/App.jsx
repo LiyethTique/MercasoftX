@@ -6,7 +6,7 @@ import CrudVenta from './ventas/crudVenta.jsx';
 import Traslados from "./Traslados/Traslados.jsx";
 import Auth from './Auth/auth';
 
-const URI_AUTH = `${import.meta.env.VITE_SERVER_BACK}/Auth`;
+const URI_AUTH = process.env.SERVER_BACK + '/auth';
 
 function App() {
   const [isAuth, setIsAuth] = useState(false);

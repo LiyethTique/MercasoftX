@@ -1,5 +1,5 @@
 import { Sequelize } from "sequelize";
-import db from "../config/database.js";
+import db from "../database/db.js";
 
 const PedidoModel = db.define('pedido', {
     Id_Pedido: {

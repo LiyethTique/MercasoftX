@@ -1,5 +1,5 @@
 import express from "express";
-import { createCliente, deleteCliente, getAllCliente, getCliente, updateCliente } from "../controllers/clienteController.js";
+import { createCliente, deleteCliente, getAllClientes, getCliente, updateCliente } from "../controllers/clienteController.js";
 
 const router = express.Router();
 
@@ -10,7 +10,7 @@ const logError = (err, req, res, next) => {
 };
 
 // Define tus rutas
-router.get('/', getAllCliente);
+router.get('/', getAllClientes);
 router.get('/:id', getCliente);
 router.post('/', createCliente);
 router.put('/:id', updateCliente);

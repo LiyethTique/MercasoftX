@@ -6,7 +6,7 @@ export const getAllVenta = async (req, res) => {
     try {
         const ventas = await Venta.findAll();
         console.log(ventas)
-        if (ventas.length>0) {
+        if (ventas.length > 0) {
             res.status(200).json(ventas);
             return
         }
@@ -21,7 +21,7 @@ export const getAllVenta = async (req, res) => {
 export const getVenta = async (req, res) => {
     try {
         const venta = await Venta.findAll({
-            where: { id: req.params.id }
+            where: { Id_Venta: req.params.id }
         });
         if (venta.length > 0) {
             res.status(200).json(venta[0]);
@@ -35,12 +35,21 @@ export const getVenta = async (req, res) => {
 
 // Crear una Venta
 export const createVenta = async (req, res) => {
+
+    const { Fec_Venta, Val_Venta, Id_Pedido } = req.body;
+
+    if (!Fec_Venta || !Val_Venta || !Id_Pedido) {
+        logger.warn('Todos los campos son obligatorios');
+        return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+    }
+
     try {
+
         const nuevaVenta = await Venta.create(req.body);
         if (nuevaVenta.Id_Venta) {
             res.status(201).json({ message: '¡Registro Creado Exitosamente!', venta: nuevaVenta });
             return
-        } 
+        }
         console.log(nuevaVenta)
         res.status(400).json({ message: '¡Ocurrio un error con la creacion!', venta: nuevaVenta });
     } catch (error) {
@@ -49,8 +58,15 @@ export const createVenta = async (req, res) => {
 }
 
 // Actualizar un registro 
-// Actualizar un registro
 export const updateVenta = async (req, res) => {
+
+    const { Fec_Venta, Val_Venta, Id_Pedido } = req.body;
+
+    if (!Fec_Venta || !Val_Venta || !Id_Pedido) {
+        logger.warn('Todos los campos son obligatorios');
+        return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+    }
+    
     try {
         const [affectedRows] = await Venta.update(req.body, {
             where: { Id_Venta: req.params.id }
@@ -82,7 +98,6 @@ export const deleteVenta = async (req, res) => {
     }
 }
 
-// Consulta personalizada
 // Consulta personalizada
 export const getQueryVenta = async (req, res) => {
     try {

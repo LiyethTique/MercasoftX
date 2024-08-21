@@ -7,6 +7,13 @@ import { sendPasswordResetEmail } from '../servicios/emailServices.js'
 
 export const createUser = async (req, res) => {
     
+    const { Nom_Usuario, Cor_Usuario} = req.body;
+
+    if (!Nom_Usuario || !Cor_Usuario) {
+        logger.warn('Todos los campos son obligatorios');
+        return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+    }
+
     try {
         const { name, email, password} = req.body
         console.log(password)

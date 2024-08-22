@@ -1,64 +1,106 @@
-import { Sequelize, Op } from "sequelize";
-import ResponsablesModel from "../models/responsableModel.js";
+import Responsable from "../models/responsableModel.js";
+import winston from "winston";
+import DailyRotateFile from "winston-daily-rotate-file";
+
+const logger = winston.createLogger({
+    level: "error",
+    format: winston.format.combine(
+        winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
+        winston.format.printf(info => `${info.timestamp}: ${info.level}: ${info.message}`)
+    ),
+    transports: [
+        new DailyRotateFile({
+            filename: 'logs/responsable-%DATE%.log',
+            datePattern: 'YYYY-MM-DD',
+            maxFiles: '14d'
+        })
+    ]
+});
 
 export const getAllResponsables = async (req, res) => {
     try {
-        const responsables = await ResponsablesModel.findAll();
-        res.status(200).json(responsables);
+        const responsables = await Responsable.findAll();
+        if (responsables.length > 0) {
+            res.status(200).json(responsables);
+            return
+        }
+        res.status(400).json({ message: 'No existen Responsables'});
     } catch (error) {
-        res.status(404).json({ message: "No se encontraron registros" });
+        logger.error(error.message);
+        res.status(500).json({ message: 'Error al obtener responsables' });
     }
 };
 
 export const getResponsable = async (req, res) => {
     try {
-        const responsable = await ResponsablesModel.findByPk(req.params.id);
+        const responsable = await Responsable.findByPk(req.params.id);
         if (responsable) {
             res.status(200).json(responsable);
         } else {
-            res.status(404).json({ message: "Registro no encontrado!" });
+            res.status(404).json({ message: 'Responsable no encontrado' });
         }
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        logger.error(error.message);
+        res.status(500).json({ message: 'Error al obtener el responsable' });
     }
 };
 
 export const createResponsable = async (req, res) => {
+
+    const { Nom_Responsable, Cor_Responsable, Tel_Responsable, Tip_Responsable, Tip_Genero } = req.body;
+
+    if (!Nom_Responsable || !Cor_Responsable || !Tel_Responsable || !Tip_Responsable || !Tip_Genero) {
+        logger.warn('Todos los campos son obligatorios');
+        return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+    }
+
     try {
-        await ResponsablesModel.create(req.body);
-        res.status(201).json({ message: "¡Registro creado exitosamente!" });
+        const responsable = await Responsable.create(req.body);
+        res.status(201).json({ message: 'Responsable creado exitosamente', responsable });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        logger.error(error.message);
+        res.status(500).json({ message: 'Error al crear el responsable' });
     }
 };
 
 export const updateResponsable = async (req, res) => {
+
+    const { Nom_Responsable, Cor_Responsable, Tel_Responsable, Tip_Responsable, Tip_Genero } = req.body;
+
+    if (!Nom_Responsable || !Cor_Responsable || !Tel_Responsable || !Tip_Responsable || !Tip_Genero) {
+        logger.warn('Todos los campos son obligatorios');
+        return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+    }
+    
     try {
-        const respuesta = await ResponsablesModel.update(req.body, {
+        const [updated] = await Responsable.update(req.body, {
             where: { Id_Responsable: req.params.id }
         });
-        if (respuesta[0] > 0) {
-            res.status(200).json({ message: "¡Registro actualizado exitosamente!" });
+        if (updated) {
+            const updatedResponsable = await Responsable.findByPk(req.params.id);
+            res.status(200).json({ message: 'Responsable actualizado exitosamente', updatedResponsable });
         } else {
-            res.status(404).json({ message: "Registro no encontrado" });
+            res.status(404).json({ message: 'Responsable no encontrado' });
         }
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        logger.error(error.message);
+        res.status(500).json({ message: 'Error al actualizar el responsable' });
     }
 };
 
 export const deleteResponsable = async (req, res) => {
     try {
-        const respuesta = await ResponsablesModel.destroy({
+        const deleted = await Responsable.destroy({
             where: { Id_Responsable: req.params.id }
         });
-        if (respuesta > 0) {
-            res.status(200).json({ message: "¡Registro eliminado exitosamente!" });
+        if (deleted) {
+            res.status(200).json({ message: 'Responsable eliminado exitosamente' });
         } else {
-            res.status(404).json({ message: "Registro no encontrado!" });
+            res.status(404).json({ message: 'Responsable no encontrado' });
         }
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        logger.error(error.message);
+        res.status(500).json({ message: 'Error al eliminar el responsable' });
     }
 };
 

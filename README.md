@@ -1,2 +1,2 @@
-# MercasoftX
-Proyecto para la Unidad de Mercasena
+# Mercasoft
+repositorio para el proyecto de mercasoft

@@ -1,12 +1,16 @@
 import { Sequelize, Op } from "sequelize";
-import PedidoProductosModel from "../models/pedidoproductoModel.js";
+import PedidoProductosModel from "../models/pedidoProducto.js";
 
 export const getAllPedidoProductos = async (req, res) => {
     try {
         const pedidoproductos = await PedidoProductosModel.findAll();
-        res.status(200).json(pedidoproductos);
+        if (pedidoproductos.length > 0) {
+            res.status(200).json(pedidoproductos);
+            return
+        }
+        res.status(400).json({ message: "No existen PedidosProductos" });
     } catch (error) {
-        res.status(404).json({ message: "No se encontraron registros" });
+        res.status(500).json({ message: error.message });
     }
 };
 
@@ -24,6 +28,14 @@ export const getPedidoProducto = async (req, res) => {
 };
 
 export const createPedidoProducto = async (req, res) => {
+
+    const { Id_Pedido, Id_Producto, Ind_entrega, Can_Producto } = req.body;
+
+    if (!Id_Pedido || !Id_Producto || Ind_entrega === undefined || !Can_Producto) {
+        logger.warn('Todos los campos son obligatorios');
+        return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+    }
+
     try {
         await PedidoProductosModel.create(req.body);
         res.status(201).json({ message: "¡Registro creado exitosamente!" });
@@ -33,6 +45,14 @@ export const createPedidoProducto = async (req, res) => {
 };
 
 export const updatePedidoProducto = async (req, res) => {
+
+    const { Id_Pedido, Id_Producto, Ind_entrega, Can_Producto } = req.body;
+
+    if (!Id_Pedido || !Id_Producto || Ind_entrega === undefined || !Can_Producto) {
+        logger.warn('Todos los campos son obligatorios');
+        return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+    }
+
     try {
         const respuesta = await PedidoProductosModel.update(req.body, {
             where: { Id_PedidoProducto: req.params.id }

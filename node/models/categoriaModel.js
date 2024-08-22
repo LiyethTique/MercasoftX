@@ -1,20 +1,22 @@
+import { Sequelize } from "sequelize";
 import db from "../database/db.js";
-import { DataTypes } from "sequelize";
 
-const CategoriaModel = db.define('categoria', {
+const Categoria = db.define('categoria', {
     Id_Categoria: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
         primaryKey: true,
+<<<<<<< HEAD
         autoIncrement: true,
         allowNull: false
+=======
+        autoIncrement: true
+>>>>>>> main
     },
     Nom_Categoria: {
-        type: DataTypes.STRING(100),
-        allowNull: true // Ajusta según sea necesario
+        type: Sequelize.STRING
     }
 }, {
-    freezeTableName: true,
-    tableName: 'categoria'
+    timestamps: false
 });
 
-export default CategoriaModel;
+export default Categoria;

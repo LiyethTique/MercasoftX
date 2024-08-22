@@ -1,27 +1,28 @@
+import { Sequelize } from "sequelize";
 import db from "../database/db.js";
-import { DataTypes } from "sequelize";
 
-const VentaModel = db.define('venta', {
+const Venta = db.define('venta', {
     Id_Venta: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
         primaryKey: true,
+<<<<<<< HEAD
         autoIncrement: true,
         allowNull: false
+=======
+        autoIncrement: true
+>>>>>>> main
     },
     Fec_Venta: {
-        type: DataTypes.DATE,
-        allowNull: true // Ajusta según sea necesario
+        type: Sequelize.DATE
     },
     Val_Venta: {
-        type: DataTypes.DECIMAL(10, 2),
-        allowNull: true // Ajusta según sea necesario
+        type: Sequelize.DECIMAL(10, 2)
     },
     Id_Pedido: {
-        type: DataTypes.INTEGER,
-        allowNull: true // Ajusta según sea necesario
+        type: Sequelize.INTEGER
     }
 }, {
-    freezeTableName: true,
-    tableName: 'venta'
+    timestamps: false
 });
-export default VentaModel;
+
+export default Venta;

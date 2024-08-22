@@ -1,82 +1,132 @@
-import { Sequelize, Op } from "sequelize";
-import VentasModel from "../models/ventaModel.js";
+import { Sequelize } from "sequelize";
+import Venta from "../models/ventaModel.js";
 
-export const getAllVentas = async (req, res) => {
+// Mostrar todos los registros
+export const getAllVenta = async (req, res) => {
     try {
-        const ventas = await VentasModel.findAll();
-        res.status(200).json(ventas);
+        const ventas = await Venta.findAll();
+        console.log(ventas)
+        if (ventas.length > 0) {
+            res.status(200).json(ventas);
+            return
+        }
+        res.status(400).json({ message: "No existen Ventas" });
     } catch (error) {
-        res.status(404).json({ message: "No se encontraron registros" });
+        console.log(error)
+        res.status(500).json({ message: error.message });
     }
-};
+}
 
+// Mostrar un registro
 export const getVenta = async (req, res) => {
     try {
-        const venta = await VentasModel.findByPk(req.params.id);
-        if (venta) {
-            res.status(200).json(venta);
-        } else {
-            res.status(404).json({ message: "Registro no encontrado!" });
-        }
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
-
-export const createVenta = async (req, res) => {
-    try {
-        await VentasModel.create(req.body);
-        res.status(201).json({ message: "¡Registro creado exitosamente!" });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
-
-export const updateVenta = async (req, res) => {
-    try {
-        const respuesta = await VentasModel.update(req.body, {
+        const venta = await Venta.findAll({
             where: { Id_Venta: req.params.id }
         });
-        if (respuesta[0] > 0) {
-            res.status(200).json({ message: "¡Registro actualizado exitosamente!" });
+        if (venta.length > 0) {
+            res.status(200).json(venta[0]);
         } else {
-            res.status(404).json({ message: "Registro no encontrado" });
+            res.status(404).json({ message: 'Venta no encontrada' });
         }
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
-};
+}
 
+// Crear una Venta
+export const createVenta = async (req, res) => {
+
+    const { Fec_Venta, Val_Venta, Id_Pedido } = req.body;
+
+    if (!Fec_Venta || !Val_Venta || !Id_Pedido) {
+        logger.warn('Todos los campos son obligatorios');
+        return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+    }
+
+    try {
+
+        const nuevaVenta = await Venta.create(req.body);
+        if (nuevaVenta.Id_Venta) {
+            res.status(201).json({ message: '¡Registro Creado Exitosamente!', venta: nuevaVenta });
+            return
+        }
+        console.log(nuevaVenta)
+        res.status(400).json({ message: '¡Ocurrio un error con la creacion!', venta: nuevaVenta });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
+// Actualizar un registro 
+export const updateVenta = async (req, res) => {
+
+    const { Fec_Venta, Val_Venta, Id_Pedido } = req.body;
+
+    if (!Fec_Venta || !Val_Venta || !Id_Pedido) {
+        logger.warn('Todos los campos son obligatorios');
+        return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+    }
+    
+    try {
+        const [affectedRows] = await Venta.update(req.body, {
+            where: { Id_Venta: req.params.id }
+        });
+        if (affectedRows > 0) {
+            res.status(200).json({ message: '¡Registro Actualizado Exitosamente!' });
+        } else {
+            res.status(404).json({ message: 'Venta no encontrada' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+
+// Borrar un registro
 export const deleteVenta = async (req, res) => {
     try {
-        const respuesta = await VentasModel.destroy({
-            where: { Id_Venta: req.params.id }
+        const deleted = await Venta.destroy({
+            where: { id: req.params.id }
         });
-        if (respuesta > 0) {
-            res.status(200).json({ message: "¡Registro eliminado exitosamente!" });
+        if (deletedVenta) {
+            res.status(200).json({ message: '¡Registro Borrado Exitosamente!' });
         } else {
-            res.status(404).json({ message: "Registro no encontrado!" });
+            res.status(404).json({ message: 'Venta no encontrada' });
         }
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
-};
+}
 
+// Consulta personalizada
 export const getQueryVenta = async (req, res) => {
     try {
-        const ventas = await VentasModel.findAll({
+        const ventas = await Venta.findAll({
             where: {
+<<<<<<< HEAD
                 Fec_Venta: {
                     [Sequelize.Op.like]: `%${req.params.Fec_Venta}%`
+=======
+                Id_Venta: {
+                    [Sequelize.Op.like]: `%${req.params.id}%`
+>>>>>>> main
                 }
             }
         });
         if (ventas.length > 0) {
             res.status(200).json(ventas);
         } else {
+<<<<<<< HEAD
             res.status(404).json({ message: "No se encontraron registros para la fecha especificada" });
+=======
+            res.status(404).json({ message: 'No se encontraron ventas' });
+>>>>>>> main
         }
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
+<<<<<<< HEAD
 };
+=======
+}
+>>>>>>> main

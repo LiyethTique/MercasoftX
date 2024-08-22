@@ -1,44 +1,48 @@
-import db from "../database/db.js";
-import { DataTypes } from "sequelize";
+import { DataTypes } from 'sequelize';
+import db from '../database/db.js';
 
-const TrasladoModel = db.define('traslado', {
+const Traslado = db.define('traslado', {
     Id_Traslado: {
         type: DataTypes.INTEGER,
         primaryKey: true,
+<<<<<<< HEAD
         autoIncrement: true,
         allowNull: false
+=======
+        autoIncrement: true
+>>>>>>> main
     },
     Fec_Traslado: {
         type: DataTypes.DATE,
-        allowNull: true // Ajusta según sea necesario
+        allowNull: false
     },
     Des_Traslado: {
         type: DataTypes.STRING(255),
-        allowNull: true // Ajusta según sea necesario
+        allowNull: false
     },
     Id_Producto: {
         type: DataTypes.INTEGER,
-        allowNull: true // Ajusta según sea necesario
+        allowNull: false
     },
     Can_Producto: {
         type: DataTypes.INTEGER,
-        allowNull: true // Ajusta según sea necesario
+        allowNull: false
     },
     Val_Unitario: {
         type: DataTypes.DECIMAL(10, 2),
-        allowNull: true // Ajusta según sea necesario
+        allowNull: false
     },
     Val_Traslado: {
         type: DataTypes.DECIMAL(10, 2),
-        allowNull: true // Ajusta según sea necesario
+        allowNull: false
     },
     Id_Responsable: {
         type: DataTypes.INTEGER,
-        allowNull: true // Ajusta según sea necesario
+        allowNull: false
     }
 }, {
-    freezeTableName: true,
-    tableName: 'traslado'
+    tableName: 'traslado',
+    timestamps: false
 });
 
-export default TrasladoModel;
+export default Traslado;

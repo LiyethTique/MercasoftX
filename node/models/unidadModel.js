@@ -1,20 +1,24 @@
-import db from "../database/db.js";
-import { DataTypes } from "sequelize";
+import { DataTypes } from 'sequelize';
+import db from '../database/db.js';
 
-const UnidadModel = db.define('unidad', {
+const Unidad = db.define('unidad', {
     Id_Unidad: {
         type: DataTypes.INTEGER,
         primaryKey: true,
+<<<<<<< HEAD
         autoIncrement: true,
         allowNull: false
+=======
+        autoIncrement: true
+>>>>>>> main
     },
     Nom_Unidad: {
         type: DataTypes.STRING(100),
-        allowNull: true // Ajusta según sea necesario
+        allowNull: false
     }
 }, {
-    freezeTableName: true,
-    tableName: 'unidad'
+    tableName: 'unidad',
+    timestamps: false
 });
 
-export default UnidadModel;
+export default Unidad;

@@ -1,56 +1,60 @@
-import db from "../database/db.js";
-import { DataTypes } from "sequelize";
+import { DataTypes } from 'sequelize';
+import db from '../database/db.js';
 
-const ProductoModel = db.define('producto', {
+const Producto = db.define('producto', {
     Id_Producto: {
         type: DataTypes.INTEGER,
         primaryKey: true,
+<<<<<<< HEAD
         autoIncrement: true,
         allowNull: false
+=======
+        autoIncrement: true
+>>>>>>> main
     },
     Nom_Producto: {
         type: DataTypes.STRING(100),
-        allowNull: true // Ajusta según sea necesario
+        allowNull: false
     },
     Car_Producto: {
         type: DataTypes.STRING(255),
-        allowNull: true // Ajusta según sea necesario
+        allowNull: true
     },
     Pre_Promedio: {
         type: DataTypes.DECIMAL(10, 2),
-        allowNull: true // Ajusta según sea necesario
+        allowNull: true
     },
     Exi_Producto: {
         type: DataTypes.INTEGER,
-        allowNull: true // Ajusta según sea necesario
+        allowNull: true
     },
     Ima_Producto: {
         type: DataTypes.STRING(255),
-        allowNull: true // Ajusta según sea necesario
+        allowNull: true
     },
     Fec_Vencimiento: {
         type: DataTypes.DATE,
-        allowNull: true // Ajusta según sea necesario
+        allowNull: true
     },
     Id_Categoria: {
         type: DataTypes.INTEGER,
-        allowNull: true // Ajusta según sea necesario
+        allowNull: true
     },
     Pre_Anterior: {
         type: DataTypes.DECIMAL(10, 2),
-        allowNull: true // Ajusta según sea necesario
+        allowNull: true
     },
     Uni_DeMedida: {
         type: DataTypes.STRING(50),
-        allowNull: true // Ajusta según sea necesario
+        allowNull: true
     },
     Pre_Producto: {
         type: DataTypes.DECIMAL(10, 2),
-        allowNull: true // Ajusta según sea necesario
+        allowNull: true
     }
 }, {
-    freezeTableName: true,
-    tableName: 'producto'
+    tableName: 'producto',
+    timestamps: false
 });
 
-export default ProductoModel;
+export default Producto;

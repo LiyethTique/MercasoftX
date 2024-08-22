@@ -1,45 +1,41 @@
+import { Sequelize } from "sequelize";
 import db from "../database/db.js";
-import { DataTypes } from "sequelize";
 
-const EntradasModel = db.define('Entradas', {
-    id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
+const EntradaModel = db.define('entrada', {
+    Id_Entrada: {
+        type: Sequelize.INTEGER,
         primaryKey: true,
+<<<<<<< HEAD
         autoIncrement: true,
         allowNull: false
+=======
+        autoIncrement: true
+>>>>>>> main
     },
     Fec_Entrada: {
-        type: DataTypes.DATE,
-        field: 'Fec_Entrada'
+        type: Sequelize.DATE
     },
     Hor_Entrada: {
-        type: DataTypes.TIME,
-        field: 'Hor_Entrada'
+        type: Sequelize.TIME
     },
     Id_Unidad: {
-        type: DataTypes.INTEGER,
-        field: 'Id_Unidad'
+        type: Sequelize.INTEGER
     },
     Id_Producto: {
-        type: DataTypes.INTEGER,
-        field: 'Id_Producto'
+        type: Sequelize.INTEGER
     },
     Id_Responsable: {
-        type: DataTypes.INTEGER,
-        field: 'Id_Responsable'
+        type: Sequelize.INTEGER
     },
     Can_Entrada: {
-        type: DataTypes.INTEGER,
-        field: 'Can_Entrada'
+        type: Sequelize.INTEGER
     },
     Fec_Vencimiento: {
-        type: DataTypes.DATE,
-        field: 'Fec_Vencimiento'
+        type: Sequelize.DATE
     }
 }, {
-    freezeTableName: true,
-    tableName: 'entradas'
+    timestamps: false,
+    tableName: 'entrada'
 });
 
-export default EntradasModel
+export default EntradaModel;

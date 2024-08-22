@@ -1,64 +1,103 @@
-import { Sequelize, Op } from "sequelize";
-import PedidosModel from "../models/pedidoModel.js";
+import PedidoModel from "../models/pedidoModel.js";
+import logger from "../logs/logger.js";
 
-export const getAllPedidos = async (req, res) => {
+// Mostrar todos los registros
+export const getAllPedido = async (req, res, next) => {
     try {
-        const pedidos = await PedidosModel.findAll();
-        res.status(200).json(pedidos);
+        const pedidos = await PedidoModel.findAll();
+        logger.info('Todos los pedidos recuperados');
+        if(pedidos.length > 0){
+            res.status(200).json(pedidos);
+            return
+        }
+        res.status(400).json({ message: "No existen Pedidos" });
     } catch (error) {
-        res.status(404).json({ message: "No se encontraron registros" });
+        res.status(500).json({ message: error.message });
+        logger.error(`Error al recuperar todos los pedidos: ${error.message}`);
+        next(error);
     }
 };
 
-export const getPedido = async (req, res) => {
+// Mostrar un registro
+export const getPedido = async (req, res, next) => {
     try {
-        const pedido = await PedidosModel.findByPk(req.params.id);
+        const pedido = await PedidoModel.findByPk(req.params.id);
         if (pedido) {
+            logger.info(`Pedido recuperado: ${pedido.Id_Pedido}`);
             res.status(200).json(pedido);
         } else {
-            res.status(404).json({ message: "Registro no encontrado!" });
+            logger.warn(`Pedido no encontrado con id: ${req.params.id}`);
+            res.status(404).json({ message: 'Pedido no encontrado' });
         }
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        logger.error(`Error al recuperar el pedido: ${error.message}`);
+        next(error);
     }
 };
 
-export const createPedido = async (req, res) => {
+// Crear un pedido
+export const createPedido = async (req, res, next) => {
+
+    const { Fec_Pedido, Id_Cliente, Est_Pedido, Val_Pedido } = req.body;
+
+    if (!Fec_Pedido || !Id_Cliente || !Est_Pedido || !Val_Pedido) {
+        logger.warn('Todos los campos son obligatorios');
+        return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+    }
+
     try {
-        await PedidosModel.create(req.body);
-        res.status(201).json({ message: "¡Registro creado exitosamente!" });
+        const nuevoPedido = await PedidoModel.create(req.body);
+        logger.info(`Pedido creado: ${nuevoPedido.Id_Pedido}`);
+        res.status(201).json({ message: '¡Pedido creado exitosamente!', pedido: nuevoPedido });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        logger.error(`Error al crear el pedido: ${error.message}`);
+        next(error);
     }
 };
 
-export const updatePedido = async (req, res) => {
+// Actualizar un registro
+export const updatePedido = async (req, res, next) => {
+
+    const { Fec_Pedido, Id_Cliente, Est_Pedido, Val_Pedido } = req.body;
+
+    if (!Fec_Pedido || !Id_Cliente || !Est_Pedido || !Val_Pedido) {
+        logger.warn('Todos los campos son obligatorios');
+        return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+    }
+
     try {
-        const respuesta = await PedidosModel.update(req.body, {
+        const [updated] = await PedidoModel.update(req.body, {
             where: { Id_Pedido: req.params.id }
         });
-        if (respuesta[0] > 0) {
-            res.status(200).json({ message: "¡Registro actualizado exitosamente!" });
+        if (updated) {
+            logger.info(`Pedido actualizado: ${req.params.id}`);
+            res.status(200).json({ message: '¡Pedido actualizado exitosamente!' });
         } else {
-            res.status(404).json({ message: "Registro no encontrado" });
+            logger.warn(`Pedido no encontrado con id: ${req.params.id}`);
+            res.status(404).json({ message: 'Pedido no encontrado' });
         }
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        logger.error(`Error al actualizar el pedido: ${error.message}`);
+        next(error);
     }
 };
 
-export const deletePedido = async (req, res) => {
+// Borrar un registro
+export const deletePedido = async (req, res, next) => {
     try {
-        const respuesta = await PedidosModel.destroy({
+        const deleted = await PedidoModel.destroy({
             where: { Id_Pedido: req.params.id }
         });
-        if (respuesta > 0) {
-            res.status(200).json({ message: "¡Registro eliminado exitosamente!" });
+        if (deleted) {
+            logger.info(`Pedido borrado: ${req.params.id}`);
+            res.status(200).json({ message: '¡Pedido borrado exitosamente!' });
         } else {
-            res.status(404).json({ message: "Registro no encontrado!" });
+            logger.warn(`Pedido no encontrado con id: ${req.params.id}`);
+            res.status(404).json({ message: 'Pedido no encontrado' });
         }
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        logger.error(`Error al borrar el pedido: ${error.message}`);
+        next(error);
     }
 };
 

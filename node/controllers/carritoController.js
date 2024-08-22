@@ -97,7 +97,10 @@ export const deleteCarrito = async (req, res, next) => {
     }
 };
 
+<<<<<<< HEAD
+=======
 
+>>>>>>> main
 export const getQueryCarrito = async (req, res) => {
     try {
         const carrito = await CarritosModel.findAll({

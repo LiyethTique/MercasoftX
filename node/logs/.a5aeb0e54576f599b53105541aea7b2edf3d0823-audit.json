@@ -1,0 +1,20 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "logs\\.a5aeb0e54576f599b53105541aea7b2edf3d0823-audit.json",
+    "files": [
+        {
+            "date": 1724281313505,
+            "name": "logs\\venta-2024-08-21.log",
+            "hash": "baf1aa0ed564b91f090fcaf61a42c26ae8ae21f5638c1d2797c90e02d1f7690d"
+        },
+        {
+            "date": 1724302938049,
+            "name": "logs\\venta-2024-08-22.log",
+            "hash": "55756e2876e3b8abb4f90dfca7560f900a40c5931bd129dffb644a54a7c8db96"
+        }
+    ],
+    "hashType": "sha256"
+}

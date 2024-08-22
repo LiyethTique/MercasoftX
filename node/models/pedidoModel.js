@@ -5,7 +5,12 @@ const PedidoModel = db.define('pedido', {
     Id_Pedido: {
         type: Sequelize.INTEGER,
         primaryKey: true,
+<<<<<<< HEAD
+        autoIncrement: true,
+        allowNull: false
+=======
         autoIncrement: true
+>>>>>>> main
     },
     Fec_Pedido: {
         type: Sequelize.DATE

@@ -5,7 +5,12 @@ const Traslado = db.define('traslado', {
     Id_Traslado: {
         type: DataTypes.INTEGER,
         primaryKey: true,
+<<<<<<< HEAD
+        autoIncrement: true,
+        allowNull: false
+=======
         autoIncrement: true
+>>>>>>> main
     },
     Fec_Traslado: {
         type: DataTypes.DATE,

@@ -5,7 +5,12 @@ const Venta = db.define('venta', {
     Id_Venta: {
         type: Sequelize.INTEGER,
         primaryKey: true,
+<<<<<<< HEAD
+        autoIncrement: true,
+        allowNull: false
+=======
         autoIncrement: true
+>>>>>>> main
     },
     Fec_Venta: {
         type: Sequelize.DATE

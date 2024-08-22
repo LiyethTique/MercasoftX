@@ -5,7 +5,12 @@ const EntradaModel = db.define('entrada', {
     Id_Entrada: {
         type: Sequelize.INTEGER,
         primaryKey: true,
+<<<<<<< HEAD
+        autoIncrement: true,
+        allowNull: false
+=======
         autoIncrement: true
+>>>>>>> main
     },
     Fec_Entrada: {
         type: Sequelize.DATE

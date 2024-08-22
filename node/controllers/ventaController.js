@@ -103,17 +103,30 @@ export const getQueryVenta = async (req, res) => {
     try {
         const ventas = await Venta.findAll({
             where: {
+<<<<<<< HEAD
+                Fec_Venta: {
+                    [Sequelize.Op.like]: `%${req.params.Fec_Venta}%`
+=======
                 Id_Venta: {
                     [Sequelize.Op.like]: `%${req.params.id}%`
+>>>>>>> main
                 }
             }
         });
         if (ventas.length > 0) {
             res.status(200).json(ventas);
         } else {
+<<<<<<< HEAD
+            res.status(404).json({ message: "No se encontraron registros para la fecha especificada" });
+=======
             res.status(404).json({ message: 'No se encontraron ventas' });
+>>>>>>> main
         }
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
+<<<<<<< HEAD
+};
+=======
 }
+>>>>>>> main

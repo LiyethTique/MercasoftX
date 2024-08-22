@@ -5,7 +5,12 @@ const Responsable = db.define('responsable', {
     Id_Responsable: {
         type: DataTypes.INTEGER,
         primaryKey: true,
+<<<<<<< HEAD
+        autoIncrement: true,
+        allowNull: false
+=======
         autoIncrement: true
+>>>>>>> main
     },
     Nom_Responsable: {
         type: DataTypes.STRING(100),

@@ -96,7 +96,11 @@ export const deleteCategoria = async (req, res) => {
 
         res.status(500).json({ message: 'Error al borrar la categoría', error: error.message });
     }
+<<<<<<< HEAD
+};
+=======
 }
+>>>>>>> main
 
 export const getQueryCategoria = async (req, res) => {
     try {

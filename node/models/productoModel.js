@@ -5,7 +5,12 @@ const Producto = db.define('producto', {
     Id_Producto: {
         type: DataTypes.INTEGER,
         primaryKey: true,
+<<<<<<< HEAD
+        autoIncrement: true,
+        allowNull: false
+=======
         autoIncrement: true
+>>>>>>> main
     },
     Nom_Producto: {
         type: DataTypes.STRING(100),

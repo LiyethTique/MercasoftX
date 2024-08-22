@@ -1,0 +1,20 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "logs\\.80ad7594f360477ca325459820be609439294fe2-audit.json",
+    "files": [
+        {
+            "date": 1724281313247,
+            "name": "logs\\pedido-2024-08-21.log",
+            "hash": "d66296935ef1e06c63f538d5200a651f976b8312820e635e4213cde474bcfd2f"
+        },
+        {
+            "date": 1724302937785,
+            "name": "logs\\pedido-2024-08-22.log",
+            "hash": "9dede0f7fa1a9d698135f4959280385490b36413fb1739351c51fa5d37ba4d82"
+        }
+    ],
+    "hashType": "sha256"
+}

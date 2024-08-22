@@ -1,0 +1,5 @@
+2024-08-21 20:33:05: error: Field 'createdAT' doesn't have a default value
+2024-08-21 21:29:34: error: Cannot delete or update a parent row: a foreign key constraint fails (`mercasoftx`.`cliente`, CONSTRAINT `Id_Carrito` FOREIGN KEY (`Id_Carrito`) REFERENCES `carrito` (`Id_Carrito`))
+2024-08-21 21:30:03: error: Cannot delete or update a parent row: a foreign key constraint fails (`mercasoftx`.`cliente`, CONSTRAINT `Id_Carrito` FOREIGN KEY (`Id_Carrito`) REFERENCES `carrito` (`Id_Carrito`))
+2024-08-21 21:31:53: error: Cannot delete or update a parent row: a foreign key constraint fails (`mercasoftx`.`cliente`, CONSTRAINT `Id_Carrito` FOREIGN KEY (`Id_Carrito`) REFERENCES `carrito` (`Id_Carrito`))
+2024-08-21 21:34:02: error: Cannot delete or update a parent row: a foreign key constraint fails (`mercasoftx`.`cliente`, CONSTRAINT `Id_Carrito` FOREIGN KEY (`Id_Carrito`) REFERENCES `carrito` (`Id_Carrito`))

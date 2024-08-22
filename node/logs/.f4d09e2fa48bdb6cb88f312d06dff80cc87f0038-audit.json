@@ -1,0 +1,20 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "logs\\.f4d09e2fa48bdb6cb88f312d06dff80cc87f0038-audit.json",
+    "files": [
+        {
+            "date": 1724281313225,
+            "name": "logs\\carrito-2024-08-21.log",
+            "hash": "a65a3fca40ce8cb153923231d25060c428c77d9dfb9aa577d929365f8d9e0585"
+        },
+        {
+            "date": 1724302937765,
+            "name": "logs\\carrito-2024-08-22.log",
+            "hash": "805d8a8cc16de4819c0573fa4c6d2e11aa0c88efe90c53f6b849374a4e967167"
+        }
+    ],
+    "hashType": "sha256"
+}

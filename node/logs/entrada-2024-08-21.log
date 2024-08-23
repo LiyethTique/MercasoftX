@@ -1,8 +1,0 @@
-2024-08-21 23:31:20: error: re is not defined
-2024-08-21 23:32:29: error: re is not defined
-2024-08-21 23:34:02: error: re is not defined
-2024-08-21 23:36:44: error: re is not defined
-2024-08-21 23:37:49: error: re is not defined
-2024-08-21 23:37:50: error: re is not defined
-2024-08-21 23:39:58: error: re is not defined
-2024-08-21 23:43:29: error: Cannot add or update a child row: a foreign key constraint fails (`mercasoftx`.`entrada`, CONSTRAINT `Id_Producto` FOREIGN KEY (`Id_Producto`) REFERENCES `producto` (`Id_Producto`))

@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import FormResponsable from './formResponsable';
 import FormQueryResponsable from './formQueryResponsable';
-import NavPri from '../NavPri/NavPri'
+import Sidebar from '../Sidebar/Sidebar'
 
 import Swal from 'sweetalert2';
 
@@ -70,7 +70,7 @@ const CrudResponsable = () => {
 
     return (
         <>
-        <NavPri />
+        <Sidebar />
             <table className="table table-striped">
                 <thead>
                     <tr>

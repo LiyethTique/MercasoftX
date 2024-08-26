@@ -2,11 +2,12 @@ import axios from 'axios'
 import { useState, useEffect } from 'react'
 import FormPedido from './formPedido'
 import FormQueryPedido from './formQueryPedido'
+import Sidebar from '../Sidebar/Sidebar'
+
 
 import Swal from 'sweetalert2'
 
 const URI = process.env.SERVER_BACK + '/pedido/'
-console.log(URI)
 
 const crudPedido = () => {
 
@@ -78,6 +79,7 @@ const crudPedido = () => {
 
     return (
         <>
+        <Sidebar />
             <table>
                 <thead>
                     <tr>

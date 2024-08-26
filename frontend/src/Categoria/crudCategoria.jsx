@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import FormCategoria from './formCategoria'
 import FormQueryCategoria from './formQueryCategoria'
 
-import NavPri from '../NavPri/NavPri'
+import Sidebar from '../Sidebar/Sidebar'
 
 import Swal from 'sweetalert2'
 
@@ -62,7 +62,7 @@ const CrudCategoria = () => {
 
     return (
         <>
-            <NavPri />
+            <Sidebar />
             <table className="table table-striped">
                 <thead>
                     <tr>

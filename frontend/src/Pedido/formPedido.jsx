@@ -63,7 +63,7 @@ const FormPedido = ({ buttonForm, pedido, updateTextButton }) => {
         <>
             <form id="pedidoForm" action="" onSubmit={sendForm}>
                 <label htmlFor="Fec_Pedido">Fecha del pedido</label>
-                <input type="text" id="Fec_Pedido" value={Fec_Pedido} onChange={(e) => setFec_Pedido(e.target.value)} />
+                <input type="date" id="Fec_Pedido" value={Fec_Pedido} onChange={(e) => setFec_Pedido(e.target.value)} />
                 <br />
                 <label htmlFor="Id_Cliente">Nombre del cliente</label>
                 <input type="text" id="Id_Cliente" value={Id_Cliente} onChange={(e) => setId_Cliente(e.target.value)} />

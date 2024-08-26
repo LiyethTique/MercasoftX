@@ -3,11 +3,11 @@ import { useEffect, useState } from "react"
 
 const FormQueryVenta = ({ URI, getVenta, deleteVenta, buttonForm}) => {
      const [ventaQuery, setVentaQuery] = useState([])
-     const [id, setId] = useState('')
+     const [Id_Venta, setId_Venta] = useState('')
 
-     const sendFormQuery = async (id) => {
-        if (id) {
-            const respuesta = await axios.get(URI + 'consulta/' + id)
+     const sendFormQuery = async (Id_Venta) => {
+        if (Id_Venta) {
+            const respuesta = await axios.get(URI + 'consulta/' + Id_Venta)
 
             setVentaQuery(
                 respuesta.data
@@ -19,7 +19,7 @@ const FormQueryVenta = ({ URI, getVenta, deleteVenta, buttonForm}) => {
 
      useEffect(() =>{
         setVentaQuery([])
-        setId('')
+        setId_Venta('')
      }, [buttonForm])
 
      return (
@@ -27,7 +27,7 @@ const FormQueryVenta = ({ URI, getVenta, deleteVenta, buttonForm}) => {
             <form action="" id="queryForm">
                 <label htmlFor="idQuery">Codigo</label>
                 <br />
-                <input type="number" id="idQuery" value={id} onChange={(e) => { sendFormQuery(e.target.value); setId(e.target.value)}}/>
+                <input type="number" id="idQuery" value={Id_Venta} onChange={(e) => { sendFormQuery(e.target.value); setId_Venta(e.target.value)}}/>
             </form>
             {
                 ventaQuery.length > 0 ? <table>
@@ -35,20 +35,18 @@ const FormQueryVenta = ({ URI, getVenta, deleteVenta, buttonForm}) => {
                         <tr>
                             <th>codigo</th>
                             <th>Fecha Venta</th>
-                            <th>Cantidad Venta</th>
                             <th>Valor Venta</th>
                         </tr>
                     </thead>
                     <tbody>
                         {ventaQuery.map((venta) =>(
-                            <tr key={venta.id}>
-                                <td>{venta.id}</td>
+                            <tr key={venta.Id_Venta}>
+                                <td>{venta.Id_Venta}</td>
                                 <td>{venta.Fec_Venta}</td>
-                                <td>{venta.Can_Venta}</td>
                                 <td>{venta.Val_Venta}</td>
                                 <td>
-                                    <button onClick={() => getVenta(venta.id)}>Editar</button>
-                                    <button onClick={() => deleteVenta(venta.id)}>Borrar</button>
+                                    <button onClick={() => getVenta(venta.Id_Venta)}>Editar</button>
+                                    <button onClick={() => deleteVenta(venta.Id_Venta)}>Borrar</button>
                                 </td>
                             </tr>
                         ))}

@@ -1,9 +1,9 @@
 const Home = () => {
-    return(
+    return (
         <>
-        <h1>Hola, Soy la Pagina Inicial del web site</h1>
-        </>
-    )
+            <h1>Hola soy la pagina de inicio bienvenido a Mercasoft X</h1>
+                </>
+                )
 }
 
 export default Home

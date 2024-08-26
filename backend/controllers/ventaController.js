@@ -86,9 +86,9 @@ export const updateVenta = async (req, res) => {
 export const deleteVenta = async (req, res) => {
     try {
         const deleted = await Venta.destroy({
-            where: { id: req.params.id }
+            where: { Id_Venta: req.params.id }
         });
-        if (deletedVenta) {
+        if (deleted) {
             res.status(200).json({ message: '¡Registro Borrado Exitosamente!' });
         } else {
             res.status(404).json({ message: 'Venta no encontrada' });

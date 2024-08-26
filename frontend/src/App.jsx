@@ -13,7 +13,7 @@ import Responsable from './Responsable/crudResponsable.jsx'
 import Traslado from './Traslado/crudTraslado.jsx'
 import Unidad from './Unidad/crudUnidad.jsx'
 import Venta from './Venta/crudVenta.jsx'
-import Auth from './Auth/auth';
+import Auth from './Auth/Auth';
 import Home from './Home/Home';
 
 const URI_AUTH = process.env.SERVER_BACK + '/auth';
@@ -60,6 +60,7 @@ function App() {
         <Route path="/traslado" element={<Traslado />} />
         <Route path="/unidad" element={<Unidad />} />
         <Route path="/venta" element={<Venta />} />
+        <Route path="/home" element={<Home />} />
         {/* {isAuth ? (
           <>
             {/* <Route path="/Ventas" element={<CrudVenta />} />

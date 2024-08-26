@@ -2,7 +2,7 @@ import axios from 'axios'
 import { useState, useEffect } from 'react'
 import FormTraslado from './formTraslado'
 import FormQueryTraslado from './formQueryTraslado'
-import NavPri from '../NavPri/NavPri'
+import Sidebar from '../Sidebar/Sidebar'
 
 import Swal from 'sweetalert2'
 
@@ -95,7 +95,7 @@ const CrudTraslado = () => {
     }
     return (
         <>
-            <NavPri />
+            <Sidebar />
             <div>
                 <h2>Lista de Traslados</h2>
                 <table className="table table-striped">

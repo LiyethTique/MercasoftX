@@ -2,13 +2,13 @@ import axios from 'axios'
 import { useState, useEffect } from 'react'
 import FormPedidoProducto from './formPedidoProducto'
 import FormQueryPedidoProducto from './formQueryPedidoProducto'
-import NavPri from '../NavPri/NavPri'
+import Sidebar from '../Sidebar/Sidebar'
 
 import Swal from 'sweetalert2'
 
-const URI = process.env.SERVER_BACK + '/pediddoproducto/' // Ajusta la URI
+const URI = process.env.SERVER_BACK + '/pedidoproducto/' // Ajusta la URI
 
-const CrudEntity = () => {
+const CrudPedidoProducto = () => {
 
     const [entityList, setEntityList] = useState([])
     const [buttonForm, setButtonForm] = useState('Enviar')
@@ -61,7 +61,7 @@ const CrudEntity = () => {
 
     return (
         <>
-            <NavPri />
+            <Sidebar />
             <table className="table table-striped">
                 <thead>
                     <tr>
@@ -90,4 +90,4 @@ const CrudEntity = () => {
     )
 }
 
-export default CrudEntity
+export default CrudPedidoProducto

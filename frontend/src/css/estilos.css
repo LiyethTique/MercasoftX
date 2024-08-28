@@ -1,0 +1,78 @@
+/* Estilos generales */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Asegura que cubra toda la altura de la pantalla */
+}
+
+/* Contenedor del formulario */
+form {
+    text-align: left;
+    background-color: #fff;
+    padding: 10px; /* Mayor espacio lateral */
+    border-radius: 10px; /* Bordes ligeramente más redondeados */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra más profunda */
+    width: 100%;
+    max-width: 300px; /* Asegura que no sea demasiado ancho en pantallas grandes */
+    box-sizing: border-box;
+}
+
+/* Estilos de los labels */
+form label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #333;
+    font-size: 15px; /* Tamaño de fuente consistente */
+}
+
+/* Estilos de los inputs */
+form input[type="text"],
+form input[type="number"],
+form input[type="date"],
+form input[type="submit"] {
+    width: 100%;
+    padding: 12px; /* Aumenta el padding para inputs más cómodos */
+    margin-bottom: 13px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 14px; /* Asegura consistencia en el tamaño de fuente */
+}
+
+/* Estilos del botón de envío */
+form input[type="submit"] {
+    background-color: #28a745;
+    color: white;
+    cursor: pointer;
+    border: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+form input[type="submit"]:hover {
+    background-color: #218838;
+    transform: scale(1.02); /* Pequeño zoom al pasar el cursor */
+}
+
+form input[type="submit"]:active {
+    background-color: #1e7e34;
+    transform: scale(0.98); /* Reduce ligeramente al hacer clic */
+}
+
+/* Mejoras visuales */
+form input:focus {
+    border-color: #80bdff;
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Estilo adicional para mayor accesibilidad */
+form input[type="submit"]:focus {
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.5);
+}

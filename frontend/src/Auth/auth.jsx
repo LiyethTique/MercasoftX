@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import NavPub from '../NavPub/NavPub';
+import NavPub from '../NavPub/NavPub.jsx';
+
+
 
 const Auth = () => {
   const [email, setEmail] = useState('');
@@ -27,33 +29,47 @@ const Auth = () => {
   return (
     <>
       <NavPub />
-      <div className="auth-container">
-        <h2>Iniciar Sesión</h2>
-        {error && <p className="error">{error}</p>}
-        <form onSubmit={handleLogin}>
-          <div className="form-group">
-            <label htmlFor="email">Correo Electrónico:</label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="password">Contraseña:</label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-          <button type="submit" className="btn btn-primary">Iniciar Sesión</button>
-        </form>
-      </div>
+      <div className="contenedor-formulario">
+      
+      <main className="form-signin w-100 m-auto">
+  <form onSubmit={handleLogin}>
+    <img rel="icon" type="image/svg+xml" src="/Logo-Icono.svg" width="85px"/>
+    
+    <h1 className="h3 mb-3 fw-normal">Iniciar Sesión</h1>
+    {error && <p className="error">{error}</p>}
+    <div className="form-floating">
+      <input
+        type="email"
+        className="form-control"
+        id="floatingInput"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        required
+      />
+      <label htmlFor="floatingInput">Correo Electrónico</label>
+    </div>
+    <div className="form-floating">
+      <input
+        type="password"
+        className="form-control"
+        id="floatingPassword"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        required
+      />
+      <label htmlFor="floatingPassword">Contraseña</label>
+    </div>
+    <button className="btn btn-primary w-100 py-2" type="submit">
+      Iniciar Sesión
+    </button>
+  </form>
+</main>
+</div>
+
+      
+
+
+
     </>
   );
 };

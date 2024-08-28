@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Routes, Route, Link, useNavigate, Navigate } from 'react-router-dom';
+import { Routes, Route, Link, useNavigate, Navigate, BrowserRouter } from 'react-router-dom';
 import axios from 'axios';
 
 import Carrito from './Carrito/crudCarrito.jsx'
@@ -13,8 +13,9 @@ import Responsable from './Responsable/crudResponsable.jsx'
 import Traslado from './Traslado/crudTraslado.jsx'
 import Unidad from './Unidad/crudUnidad.jsx'
 import Venta from './Venta/crudVenta.jsx'
-import Auth from './Auth/auth';
-import Home from './Home/Home';
+import Auth from './Auth/auth.jsx';
+import Home from './Home/Home.jsx';
+
 
 const URI_AUTH = process.env.SERVER_BACK + '/auth';
 
@@ -47,29 +48,23 @@ function App() {
 
   return (
     <>
+    {/* <BrowserRouter> */}
       <Routes>
-        <Route path="/" element={<Auth />} />
-        <Route path="/carrito" element={<Carrito />} />
-        <Route path="/categoria" element={<Categoria />} />
-        <Route path="/cliente" element={<Cliente />} />
-        <Route path="/entrada" element={<Entrada />} />
-        <Route path="/pedido" element={<Pedido />} />
-        <Route path="/pedidoproducto" element={<PedidoProducto />} />
-        <Route path="/producto" element={<Producto />} />
-        <Route path="/responsable" element={<Responsable />} />
-        <Route path="/traslado" element={<Traslado />} />
-        <Route path="/unidad" element={<Unidad />} />
-        <Route path="/venta" element={<Venta />} />
-        {/* {isAuth ? (
-          <>
-            {/* <Route path="/Ventas" element={<CrudVenta />} />
-            <Route path="/Traslados" element={<Traslados />} /> */}
-          {/* </> */}
-        {/* ) : (
-          <Route path="*" element={<Navigate to="/" />} />
-        )}
-        {!isAuth && <Route path="/auth" element={<Auth />} />} */} */
+            <Route path='/' element={<Auth />} />
+            <Route path='/home' element={<Home/>} />
+            <Route path='/carrito' element={<Carrito />} />
+            <Route path='/Categoria' element={<Categoria />} />
+            <Route path='/cliente' element={<Cliente />} />
+            <Route path='/entrada' element={<Entrada />} />
+            <Route path='/pedido' element={<Pedido />} />
+            <Route path='/PedidoProducto' element={<PedidoProducto />} />
+            <Route path='/Producto' element={<Producto />} />
+            <Route path='/Responsable' element={<Responsable />} />
+            <Route path='/Traslado' element={<Traslado />} />
+            <Route path='/Unidad' element={<Unidad />} />
+            <Route path='/Venta' element={<Venta />} />
       </Routes>
+    {/* </BrowserRouter> */}
     </>
   );
 }

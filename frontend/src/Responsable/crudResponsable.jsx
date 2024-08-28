@@ -2,9 +2,9 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import FormResponsable from './formResponsable';
 import FormQueryResponsable from './formQueryResponsable';
-import NavPri from '../NavPri/NavPri'
-
 import Swal from 'sweetalert2';
+import { Link } from'react-router-dom';
+import Sidebar from '../Sidebar/Sidebar.jsx';
 
 const URI = process.env.SERVER_BACK + '/responsable/';
 
@@ -12,7 +12,6 @@ const CrudResponsable = () => {
     const [responsableList, setResponsableList] = useState([]);
     const [buttonForm, setButtonForm] = useState('Enviar');
     const [responsable, setResponsable] = useState({
-        
         Id_Responsable: '',
         Nom_Responsable: '',
         Cor_Responsable: '',
@@ -46,7 +45,7 @@ const CrudResponsable = () => {
         setButtonForm(texto);
     };
 
-    const deleteResponsable = (idResponsable) => {
+    const deleteResponsable = async (idResponsable) => {
         Swal.fire({
             title: "¿Estás seguro?",
             text: "¡No podrás revertir esto!",
@@ -68,18 +67,22 @@ const CrudResponsable = () => {
         });
     };
 
+    const handleFormSubmit = async () => {
+        await getAllResponsables(); // Refresh list after form submission
+    };
+
     return (
         <>
-        <NavPri />
-            <table className="table table-striped">
+        <Sidebar/>            
+        <table className="table table-striped">
                 <thead>
                     <tr>
                         <th>ID Responsable</th>
-                        <th>Nombre Responsable</th>
-                        <th>Correo Responsable</th>
-                        <th>Teléfono Responsable</th>
-                        <th>Tipo Responsable</th>
-                        <th>Género Responsable</th>
+                        <th>Nombre Completo</th>
+                        <th>Correo Electronico</th>
+                        <th>Teléfono</th>
+                        <th>Tip Responsable</th>
+                        <th>Género</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -101,9 +104,21 @@ const CrudResponsable = () => {
                 </tbody>
             </table>
             <hr />
-            <FormResponsable buttonForm={buttonForm} responsable={responsable} URI={URI} updateTextButton={updateTextButton} />
+            <FormResponsable 
+                buttonForm={buttonForm} 
+                responsable={responsable} 
+                URI={URI} 
+                updateTextButton={updateTextButton}
+                onSubmit={handleFormSubmit} // Add this prop to handle form submission
+            />
             <hr />
-            <FormQueryResponsable URI={URI} getResponsable={getResponsable} deleteResponsable={deleteResponsable} buttonForm={buttonForm} />
+            <FormQueryResponsable 
+                URI={URI} 
+                getResponsable={getResponsable} 
+                deleteResponsable={deleteResponsable} 
+                buttonForm={buttonForm} 
+                onSubmit={handleFormSubmit} // Add this prop to handle form submission
+            />
         </>
     );
 };

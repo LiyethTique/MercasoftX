@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useState, useEffect, useCallback } from 'react';
 import FormCarrito from './formCarrito';
 import FormQueryCarrito from './formQueryCarrito';
-import NavPri from '../NavPri/NavPri'
+import Sidebar from '../Sidebar/Sidebar'
 
 import Swal from 'sweetalert2';
 
@@ -87,7 +87,7 @@ const CrudCarrito = () => {
 
     return (
         <>
-        <NavPri />
+        <Sidebar />
             <table className="table table-striped">
                 <thead>
                     <tr>

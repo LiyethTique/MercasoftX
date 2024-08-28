@@ -2,6 +2,7 @@ import axios from 'axios'
 import { useState, useEffect } from 'react'
 import FormPedido from './formPedido'
 import FormQueryPedido from './formQueryPedido'
+import Sidebar from '../Sidebar/Sidebar'
 
 import Swal from 'sweetalert2'
 
@@ -78,6 +79,7 @@ const crudPedido = () => {
 
     return (
         <>
+        <Sidebar />
             <table>
                 <thead>
                     <tr>

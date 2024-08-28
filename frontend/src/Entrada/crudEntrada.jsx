@@ -2,7 +2,7 @@ import axios from 'axios'
 import { useState, useEffect } from 'react'
 import FormEntrada from './formEntrada'
 import FormQueryEntrada from './formQueryEntrada'
-import NavPri from '../NavPri/NavPri'
+import Sidebar from '../Sidebar/Sidebar'
 
 import Swal from 'sweetalert2'
 
@@ -81,7 +81,7 @@ const CrudEntrada = () => {
 
     return (
         <>
-        <NavPri />
+        <Sidebar />
             <table>
                 <thead>
                     <tr>

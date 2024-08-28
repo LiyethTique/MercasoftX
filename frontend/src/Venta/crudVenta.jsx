@@ -2,7 +2,8 @@ import axios from 'axios'
 import { useState, useEffect } from 'react'
 import FormVenta from './formVenta'
 import FormQueryVenta from './formQueryVenta'
-import NavPri from '../NavPri/NavPri'
+import Sidebar from '../Sidebar/Sidebar'
+
 
 import Swal from 'sweetalert2'
 
@@ -75,7 +76,8 @@ const CrudVenta = () => {
     }
     return (
         <>
-        <NavPri />
+        <Sidebar/>
+        
             <table className="table table-striped">
                 <thead>
                     <tr>

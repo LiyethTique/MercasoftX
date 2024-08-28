@@ -2,7 +2,7 @@ import axios from 'axios'
 import { useState, useEffect } from 'react'
 import FormCliente from './formCliente'
 import FormQueryCliente from './formQueryCliente'
-import NavPri from '../NavPri/NavPri'
+import Sidebar from '../Sidebar/Sidebar'
 
 import Swal from 'sweetalert2'
 
@@ -61,7 +61,7 @@ const CrudCliente = () => {
 
     return (
         <>
-            <NavPri />
+            <Sidebar />
             <table className="table table-striped">
                 <thead>
                     <tr>

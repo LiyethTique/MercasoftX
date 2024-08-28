@@ -8,10 +8,7 @@ const FormQueryVenta = ({ URI, getVenta, deleteVenta, buttonForm}) => {
      const sendFormQuery = async (Id_Venta) => {
         if (Id_Venta) {
             const respuesta = await axios.get(URI + 'consulta/' + Id_Venta)
-
-            setVentaQuery(
-                respuesta.data
-            ) 
+            setVentaQuery(respuesta.data) 
             }else {
                 setVentaQuery([])
         } 

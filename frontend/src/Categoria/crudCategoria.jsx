@@ -77,7 +77,7 @@ const CrudCategoria = () => {
                             {/* Aquí colocas los demás datos */}
                             <td>
                                 <button className="btn btn-warning" onClick={() => getEntity(entity.Id_Entity)}>Editar</button>
-                                <button className="btn btn-warning" onClick={() => deleteEntity(entity.Id_Entity)}>Borrar</button>
+                                <button className="btn btn-danger" onClick={() => deleteEntity(entity.Id_Entity)}>Borrar</button>
                             </td>
                         </tr>
                     ))}

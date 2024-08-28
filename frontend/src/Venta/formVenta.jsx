@@ -1,6 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect} from "react";
 
 const FormVenta = ({ buttonForm, venta, URI, updateTextButton }) => {
     const [Fec_Venta, setFecha] = useState('')
@@ -24,6 +23,7 @@ const FormVenta = ({ buttonForm, venta, URI, updateTextButton }) => {
 
         } else if (buttonForm == 'Enviar') {
             console.log('guardando ando...')
+
             axios.post(URI, {
                 Fec_Venta: Fec_Venta,
                 Val_Venta: Val_Venta,
@@ -46,7 +46,6 @@ const FormVenta = ({ buttonForm, venta, URI, updateTextButton }) => {
 
     useEffect(() => {
         setData()
-
     }, [venta])
 
     return (

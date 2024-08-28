@@ -49,9 +49,17 @@ export const createEntrada = async (req, res, next) => {
 
     try {
         const nuevaEntrada = await EntradaModel.create(req.body);
-        logger.info(`Entrada creada: ${nuevaEntrada.Id_Entrada}`);
-        res.status(201).json({ message: '¡Entrada creada exitosamente!', entrada: nuevaEntrada });
+        if(nuevaEntrada){
+            logger.info(`Entrada creada: ${nuevaEntrada.Id_Entrada}`);
+            res.status(201).json({ message: '¡Entrada creada exitosamente!', entrada: nuevaEntrada });
+            next();
+        }else{
+            logger.error('Error al crear la entrada');
+            res.status(500).json({ message: 'Error al crear la entrada' });
+            next();
+        }
     } catch (error) {
+        res.status(500).json({ message: 'Verifique si la UNIDAD, el PRODUCTO o  el RESPONSABLE hallan sido creados, de lo ciontrario es un error interno del servidor' });
         logger.error(`Error al crear la entrada: ${error.message}`);
         next(error);
     }

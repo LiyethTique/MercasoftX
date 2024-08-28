@@ -1,55 +1,55 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
 
-const FormQueryUnidad = ({ URI, getEntity, deleteEntity, buttonForm }) => {
-    const [entityQuery, setEntityQuery] = useState([])
-    const [id, setId] = useState('')
+const FormQueryUnidad = ({ URI, getUnidad, deleteUnidad, buttonForm }) => {
+    const [unidadQuery, setUnidadQuery] = useState([])
+    const [Id_Unidad, setId_Unidad] = useState('')
 
-    const sendFormQuery = async (id) => {
-        if (id) {
-            const respuesta = await axios.get(URI + 'consulta/' + id)
-            setEntityQuery(respuesta.data)
+    const sendFormQuery = async (Id_Unidad) => {
+        if (Id_Unidad) {
+            const respuesta = await axios.get(URI + 'consulta/' + Id_Unidad)
+            setUnidadQuery(respuesta.data)
         } else {
-            setEntityQuery([])
+            setUnidadQuery([])
         }
     }
 
     useEffect(() => {
-        setEntityQuery([])
-        setId('')
+        setUnidadQuery([])
+        setId_Unidad('')
     }, [buttonForm])
 
     return (
         <>
-            <form id="queryForm">
-                <label htmlFor="idQuery">Código</label>
-                <input type="number" id="idQuery" value={id} onChange={(e) => { sendFormQuery(e.target.value); setId(e.target.value) }} />
+            <form action="" id="queryForm">
+                <label htmlFor="idQuery">Nombre de la unidad</label>
+                <br />
+                <input type="text" id="idQuery" value={Id_Unidad} onChange={(e) => { sendFormQuery(e.target.value); setId_Unidad(e.target.value) }} />
             </form>
             {
-                entityQuery.length > 0 &&
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Código</th>
-                            {/* Aquí colocas los demás encabezados */}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {entityQuery.map((entity) => (
-                            <tr key={entity.Id_Entity}>
-                                <td>{entity.Id_Entity}</td>
-                                {/* Aquí colocas los demás datos */}
-                                <td>
-                                    <button onClick={() => getEntity(entity.Id_Entity)}>Editar</button>
-                                    <button onClick={() => deleteEntity(entity.Id_Entity)}>Borrar</button>
-                                </td>
+                unidadQuery.length > 0 ? <table>
+                        <thead>
+                            <tr>
+                                <th>Codigo de la unidad</th>
+                                <th>Nombre de la unidad</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {unidadQuery.map((unidad) => (
+                                <tr key={unidad.Id_Unidad}>
+                                    <td>{unidad.Id_Unidad}</td>
+                                    <td>{unidad.Nom_Unidad}</td>
+                                    <td>
+                                        <button onClick={() => getUnidad(unidad.Id_Unidad)}>Editar</button>
+                                        <button onClick={() => deleteUnidad(unidad.Id_Unidad)}>Borrar</button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table> : ''
             }
         </>
     )
 }
 
-export default FormQueryUnidad
+            export default FormQueryUnidad

@@ -124,7 +124,7 @@ const CrudTraslado = () => {
                                 <td>{traslado.Id_Responsable}</td>
                                 <td>
                                     <button className="btn btn-warning" onClick={() => getTraslado(traslado.Id_Traslado)}>Editar</button>
-                                    <button className="btn btn-warning" onClick={() => deleteTraslado(traslado.Id_Traslado)}>Borrar</button>
+                                    <button className="btn btn-danger" onClick={() => deleteTraslado(traslado.Id_Traslado)}>Borrar</button>
                                 </td>
                             </tr>
                         ))}

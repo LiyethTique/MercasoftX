@@ -2,7 +2,7 @@ import axios from 'axios'
 import { useState, useEffect } from 'react'
 import FormEntrada from './formEntrada'
 import FormQueryEntrada from './formQueryEntrada'
-import Sidebar from '../Sidebar/Sidebar'
+// import Sidebar from '../Sidebar/Sidebar'
 
 import Swal from 'sweetalert2'
 
@@ -28,31 +28,28 @@ const CrudEntrada = () => {
 
     useEffect(() => {
         getAllEntradas()
-    }, [entradaList]);
+    }, []);
 
     const getAllEntradas = async () => {
         try {
             const respuesta = await axios.get(URI)
-            if (respuesta.status == 200) {
-                setEntradaList(respuesta.data)
-            }
+            setEntradaList(Array.isArray(respuesta.data) ? respuesta.data : [])
             console.log(respuesta)
         } catch (error) {
-            alert(error.response.data.message)
+            alert(error.response?.data?.message || "Error al obtener las Entradas")
         }
     }
 
     const getEntrada = async (Id_Entrada) => {
-        setButtonForm('Enviar')
+        setButtonForm('Actualizar')
+        console.log('Id_Entrada' + Id_Entrada)
         const respuesta = await axios.get(URI + Id_Entrada)
         console.log(respuesta)
-        if (respuesta.status == 201) {
-            setButtonForm('Actualizar')
-            setEntrada({
-                ...respuesta.data
-            })
-        }
+        setEntrada({
+            ...respuesta.data
+        })
     }
+
 
     const updateTextButton = (texto) => {
         setButtonForm(texto)
@@ -67,22 +64,23 @@ const CrudEntrada = () => {
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
             confirmButtonText: "Si, borrar!"
-          }).then(async(result) => {
+        }).then(async (result) => {
             if (result.isConfirmed) {
                 await axios.delete(URI + Id_Entrada)
-              Swal.fire({
-                title: "Borrado!",
-                text: "El registro ha sido borrado.",
-                icon: "success"
-              });
+                Swal.fire({
+                    title: "Borrado!",
+                    text: "El registro ha sido borrado.",
+                    icon: "success"
+                });
+                getAllEntrada();
             }
-          });
+        });
     }
 
     return (
         <>
-        <Sidebar />
-            <table>
+            {/* <Sidebar /> */}
+            <table className="table table-striped">
                 <thead>
                     <tr>
                         <th>Fecha de la entrada</th>
@@ -95,8 +93,9 @@ const CrudEntrada = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {entradaList.map((entrada) => {
-                        <tr key={entrada.Id_Emtrada}>
+                    {Array.isArray(entradaList) && entradaList.map((entrada) => {
+                        <tr key={entrada.Id_Entrada}>
+                            <td>{entrada.Id_Entrada}</td>
                             <td>{entrada.Fec_Entrada}</td>
                             <td>{entrada.Hor_Entrada}</td>
                             <td>{entrada.Id_Unidad}</td>
@@ -105,8 +104,8 @@ const CrudEntrada = () => {
                             <td>{entrada.Can_Entrada}</td>
                             <td>{entrada.Fec_Vencimiento}</td>
                             <td>
-                                <button onClick={() => getEntrada(entrada.Id_Entrada)}>Editar</button>
-                                <button onClick={() => deleteEntrada(entrada.Id_Entrada)}>Borrar</button>
+                                <button className="btn btn-warning" onClick={() => getEntrada(entrada.Id_Entrada)}>Editar</button>
+                                <button className="btn btn-danger" onClick={() => deleteEntrada(entrada.Id_Entrada)}>Borrar</button>
                             </td>
                         </tr>
                     })}
@@ -118,6 +117,7 @@ const CrudEntrada = () => {
             <FormQueryEntrada URI={URI} getEntrada={getEntrada} deleteEntrada={deleteEntrada} buttonForm={buttonForm} />
         </>
     )
+
 }
 
 export default CrudEntrada

@@ -6,34 +6,38 @@ import Sidebar from '../Sidebar/Sidebar'
 
 import Swal from 'sweetalert2'
 
-const URI = process.env.SERVER_BACK + '/Unidad/' // Ajusta la URI
+const URI = process.env.SERVER_BACK + '/unidad/' // Ajusta la URI
 
 const CrudUndiad = () => {
 
-    const [entityList, setEntityList] = useState([])
+    const [unidadList, setUnidadList] = useState([])
+
     const [buttonForm, setButtonForm] = useState('Enviar')
-    const [entity, setEntity] = useState({
-        Id_Entity: '',
-        // Aquí colocas los demás campos de la entidad
+
+    const [unidad, setUnidad] = useState({
+        Id_Unidad:'',
+        Nom_Unidad: ''
     })
 
     useEffect(() => {
-        getAllEntity()
+        getAllUnidad()
     }, [])
 
-    const getAllEntity = async () => {
+    const getAllUnidad = async () => {
         try {
             const respuesta = await axios.get(URI)
-            setEntityList(respuesta.data)
+            setUnidadList(Array.isArray(respuesta.data) ? respuesta.data : [])
         } catch (error) {
-            alert(error.response.data.message)
+            alert(error.response?.data?.message || "Error al obtener las unidades")
         }
     }
 
-    const getEntity = async (idEntity) => {
+    const getUnidad = async (Id_Unidad) => {
         setButtonForm('Actualizar')
-        const respuesta = await axios.get(URI + idEntity)
-        setEntity({
+        console.log('Id_Unidad' + Id_Unidad)
+        const respuesta = await axios.get(URI + Id_Unidad)
+        console.log(respuesta.data)
+        setUnidad({
             ...respuesta.data
         })
     }
@@ -42,7 +46,7 @@ const CrudUndiad = () => {
         setButtonForm(texto)
     }
 
-    const deleteEntity = (idEntity) => {
+    const deleteUnidad = (Id_Unidad) => {
         Swal.fire({
             title: "¿Estás seguro?",
             text: "¡No podrás revertir esto!",
@@ -53,7 +57,7 @@ const CrudUndiad = () => {
             confirmButtonText: "¡Sí, borrar!"
         }).then(async (result) => {
             if (result.isConfirmed) {
-                await axios.delete(URI + idEntity)
+                await axios.delete(URI + Id_Unidad)
                 Swal.fire("¡Borrado!", "El registro ha sido borrado.", "success");
             }
         });
@@ -65,27 +69,27 @@ const CrudUndiad = () => {
             <table className="table table-striped">
                 <thead>
                     <tr>
-                        <th>Código</th>
-                        {/* Aquí colocas los demás encabezados */}
+                        <th>Codigo de la unidad</th>
+                        <th>Nombre de la unidad</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {entityList.map((entity) => (
-                        <tr key={entity.Id_Entity}>
-                            <td>{entity.Id_Entity}</td>
-                            {/* Aquí colocas los demás datos */}
+                    {Array.isArray(unidadList) && unidadList.map((unidad) => (
+                        <tr key={unidad.Id_Unidad}>
+                            <td>{unidad.Id_Unidad}</td>
+                            <td>{unidad.Nom_Unidad}</td>
                             <td>
-                                <button className="btn btn-warning" onClick={() => getEntity(entity.Id_Entity)}>Editar</button>
-                                <button className="btn btn-warning" onClick={() => deleteEntity(entity.Id_Entity)}>Borrar</button>
+                                <button className="btn btn-warning" onClick={() => getUnidad(unidad.Id_Unidad)}>Editar</button>
+                                <button className="btn btn-danger" onClick={() => deleteUnidad(unidad.Id_Unidad)}>Borrar</button>
                             </td>   
                         </tr>
                     ))}
                 </tbody>
             </table>
             <hr />
-            <FormUnidad buttonForm={buttonForm} entity={entity} URI={URI} updateTextButton={updateTextButton} />
+            <FormUnidad buttonForm={buttonForm} unidad={unidad} URI={URI} updateTextButton={updateTextButton} />
             <hr />
-            <FormQueryUnidad URI={URI} getEntity={getEntity} deleteEntity={deleteEntity} buttonForm={buttonForm} />
+            <FormQueryUnidad URI={URI} getUnidad={getUnidad} deleteUnidad={deleteUnidad} buttonForm={buttonForm} />
         </>
     )
 }

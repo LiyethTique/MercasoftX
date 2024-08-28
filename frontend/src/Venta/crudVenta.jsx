@@ -9,10 +9,11 @@ import Swal from 'sweetalert2'
 const URI = process.env.SERVER_BACK + '/venta/'
 
 const CrudVenta = () => {
+
     const [ventaList, setVentaList] = useState([])
 
     const [buttonForm, setButtonForm] = useState('Enviar')
-
+    
     const [venta, setVenta] = useState({
         Id_Venta: '',
         Fec_Venta: '',
@@ -27,10 +28,9 @@ const CrudVenta = () => {
     const getAllVenta = async () => {
         try {
             const respuesta = await axios.get(URI)
-             // Verificar la estructura de la respuesta
             setVentaList(Array.isArray(respuesta.data) ? respuesta.data : [])
         } catch (error) {
-            alert(error.response?.data?.message || "Error al obtener las ventas")
+            alert(error.response?.data?.message || "Error al obtener las Ventas")
         }
     }
 
@@ -38,7 +38,7 @@ const CrudVenta = () => {
         setButtonForm('Actualizar')
         console.log('Id_Venta' + Id_Venta)
         const respuesta = await axios.get(URI + Id_Venta)
-        console.log(respuesta.data)
+        console.log(respuesta)
         setVenta({
             ...respuesta.data
         })
@@ -92,7 +92,7 @@ const CrudVenta = () => {
 
                             <td>
                                 <button className="btn btn-warning" onClick={() => getVenta(venta.Id_Venta)}>Editar</button>
-                                <button className="btn btn-warning" onClick={() => deleteVenta(venta.Id_Venta)}>Borrar</button>
+                                <button className="btn btn-danger" onClick={() => deleteVenta(venta.Id_Venta)}>Borrar</button>
                             </td>
                         </tr>
                     ))}

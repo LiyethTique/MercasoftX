@@ -1,6 +1,5 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import "../css/estilos.css"
 
 const FormVenta = ({ buttonForm, venta, URI, updateTextButton }) => {
     const [Fec_Venta, setFechaVenta] = useState('');

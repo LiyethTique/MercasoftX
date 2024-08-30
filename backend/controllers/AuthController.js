@@ -1,109 +1,120 @@
-import bcrypt from 'bcrypt'
-import UserModel from '../models/AuthModel.js'
+import bcryptjs from 'bcryptjs';
+import UserModel from '../models/AuthModel.js';
+import jwt from 'jsonwebtoken';
+import { sendPasswordResetEmail } from '../servicios/emailServices.js';
 
-
-import jwt from 'jsonwebtoken'
-import { sendPasswordResetEmail } from '../servicios/emailServices.js'
+// Obtener la clave secreta de JWT del entorno
+const JTW_LLAVE = process.env.JWT_LLAVE;
 
 export const createUser = async (req, res) => {
-    
-    const { Nom_Usuario, Cor_Usuario} = req.body;
+    const { Cor_Usuario, Password_Usuario } = req.body;
 
-    if (!Nom_Usuario || !Cor_Usuario) {
-        logger.warn('Todos los campos son obligatorios');
+    if (!Cor_Usuario || !Password_Usuario) {
         return res.status(400).json({ message: 'Todos los campos son obligatorios' });
     }
 
     try {
-        const { name, email, password} = req.body
-        console.log(password)
+        const user = await UserModel.findOne({ where: { Cor_Usuario } });
 
-        let userOk = await UserModel.findOne({ where: {email: email}})
+        if (user) {
+            return res.status(400).json({ message: "El Usuario ya existe" });
+        }
 
-        if (user){
-            res.json({"message": "El Usuario ya existe"})
-        } else {
-
-        let passHash = await bcrypt.hash(password, 8)
+        const passHash = await bcryptjs.hash(Password_Usuario, 8);
 
         await UserModel.create({
-            "name": name,
-            "email": email,
-            "password": passHash
-        })
-        const tokenUser =jwt.sign({user: {email:userOk.email}}, process.env.JWT_LLAVE, { expiresIn: '4h'})
+            Cor_Usuario,
+            Password_Usuario: passHash
+        });
 
-        console.log("TOKEN:" + tokenUser)
-        res.json({tokenUser})
+        const tokenUser = jwt.sign({ user: { email: Cor_Usuario } }, JTW_LLAVE, { expiresIn: '4h' });
 
-        res.json({"message": "usuario creado de manera exitosa."})
-    }
+        res.json({ tokenUser, message: "Usuario creado de manera exitosa." });
 
     } catch (error) {
-        res.json({"message": error})
+        res.status(500).json({ message: error.message });
     }
 }
 
 export const verifyToken = (req, res) => {
-     
-    const token = req.header('Authorization').replace('Bearer', '')
+    const token = req.header('Authorization')?.replace('Bearer ', '');
     if (!token) {
-        res.status(401).json({ message: 'Acceso denegado'})
+        return res.status(401).json({ message: 'Acceso denegado' });
     }
-}
-
-export const loginUser = async (req, res) => {
-    const { email, password } = req.body
 
     try {
-        const userOk = await UserModel.findOne({ where: {email: email}})
-        if(!userOk || !bcrypt.compareSync(password)) {
-            res.status(401).json({ message: 'Usuario o clave invalidos'})
-        }else {
-            const tokenUser = jwt.sign({user: {email: userOk.email}}, process.env.JWT_LLAVE, {expiresIn: '4h'})
-            res.json({tokenUser})
-        } 
-    }catch (error) {
-        res.status(500).json({ message: error.message })
+        const verified = jwt.verify(token, JTW_LLAVE);
+        req.user = verified.user;
+        return res.status(200).json({ message: 'Token verificado' });
+    } catch (error) {
+        return res.status(401).json({ message: 'Token no válido' });
     }
+};
 
-   
+export const loginUser = async (req, res) => {
+    const { email, password } = req.body;
+
+    try {
+        if (!email || !password) {
+            return res.status(400).json({ message: 'Email y contraseña son requeridos' });
+        }
+
+        const user = await UserModel.findOne({ where: { Cor_Usuario: email } });
+
+        if (!user || !bcryptjs.compareSync(password, user.Password_Usuario)) {
+            return res.status(401).json({ message: 'Usuario o clave inválidos' });
+        }
+
+        const tokenUser = jwt.sign({ user: { email: user.Cor_Usuario } }, process.env.JWT_LLAVE, { expiresIn: '4h' });
+
+        res.json({ tokenUser });
+
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
 }
 
-export const getResetPassword = async(req, res) => {
-    const {email} = req.body
+export const getResetPassword = async (req, res) => {
+    const { email } = req.body;
 
-    const user = UserModel.findOne({where:{email: email}})
+    try {
+        const user = await UserModel.findOne({ where: { Cor_Usuario: email } });
 
-    if(!user) {
-        res.status(404).json({message: 'usuario no encotrado'})
-    } else {
-        const tokenForPassword = jwt.sign({ user: {id: user.id, name: user.name, email: user.email}}, process.env.JWT_LLAVE, {
-            expiresIn: '30m'})
+        if (!user) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
 
-            await sendPasswordResetEmail(email, tokenForPassword)
-            res.status(200).json({ message: 'El mensaje para restablecer contraseña fue enviado correctamente'})
+        const tokenForPassword = jwt.sign({ user: { id: user.Id_Usuario, email: user.Cor_Usuario } }, JTW_LLAVE, { expiresIn: '30m' });
+
+        await sendPasswordResetEmail(email, tokenForPassword);
+        res.status(200).json({ message: 'El mensaje para restablecer contraseña fue enviado correctamente' });
+
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
 }
 
 export const setNewPassword = async (req, res) => {
-    const {tokenForPassword, newPassword} = req.body
+    const { tokenForPassword, newPassword } = req.body;
 
     try {
-        const decodificado = jwt.verify(tokenForPassword, process.env.JWT_LLAVE)
-        const user = await UserModel.findByPk(decodificado.id)
+        const decoded = jwt.verify(tokenForPassword, JTW_LLAVE);
+        const user = await UserModel.findByPk(decoded.user.id);
 
         if (!user) {
-            res.status(404).json({message: 'Usuario no encontrado'})
-        } else{
-            let passHash = await bcrypt.hash(newPassword, 6)
-
-            await UserModel.update({
-                password: passHash
-            },{ where: {id: decodificado.user.id}})
-            res.status(200).json({message: 'Contraseña actualizada correctamente'})
+            return res.status(404).json({ message: 'Usuario no encontrado' });
         }
+
+        const passHash = await bcryptjs.hash(newPassword, 8);
+
+        await UserModel.update(
+            { Password_Usuario: passHash },
+            { where: { Id_Usuario: user.Id_Usuario } }
+        );
+
+        res.status(200).json({ message: 'Contraseña actualizada correctamente' });
+
     } catch (error) {
-        res.status(400).json({ message: 'Información inválida o el tiempo ha expirado'})
+        res.status(400).json({ message: 'Información inválida o el tiempo ha expirado' });
     }
 }

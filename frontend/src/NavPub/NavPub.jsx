@@ -1,22 +1,23 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
-const NavPublic = () => {
+const NavPub = () => {
     return (
         <React.Fragment>
-            <nav className="navbar navbar-expand-lg navbar-dark bg-black">
-                <div className="container">
-                    <a className="navbar-brand" href="/home">Home</a>
-                    <a className="navbar-brand" href="/contact">Contact</a>
+            <nav className="navbar navbar-expand-lg navbar-light w-100" style={{ backgroundColor: '#FFA500' }}>
+                <div className="container-fluid">
+                    <Link className="navbar-brand" to="/home" style={{ color: '#fff', fontWeight: 'bold' }}>Home</Link>
+                    <Link className="navbar-brand" to="/contacto" style={{ color: '#fff', fontWeight: 'bold' }}>Contacto</Link>
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                        <span className="navbar-toggler-icon"></span>
+                        <span className="navbar-toggler-icon" style={{ backgroundColor: '#fff' }}></span>
                     </button>
                     <div className="collapse navbar-collapse" id="navbarNav">
                         <ul className="navbar-nav ms-auto">
                             <li className="nav-item">
-                                <a className="nav-link text-white" href="/login">Login</a>
+                                <Link className="nav-link" to="/Login" style={{ color: '#fff', fontWeight: 'bold' }}>Iniciar Sesion</Link>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link text-white" href="/register">Register</a>
+                                <Link className="nav-link" to="/register" style={{ color: '#fff', fontWeight: 'bold' }}>Registrar</Link>
                             </li>
                         </ul>
                     </div>
@@ -26,4 +27,4 @@ const NavPublic = () => {
     );
 }
 
-export default NavPublic;
+export default NavPub;

@@ -8,7 +8,7 @@ export const getAllCarrito = async (req, res, next) => {
         logger.info('Todos los carritos recuperados');
         res.status(200).json(carritos);
     } catch (error) {
-        logger.error(`Error al recuperar todos los carritos: ${error.message}`);
+        logger.error(`Error al  recuperar todos los carritos: ${error.message}`);
         next(error);
     }
 };

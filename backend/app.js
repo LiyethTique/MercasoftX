@@ -37,6 +37,7 @@ app.use('/auth', authRoutes)
 app.use('/traslado', trasladoRoutes)
 app.use('/unidad', unidadRoutes)
 app.use('/venta', ventaRoutes)
+app.use('/auth', ventaRoutes)
 
 try {
   await db.authenticate()

@@ -1,78 +1,128 @@
-/* Estilos generales */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+/* Estilos generales para la página */
+body, html {
     margin: 0;
     padding: 0;
+    height: 100%;
+    width: 100%;
+}
+
+/* Estilo para la barra de navegación */
+.navbar {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    background-color: #333; /* Color de fondo de la barra de navegación */
+    color: white; /* Color del texto */
+    padding: 10px 20px; /* Espaciado dentro de la barra de navegación */
+}
+
+
+
+/* Estilo para el contenedor del formulario */
+.form-container {
+    max-width: 400px;
+    width: 100%;
+    padding: 20px;
+    background-color: thistle; /* Color de fondo azul claro */
+    border-radius: 12px; /* Bordes redondeados suaves */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+    margin: 0 auto; /* Centra el formulario en la página */
+}
+
+/* Estilo para el título dentro del formulario */
+.form-container h2 {
+    color: #333; /* Color del título, gris oscuro */
+    margin-bottom: 20px; /* Espacio debajo del título */
+}
+
+/* Estilo para las etiquetas del formulario */
+.form-container .form-label {
+    color: #555; /* Color del texto de las etiquetas, gris más claro */
+    font-weight: bold; /* Negrita para las etiquetas */
+    margin: 10px 0 5px; /* Espaciado alrededor de las etiquetas */
+}
+
+/* Estilo para los campos del formulario */
+.form-container .form-control {
+    border: 1px solid #ddd; /* Borde suave alrededor de los campos */
+    border-radius: 6px; /* Bordes redondeados en los campos */
+    padding: 10px; /* Espacio interno en los campos */
+    margin-bottom: 15px; /* Espacio entre los campos */
+    font-size: 16px; /* Tamaño del texto en los campos */
+}
+
+/* Estilo para el botón de envío */
+.form-container .btn {
+    background-color: #FFA500; /* Color del botón, naranja */
+    color: white; /* Color del texto del botón */
+    border: none; /* Sin borde para un aspecto limpio */
+    border-radius: 10px; /* Bordes redondeados en el botón */
+    padding: 12px 20px; /* Espacio interno en el botón: más alto y más ancho */
+    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+    font-size: 16px; /* Tamaño del texto en el botón */
+    width: 100%; /* Ancho completo del contenedor */
+    max-width: 300px; /* Limita el ancho máximo del botón */
+    display: block; /* Hace que el botón sea un bloque para centrarlo */
+    margin: 0 auto; /* Centra el botón en el contenedor */
+    text-align: center; /* Centra el texto dentro del botón */
+}
+
+/* Estilo para el botón de envío al pasar el ratón */
+.form-container .btn:hover {
+    background-color: #e59400; /* Color del botón al pasar el ratón, naranja más oscuro */
+}
+
+/* Estilo específico para el contenedor de inicio de sesión */
+.login-container {
+    margin-top: 70px; /* Ajusta este valor según la altura de tu barra de navegación */
+    padding: 20px;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: thistle; /* Color de fondo igual al del formulario */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil igual al del formulario */
+    border-radius: 12px; /* Bordes redondeados suaves igual al del formulario */
+    text-align: center; /* Centra el texto */
+}
+
+/* Estilo específico para el formulario de inicio de sesión */
+.login-form {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh; /* Asegura que cubra toda la altura de la pantalla */
+    flex-direction: column;
 }
 
-/* Contenedor del formulario */
-form {
-    text-align: left;
-    background-color: #fff;
-    padding: 10px; /* Mayor espacio lateral */
-    border-radius: 10px; /* Bordes ligeramente más redondeados */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra más profunda */
-    width: 100%;
-    max-width: 300px; /* Asegura que no sea demasiado ancho en pantallas grandes */
-    box-sizing: border-box;
+.login-form label {
+    margin: 10px 0 5px; /* Espaciado alrededor de las etiquetas */
+    font-weight: bold; /* Negrita para las etiquetas */
 }
 
-/* Estilos de los labels */
-form label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 8px;
-    color: #333;
-    font-size: 15px; /* Tamaño de fuente consistente */
+.login-form input {
+    padding: 10px; /* Espacio interno en los campos */
+    margin-bottom: 15px; /* Espacio entre los campos */
+    border: 1px solid #ddd; /* Borde suave alrededor de los campos */
+    border-radius: 6px; /* Bordes redondeados en los campos */
+    font-size: 16px; /* Tamaño del texto en los campos */
 }
 
-/* Estilos de los inputs */
-form input[type="text"],
-form input[type="number"],
-form input[type="date"],
-form input[type="submit"] {
-    width: 100%;
-    padding: 12px; /* Aumenta el padding para inputs más cómodos */
-    margin-bottom: 13px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-    font-size: 14px; /* Asegura consistencia en el tamaño de fuente */
+/* Estilo para el botón de inicio de sesión */
+.login-button {
+    padding: 12px 20px; /* Espacio interno en el botón: más alto y más ancho */
+    background-color: #FFA500; /* Color del botón, naranja */
+    color: white; /* Color del texto del botón */
+    border: none; /* Sin borde para un aspecto limpio */
+    border-radius: 10px; /* Bordes redondeados en el botón */
+    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+    font-size: 16px; /* Tamaño del texto en el botón */
+    width: 100%; /* Ancho completo del contenedor */
+    max-width: 300px; /* Limita el ancho máximo del botón */
+    display: block; /* Hace que el botón sea un bloque para centrarlo */
+    margin: 0 auto; /* Centra el botón en el contenedor */
+    text-align: center; /* Centra el texto dentro del botón */
 }
 
-/* Estilos del botón de envío */
-form input[type="submit"] {
-    background-color: #28a745;
-    color: white;
-    cursor: pointer;
-    border: none;
-    font-weight: bold;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-form input[type="submit"]:hover {
-    background-color: #218838;
-    transform: scale(1.02); /* Pequeño zoom al pasar el cursor */
-}
-
-form input[type="submit"]:active {
-    background-color: #1e7e34;
-    transform: scale(0.98); /* Reduce ligeramente al hacer clic */
-}
-
-/* Mejoras visuales */
-form input:focus {
-    border-color: #80bdff;
-    outline: none;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-}
-
-/* Estilo adicional para mayor accesibilidad */
-form input[type="submit"]:focus {
-    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.5);
+/* Estilo para el botón de inicio de sesión al pasar el ratón */
+.login-button:hover {
+    background-color: #e59400; /* Color del botón al pasar el ratón, naranja más oscuro */
 }

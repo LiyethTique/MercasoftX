@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import '../css/estilos.css';
+import { Link } from 'react-router-dom';
+import '../css/iniciarSesion.css';
 import NavPub from '../NavPub/NavPub';
 
 const Login = ({ setAuthenticated }) => {
@@ -59,8 +60,12 @@ const Login = ({ setAuthenticated }) => {
       <NavPub/>  {/* Barra de navegación en la parte superior */}
       
       <div className="login-container">
-        <h2>Iniciar Sesión</h2>
+       
         <form className="login-form" onSubmit={handleLogin}>
+          <center>
+        <h2>Iniciar Sesión</h2>
+        <img rel="icon" type="image/svg+xml" src="/Logo-Icono.svg" width="100px" alt="Logo" />
+        </center>
           <label htmlFor="email">Correo Electrónico</label>
           <input
             type="email"
@@ -83,6 +88,9 @@ const Login = ({ setAuthenticated }) => {
 
           <button type="submit" className="login-button">Iniciar Sesión</button>
         </form>
+        <p className="register-prompt">
+          ¿No tienes una cuenta? <Link to="/register">Regístrate aquí</Link>
+        </p>
       </div>
     </>
   );

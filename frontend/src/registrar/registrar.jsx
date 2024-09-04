@@ -1,92 +1,112 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import '../css/estilos.css'; // Asegúrate de que el archivo CSS esté correctamente vinculado
+import '../css/registrar.css';
+
+
 import NavPub from '../NavPub/NavPub';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
-// Asegúrate de que SERVER_BACK esté correctamente configurado en el archivo .env
-const URI = process.env.SERVER_BACK + '/usuario/';
+const Register = ({ setRegistered }) => {
+  const [formData, setFormData] = useState({ Cor_Usuario: '', Password_Usuario: '' });
+  const [showPassword, setShowPassword] = useState(false);
 
-const FormUsuario = () => {
-  const [usuario, setUsuario] = useState({
-    Con_Usuario: '',
-    Password_Usuario: '',
-  });
-
-  const handleChange = (e) => {
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setUsuario({
-      ...usuario,
+    setFormData({
+      ...formData,
       [name]: value,
     });
   };
 
-  const handleSubmit = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
-    
-    // Validación básica
-    if (!usuario.Con_Usuario || !usuario.Password_Usuario) {
-      Swal.fire('Error', 'Todos los campos son obligatorios', 'error');
+    const { Cor_Usuario, Password_Usuario } = formData;
+
+    if (!Cor_Usuario || !Password_Usuario) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Todos los campos son obligatorios',
+      });
       return;
     }
 
     try {
-      // Enviar los datos al servidor
-      const response = await axios.post(URI, usuario);
-      Swal.fire('Éxito', 'Usuario registrado correctamente', 'success');
-      // Reiniciar formulario
-      setUsuario({
-        Con_Usuario: '',
-        Password_Usuario: '',
-      });
+      const response = await axios.post((process.env.REACT_APP_SERVER_BACK || 'http://localhost:3002') + '/auth/register', { Cor_Usuario, Password_Usuario });
+
+      if (response.data.success) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Registro exitoso',
+        });
+        setRegistered(true);
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: response.data.message || 'No se pudo registrar el usuario',
+        });
+      }
     } catch (error) {
-      Swal.fire('Error', 'Hubo un problema al registrar el usuario', 'error');
+      console.error(error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error de servidor',
+        text: error.response?.data?.message || 'Error al intentar conectarse con el servidor',
+      });
     }
   };
 
   return (
     <>
-      <NavPub />
-      <br />
-      <br />
-      <div className="form-wrapper">
-        <div className="form-container">
-          <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <center>
-                <h2>Registrarse</h2>
-              </center>
-              <label htmlFor="Con_Usuario" className="form-label">Correo Electrónico:</label>
-              <input
-                type="text"
-                className="form-control"
-                id="Con_Usuario"
-                name="Con_Usuario"
-                value={usuario.Con_Usuario}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="Password_Usuario" className="form-label">Contraseña:</label>
-              <input
-                type="password"
-                className="form-control"
-                id="Password_Usuario"
-                name="Password_Usuario"
-                value={usuario.Password_Usuario}
-                onChange={handleChange}
-                required
-              />
-            </div>
+      <NavPub />  {/* Barra de navegación en la parte superior */}
+
+      <div className="register-container">
+        <form className="register-form" onSubmit={handleRegister}>
+          <div className="form-header">
             <center>
-              <button type="submit" className="btn">Registrar</button>
+              <h2>Registrar Usuario</h2>
+              <img rel="icon" type="image/svg+xml" src="/Logo-Icono.svg" width="150px" alt="Logo" />  
             </center>
-          </form>
-        </div>
+          
+          </div>
+          <label htmlFor="Cor_Usuario">Correo Electrónico</label>
+          <input
+            type="email"
+            id="Cor_Usuario"
+            name="Cor_Usuario"
+            value={formData.Cor_Usuario}
+            onChange={handleInputChange}
+            placeholder="Ingrese su correo"
+          />
+
+          <label htmlFor="Password_Usuario">Contraseña</label>
+          <div className="password-container">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              id="Password_Usuario"
+              name="Password_Usuario"
+              value={formData.Password_Usuario}
+              onChange={handleInputChange}
+              placeholder="Ingrese su contraseña"
+            />
+            <button
+              type="button"
+              className="password-toggle"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
+          </div>
+
+          <center>
+            <button type="submit" className="register-button">Registrar</button>
+          </center>
+        </form>
       </div>
     </>
   );
 };
 
-export default FormUsuario;
+export default Register;

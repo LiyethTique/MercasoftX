@@ -13,12 +13,13 @@ import pedidoRoutes from './routes/pedidoRouter.js'
 import pedidoProductoRoutes from './routes/pedidoProductoRoutes.js'
 import productoRoutes from './routes/productoRouter.js'
 import responsableRoutes from './routes/responsableRoutes.js'
-import authRoutes from './routes/AuthRoutes.js'
 import trasladoRoutes from './routes/trasladoRoutes.js'
 import unidadRoutes from './routes/unidadRoutes.js'
 import ventaRoutes from './routes/ventaRoutes.js'
 
-// Carga las variables de entorno antes de conectar a la base de datos
+
+
+// Carga las variables de entorno antes de conectar a la basse de datos
 dotenv.config({ path: './.env'})
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -33,11 +34,11 @@ app.use('/pedido', pedidoRoutes)
 app.use('/pedidoProducto', pedidoProductoRoutes)
 app.use('/producto', productoRoutes)
 app.use('/responsable', responsableRoutes)
-app.use('/auth', authRoutes)
 app.use('/traslado', trasladoRoutes)
 app.use('/unidad', unidadRoutes)
 app.use('/venta', ventaRoutes)
-app.use('/auth', ventaRoutes)
+
+
 
 try {
   await db.authenticate()

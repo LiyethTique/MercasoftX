@@ -1,52 +1,187 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 
-const FormCategoria = ({ buttonForm, entity, URI, updateTextButton }) => {
-    const [field1, setField1] = useState('')
-    // Aquí colocas los demás campos
+const categorias = {
+    PORCINOS: [
+        "Piensos y alimentos para cerdos",
+        "Suplementos nutricionales",
+        "Equipos de crianza",
+        "Productos de salud animal",
+        "Materiales de manejo y transporte"
+    ],
+    CAPRINOS: [
+        "Piensos y alimentos para cabras",
+        "Suplementos nutricionales",
+        "Equipos de ordeño",
+        "Productos de salud animal",
+        "Materiales de manejo y transporte"
+    ],
+    CUNICULTURA: [
+        "Piensos y alimentos para conejos",
+        "Suplementos nutricionales",
+        "Equipos de crianza",
+        "Productos de salud animal",
+        "Materiales de manejo y transporte"
+    ],
+    AVICULTURA: [
+        "Piensos y alimentos para aves",
+        "Suplementos nutricionales",
+        "Equipos de incubación",
+        "Productos de salud animal",
+        "Materiales de manejo y transporte"
+    ],
+    GANADERIA: [
+        "Piensos y alimentos para ganado",
+        "Suplementos nutricionales",
+        "Equipos de ordeño",
+        "Productos de salud animal",
+        "Materiales de manejo y transporte"
+    ],
+    OVINOS: [
+        "Piensos y alimentos para ovejas",
+        "Suplementos nutricionales",
+        "Equipos de manejo y esquila",
+        "Productos de salud animal",
+        "Materiales de manejo y transporte"
+    ],
+    PISCICULTURA: [
+        "Piensos y alimentos para peces",
+        "Suplementos nutricionales",
+        "Equipos de cultivo acuático",
+        "Productos de salud animal",
+        "Materiales de manejo y transporte"
+    ],
+    APICULTURA: [
+        "Piensos y alimentos para abejas",
+        "Suplementos nutricionales",
+        "Equipos de cosecha de miel",
+        "Productos de salud de las abejas",
+        "Materiales de manejo y transporte"
+    ],
+    PLANTA_CONCENTRADOS: [
+        "Concentrados de alimentos",
+        "Suplementos nutricionales",
+        "Equipos de procesamiento",
+        "Ingredientes para mezclas",
+        "Materiales de empaque"
+    ],
+    LABORATORIO_REPRODUCCION_BOVINA: [
+        "Equipos de inseminación artificial",
+        "Suplementos reproductivos",
+        "Productos de salud reproductiva",
+        "Equipos de diagnóstico",
+        "Materiales de laboratorio"
+    ]
+};
+    // ... tus categorías aquí
 
-    const sendForm = (e) => {
-        e.preventDefault()
 
-        if (buttonForm === 'Actualizar') {
-            axios.put(URI + entity.Id_Entity, {
-                field1: field1,
-                // Aquí colocas los demás campos
-            })
-            updateTextButton('Enviar')
-            clearForm()
+const FormCategoria = ({ buttonForm, categoria, URI, updateTextButton, onSuccess }) => {
+    const [categoriaPrincipal, setCategoriaPrincipal] = useState('');
+    const [subcategoria, setSubcategoria] = useState('');
 
-        } else if (buttonForm === 'Enviar') {
-            axios.post(URI, {
-                field1: field1,
-                // Aquí colocas los demás campos
-            })
-            clearForm()
+    const handleCategoriaChange = (e) => {
+        setCategoriaPrincipal(e.target.value);
+        setSubcategoria('');
+    };
+
+    const sendForm = async (e) => {
+        e.preventDefault();
+
+        try {
+            if (buttonForm === 'Actualizar') {
+                console.log('actualizando...');
+
+                await axios.put(URI + categoria.Id_Categoria, {
+                    Nom_Categoria: subcategoria
+                });
+
+                updateTextButton('Enviar');
+                onSuccess(); // Notifica el éxito a CrudCategoria
+                clearForm();
+
+            } else if (buttonForm === 'Enviar') {
+                console.log('guardando...');
+
+                await axios.post(URI, {
+                    Nom_Categoria: subcategoria
+                });
+
+                onSuccess(); // Notifica el éxito a CrudCategoria
+                clearForm();
+            }
+        } catch (error) {
+            alert('Error al guardar la categoría');
         }
-    }
+    };
 
     const clearForm = () => {
-        setField1('')
-        // Aquí reseteas los demás campos
-    }
+        setCategoriaPrincipal('');
+        setSubcategoria('');
+    };
 
     const setData = () => {
-        setField1(entity.field1)
-        // Aquí configuras los demás campos
-    }
+        if (categoria.Nom_Categoria) {
+            for (const [key, values] of Object.entries(categorias)) {
+                if (values.includes(categoria.Nom_Categoria)) {
+                    setCategoriaPrincipal(key);
+                    setSubcategoria(categoria.Nom_Categoria);
+                    break;
+                }
+            }
+        }
+    };
 
     useEffect(() => {
-        setData()
-    }, [entity])
+        setData();
+    }, [categoria]);
 
     return (
-        <form id="entityForm" onSubmit={sendForm} className="table table-striped">
-            <label htmlFor="field1">Campo 1</label>
-            <input type="text" id="field1" value={field1} onChange={(e) => setField1(e.target.value)} />
-            {/* Aquí colocas los demás campos */}
-            <input type="submit" value={buttonForm} className="btn btn-success" />
-        </form>
-    )
-}
+        <>
+            <form id="categoriaForm" action="" onSubmit={sendForm} className="table table-striped">
+                <label htmlFor="categoriaPrincipal">Categoría Principal</label>
+                <select
+                    id="categoriaPrincipal"
+                    value={categoriaPrincipal}
+                    required
+                    onChange={handleCategoriaChange}
+                >
+                    <option value="">Seleccionar...</option>
+                    {Object.keys(categorias).map((key) => (
+                        <option key={key} value={key}>
+                            {key}
+                        </option>
+                    ))}
+                </select>
+                <br />
 
-export default FormCategoria
+                <label htmlFor="subcategoria">Subcategoría</label>
+                <select
+                    id="subcategoria"
+                    value={subcategoria}
+                    required
+                    onChange={(e) => setSubcategoria(e.target.value)}
+                    disabled={!categoriaPrincipal}
+                >
+                    <option value="">Seleccionar...</option>
+                    {categoriaPrincipal &&
+                        categorias[categoriaPrincipal].map((item, index) => (
+                            <option key={index} value={item}>
+                                {item}
+                            </option>
+                        ))}
+                </select>
+                <br />
+
+                <input
+                    type="submit"
+                    id="boton"
+                    value={buttonForm}
+                    className="btn btn-success"
+                />
+            </form>
+        </>
+    );
+};
+
+export default FormCategoria;

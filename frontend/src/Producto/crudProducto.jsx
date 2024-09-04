@@ -1,48 +1,56 @@
-import axios from 'axios'
-import { useState, useEffect } from 'react'
-import FormProducto from './formProducto'
-import FormQueryProducto from './formQueryProducto'
-import Sidebar from '../Sidebar/Sidebar'
+// CrudProducto.jsx
+import axios from 'axios';
+import { useState, useEffect } from 'react';
+import FormProducto from './formProducto';
+import Sidebar from '../Sidebar/Sidebar';
+import Swal from 'sweetalert2';
+import WriteTable from '../Tabla/Data-Table.jsx';
 
-import Swal from 'sweetalert2'
+const URI = (process.env.SERVER_BACK || 'http://localhost:3002') + '/producto/';
 
-const URI = process.env.SERVER_BACK + '/producto/' // Ajusta la URI
-
-const CrudProucto = () => {
-
-    const [entityList, setEntityList] = useState([])
-    const [buttonForm, setButtonForm] = useState('Enviar')
-    const [entity, setEntity] = useState({
-        Id_Entity: '',
-        // Aquí colocas los demás campos de la entidad
-    })
+const CrudProducto = () => {
+    const [productoList, setProductoList] = useState([]);
+    const [buttonForm, setButtonForm] = useState('Enviar');
+    const [producto, setProducto] = useState({
+        Id_Producto: '',
+        Nom_Producto: '',
+        Car_Producto: '',
+        Pre_Promedio: '',
+        Exi_Producto: '',
+        Ima_Producto: '',
+        Fec_Vencimiento: '',
+        Id_Categoria: '',
+        Pre_Anterior: '',
+        Uni_DeMedida: '',
+        Pre_Producto: ''
+    });
 
     useEffect(() => {
-        getAllEntity()
-    }, [])
+        getAllProducto();
+    }, []);
 
-    const getAllEntity = async () => {
+    const getAllProducto = async () => {
         try {
-            const respuesta = await axios.get(URI)
-            setEntityList(respuesta.data)
+            const respuesta = await axios.get(URI);
+            setProductoList(Array.isArray(respuesta.data) ? respuesta.data : []);
         } catch (error) {
-            alert(error.response.data.message)
+            alert(error.response?.data?.message || "Error al obtener los Productos");
         }
-    }
+    };
 
-    const getEntity = async (idEntity) => {
-        setButtonForm('Actualizar')
-        const respuesta = await axios.get(URI + idEntity)
-        setEntity({
+    const getProducto = async (Id_Producto) => {
+        setButtonForm('Actualizar');
+        const respuesta = await axios.get(URI + Id_Producto);
+        setProducto({
             ...respuesta.data
-        })
-    }
+        });
+    };
 
     const updateTextButton = (texto) => {
-        setButtonForm(texto)
-    }
+        setButtonForm(texto);
+    };
 
-    const deleteEntity = (idEntity) => {
+    const deleteProducto = (Id_Producto) => {
         Swal.fire({
             title: "¿Estás seguro?",
             text: "¡No podrás revertir esto!",
@@ -50,44 +58,52 @@ const CrudProucto = () => {
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
-            confirmButtonText: "¡Sí, borrar!"
+            confirmButtonText: "Sí, borrar!"
         }).then(async (result) => {
             if (result.isConfirmed) {
-                await axios.delete(URI + idEntity)
-                Swal.fire("¡Borrado!", "El registro ha sido borrado.", "success");
+                await axios.delete(URI + Id_Producto);
+                Swal.fire({
+                    title: "¡Borrado!",
+                    text: "El registro ha sido borrado.",
+                    icon: "success"
+                });
+                getAllProducto(); // Refrescar la lista después de eliminar
             }
         });
-    }
+    };
+
+    const handleSuccess = () => {
+        getAllProducto(); // Actualizar la lista de productos
+    };
+
+    const titles = ['Código', 'Nombre Producto', 'Descripción', 'Precio Promedio', 'Existencia', 'Imagen', 'Fecha Vencimiento', 'Categoría', 'Precio Anterior', 'Unidad de Medida', 'Precio Producto', 'Acciones'];
+    const data = productoList.map(producto => [
+        producto.Id_Producto,
+        producto.Nom_Producto,
+        producto.Car_Producto,
+        producto.Pre_Promedio,
+        producto.Exi_Producto,
+        producto.Ima_Producto,
+        producto.Fec_Vencimiento,
+        producto.Id_Categoria,
+        producto.Pre_Anterior,
+        producto.Uni_DeMedida,
+        producto.Pre_Producto,
+        <div>
+            <button className="btn btn-warning" onClick={() => getProducto(producto.Id_Producto)}>Editar</button>
+            <button className="btn btn-danger" onClick={() => deleteProducto(producto.Id_Producto)}>Borrar</button>
+        </div>
+    ]);
 
     return (
         <>
+            <center><h1>Gestionar Productos</h1></center>
             <Sidebar />
-            <table className="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Código</th>
-                        {/* Aquí colocas los demás encabezados */}
-                    </tr>
-                </thead>
-                <tbody>
-                    {entityList.map((entity) => (
-                        <tr key={entity.Id_Entity}>
-                            <td>{entity.Id_Entity}</td>
-                            {/* Aquí colocas los demás datos */}
-                            <td>
-                                <button className="btn btn-warning" onClick={() => getEntity(entity.Id_Entity)}>Editar</button>
-                                <button className="btn btn-warning" onClick={() => deleteEntity(entity.Id_Entity)}>Borrar</button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            <WriteTable titles={titles} data={data} />
             <hr />
-            <FormProducto buttonForm={buttonForm} entity={entity} URI={URI} updateTextButton={updateTextButton} />
-            <hr />
-            <FormQueryProducto URI={URI} getEntity={getEntity} deleteEntity={deleteEntity} buttonForm={buttonForm} />
+            <FormProducto buttonForm={buttonForm} producto={producto} URI={URI} updateTextButton={updateTextButton} onSuccess={handleSuccess} />
         </>
-    )
-}
+    );
+};
 
-export default CrudProucto
+export default CrudProducto;

@@ -1,83 +1,113 @@
+import axios from "axios";
 import { useState, useEffect } from "react";
 
+const FormPedido = ({ buttonForm, pedido, URI, updateTextButton, onSuccess }) => {
+    const [fecPedido, setFecPedido] = useState('');
+    const [idCliente, setIdCliente] = useState('');
+    const [estPedido, setEstPedido] = useState('');
+    const [valPedido, setValPedido] = useState('');
 
-const FormPedido = ({ buttonForm, pedido, updateTextButton }) => {
-
-    const [Fec_Pedido, setFec_Pedido] = useState('')
-    const [Id_Cliente, setId_Cliente] = useState('')
-    const [Est_Pedido, setEst_Pedido] = useState('')
-    const [Val_Pedido, setVal_Pedido] = useState('')
-
-    const sendForm = (e) => {
-
+    const sendForm = async (e) => {
         e.preventDefault();
 
-        if (buttonForm == 'Actualizar') {
-            console.log('actualizando ando...')
+        try {
+            if (buttonForm === 'Actualizar') {
+                await axios.put(URI + pedido.Id_Pedido, {
+                    Fec_Pedido: fecPedido,
+                    Id_Cliente: idCliente,
+                    Est_Pedido: estPedido,
+                    Val_Pedido: valPedido
+                });
 
-            const respuesta = axios.put(URI + pedido.Id_Pedido, {
-                Fec_Pedido: Fec_Pedido,
-                Id_Cliente: Id_Cliente,
-                Est_Pedido: Est_Pedido,
-                Val_Pedido: Val_Pedido
-            })
-            if (respuesta.status == 201) {
-                updateTextButton('Enviar')
-                clearForm()
-            }
-        } else if (buttonForm == 'Enviar') {
-            console.log('guardando ando...')
+                updateTextButton('Enviar');
+                onSuccess(); // Notifica el éxito a CrudPedido
+                clearForm();
 
-            const respuesta = axios.post(URI, {
-                Fec_Pedido: Fec_Pedido,
-                Id_Cliente: Id_Cliente,
-                Est_Pedido: Est_Pedido,
-                Val_Pedido: Val_Pedido
-            })
-            if (respuesta.status == 201) {
-                clearForm()
+            } else if (buttonForm === 'Enviar') {
+                await axios.post(URI, {
+                    Fec_Pedido: fecPedido,
+                    Id_Cliente: idCliente,
+                    Est_Pedido: estPedido,
+                    Val_Pedido: valPedido
+                });
+
+                onSuccess(); // Notifica el éxito a CrudPedido
+                clearForm();
             }
+        } catch (error) {
+            alert('Error al guardar el pedido');
         }
-
-    }
-
-    const clearForm = () => {
-        setFec_Pedido('');
-        setId_Cliente('');
-        setEst_Pedido('');
-        setVal_Pedido('');
     };
 
-    const setData = () => {
-        setFec_Pedido(pedido.Fec_Pedido);
-        setId_Cliente(pedido.Id_Cliente);
-        setEst_Pedido(pedido.Est_Pedido);
-        setVal_Pedido(pedido.Val_Pedido);
+    const clearForm = () => {
+        setFecPedido('');
+        setIdCliente('');
+        setEstPedido('');
+        setValPedido('');
     };
 
     useEffect(() => {
-        setData()
-    }), [pedido]
+        if (pedido.Fec_Pedido) {
+            setFecPedido(pedido.Fec_Pedido);
+            setIdCliente(pedido.Id_Cliente);
+            setEstPedido(pedido.Est_Pedido);
+            setValPedido(pedido.Val_Pedido);
+        }
+    }, [pedido]);
 
     return (
         <>
-            <form id="pedidoForm" action="" onSubmit={sendForm}>
-                <label htmlFor="Fec_Pedido">Fecha del pedido</label>
-                <input type="text" id="Fec_Pedido" value={Fec_Pedido} onChange={(e) => setFec_Pedido(e.target.value)} />
+            <form id="pedidoForm" action="" onSubmit={sendForm} className="table table-striped">
+                <label htmlFor="fecPedido">Fecha Pedido</label>
+                <input
+                    type="date"
+                    id="fecPedido"
+                    value={fecPedido}
+                    required
+                    onChange={(e) => setFecPedido(e.target.value)}
+                />
                 <br />
-                <label htmlFor="Id_Cliente">Nombre del cliente</label>
-                <input type="text" id="Id_Cliente" value={Id_Cliente} onChange={(e) => setId_Cliente(e.target.value)} />
-                <br />
-                <label htmlFor="Est_Pedido">Nombre de la unidad</label>
-                <input type="text" id="Est_Pedido" value={Est_Pedido} onChange={(e) => setEst_Pedido(e.target.value)} />
-                <br />
-                <label htmlFor="Val_Pedido">Nombre del producto</label>
-                <input type="text" id="Val_Pedido" value={Val_Pedido} onChange={(e) => setVal_Pedido(e.target.value)} />
 
-                <input type="text" id="boton" value={buttonForm} className="btn btn-success" readOnly />
+                <label htmlFor="idCliente">ID Cliente</label>
+                <input
+                    type="number"
+                    id="idCliente"
+                    value={idCliente}
+                    required
+                    onChange={(e) => setIdCliente(e.target.value)}
+                />
+                <br />
+
+                <label htmlFor="estPedido">Estado Pedido</label>
+                <input
+                    type="text"
+                    id="estPedido"
+                    value={estPedido}
+                    required
+                    onChange={(e) => setEstPedido(e.target.value)}
+                />
+                <br />
+
+                <label htmlFor="valPedido">Valor Pedido</label>
+                <input
+                    type="number"
+                    id="valPedido"
+                    value={valPedido}
+                    step="0.01"
+                    required
+                    onChange={(e) => setValPedido(e.target.value)}
+                />
+                <br />
+
+                <input
+                    type="submit"
+                    id="boton"
+                    value={buttonForm}
+                    className="btn btn-success"
+                />
             </form>
         </>
-    )
-}
+    );
+};
 
-export default FormPedido
+export default FormPedido;

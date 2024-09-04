@@ -1,0 +1,131 @@
+/* Estilo general */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+  }
+  
+  h2 {
+    color: #4a4a4a;
+    font-size: 24px;
+  }
+  
+  /* Estilo del formulario de consulta */
+  .query-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .query-label {
+    font-size: 18px;
+    margin-bottom: 8px;
+    color: #555;
+  }
+  
+  .input-container {
+    display: flex;
+    align-items: center;
+    border: 2px solid #ddd;
+    border-radius: 25px;
+    padding: 8px 12px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s ease;
+  }
+  
+  .query-input {
+    border: none;
+    outline: none;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 25px;
+    width: 300px;
+    color: #333;
+  }
+  
+  .query-input::placeholder {
+    color: #aaa;
+  }
+  
+  .search-icon {
+    font-size: 18px;
+    color: #aaa;
+    margin-left: 10px;
+  }
+  
+  .input-container:focus-within {
+    border-color: #4a90e2;
+  }
+  
+  .ventas-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+  }
+  
+  .ventas-table th,
+  .ventas-table td {
+    padding: 12px 15px;
+    text-align: left;
+  }
+  
+  .ventas-table th {
+    background-color: #4a90e2;
+    color: #fff;
+    font-weight: bold;
+  }
+  
+  .ventas-table tr {
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .ventas-table tr:nth-child(even) {
+    background-color: #f4f4f9;
+  }
+  
+  .ventas-table tr:hover {
+    background-color: #e9f5ff;
+  }
+  
+  .action-button {
+    border: none;
+    outline: none;
+    padding: 8px 12px;
+    margin-right: 5px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .edit-button {
+    background-color: #4caf50;
+    color: #fff;
+  }
+  
+  .edit-button:hover {
+    background-color: #45a049;
+  }
+  
+  .delete-button {
+    background-color: #f44336;
+    color: #fff;
+  }
+  
+  .delete-button:hover {
+    background-color: #e53935;
+  }
+  
+  .no-results {
+    color: #888;
+    font-size: 16px;
+    text-align: center;
+    margin-top: 20px;
+  }
+  

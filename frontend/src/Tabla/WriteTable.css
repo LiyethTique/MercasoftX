@@ -1,0 +1,74 @@
+/* WriteTable.css */
+
+/* Estilos generales para el contenedor de la tabla */
+.container {
+  padding: 20px;
+  background-color: #f8f9fa; /* Fondo suave para el contenedor */
+  border-radius: 8px; /* Bordes redondeados del contenedor */
+}
+
+/* Estilos para la tabla */
+.table {
+  width: 100%;
+  border-collapse: separate; /* Separa las celdas */
+  border-spacing: 0;
+  background-color: #ffffff; /* Fondo blanco para la tabla */
+  border-radius: 8px; /* Bordes redondeados de la tabla */
+  overflow: hidden; /* Oculta los desbordamientos */
+}
+
+/* Estilos para las cabeceras */
+.table thead th {
+  background-color: #ff9800; /* Color de fondo naranjo para las cabeceras */
+  color: #ffffff; /* Color del texto blanco en las cabeceras */
+  padding: 12px 15px; /* Espaciado interno de las cabeceras */
+  border-bottom: 1px solid #ff5722; /* Línea inferior naranjo */
+}
+
+/* Estilos para las filas de la tabla */
+.table tbody tr {
+  border-bottom: 1px solid #e0e0e0; /* Línea inferior gris clara */
+}
+
+.table tbody tr:nth-of-type(even) {
+  background-color: #fafafa; /* Color de fondo gris claro para filas pares */
+}
+
+.table tbody tr:hover {
+  background-color: #ffe0b2; /* Color de fondo naranjo claro al pasar el cursor */
+}
+
+/* Estilos para las celdas */
+.table td {
+  padding: 12px 15px; /* Espaciado interno de las celdas */
+  color: #333333; /* Color del texto en las celdas */
+}
+
+/* Estilos para el campo de búsqueda del DataTable */
+.dataTables_wrapper .dataTables_filter {
+  margin-bottom: 20px !important; /* Asegura el espacio debajo del input de búsqueda */
+}
+
+.dataTables_wrapper .dataTables_filter input {
+  border: 1px solid #ff9800; /* Borde naranja para el campo de búsqueda */
+  border-radius: 4px; /* Bordes redondeados del campo de búsqueda */
+  padding: 6px 10px; /* Espaciado interno del campo de búsqueda */
+  width: 200px; /* Ancho del campo de búsqueda */
+}
+
+.dataTables_wrapper .dataTables_filter input::placeholder {
+  color: #ff9800; /* Color del placeholder en el campo de búsqueda */
+}
+
+/* Estilos para los botones de paginación del DataTable */
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+  border: 1px solid #ff9800; /* Borde naranja para los botones de paginación */
+  border-radius: 4px; /* Bordes redondeados de los botones de paginación */
+  padding: 6px 10px; /* Espaciado interno de los botones de paginación */
+  color: #ff9800; /* Color del texto en los botones de paginación */
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+  background-color: #ff9800; /* Color de fondo naranja al pasar el cursor */
+  color: #ffffff; /* Color del texto blanco al pasar el cursor */
+}

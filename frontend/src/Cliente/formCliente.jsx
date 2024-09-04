@@ -1,52 +1,128 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 
-const FormCliente = ({ buttonForm, entity, URI, updateTextButton }) => {
-    const [field1, setField1] = useState('')
-    // Aquí colocas los demás campos
 
-    const sendForm = (e) => {
-        e.preventDefault()
+const FormCliente = ({ buttonForm, cliente, URI, updateTextButton, onSuccess }) => {
+    const [nomCliente, setNomCliente] = useState('');
+    const [corCliente, setCorCliente] = useState('');
+    const [telCliente, setTelCliente] = useState('');
+    const [idCarrito, setIdCarrito] = useState('');
 
-        if (buttonForm === 'Actualizar') {
-            axios.put(URI + entity.Id_Entity, {
-                field1: field1,
-                // Aquí colocas los demás campos
-            })
-            updateTextButton('Enviar')
-            clearForm()
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        if (name === 'Nom_Cliente') setNomCliente(value);
+        if (name === 'Cor_Cliente') setCorCliente(value);
+        if (name === 'Tel_Cliente') setTelCliente(value);
+        if (name === 'Id_Carrito') setIdCarrito(value);
+    };
 
-        } else if (buttonForm === 'Enviar') {
-            axios.post(URI, {
-                field1: field1,
-                // Aquí colocas los demás campos
-            })
-            clearForm()
+    const sendForm = async (e) => {
+        e.preventDefault();
+
+        try {
+            if (buttonForm === 'Actualizar') {
+                await axios.put(URI + cliente.Id_Cliente, {
+                    Nom_Cliente: nomCliente,
+                    Cor_Cliente: corCliente,
+                    Tel_Cliente: telCliente,
+                    Id_Carrito: idCarrito
+                });
+
+                updateTextButton('Enviar');
+                onSuccess(); // Notifica el éxito a CrudCliente
+                clearForm();
+
+            } else if (buttonForm === 'Enviar') {
+                await axios.post(URI, {
+                    Nom_Cliente: nomCliente,
+                    Cor_Cliente: corCliente,
+                    Tel_Cliente: telCliente,
+                    Id_Carrito: idCarrito
+                });
+
+                onSuccess(); // Notifica el éxito a CrudCliente
+                clearForm();
+            }
+        } catch (error) {
+            alert('Error al guardar el cliente');
         }
-    }
+    };
 
     const clearForm = () => {
-        setField1('')
-        // Aquí reseteas los demás campos
-    }
+        setNomCliente('');
+        setCorCliente('');
+        setTelCliente('');
+        setIdCarrito('');
+    };
 
     const setData = () => {
-        setField1(entity.field1)
-        // Aquí configuras los demás campos
-    }
+        if (cliente.Nom_Cliente) {
+            setNomCliente(cliente.Nom_Cliente);
+            setCorCliente(cliente.Cor_Cliente);
+            setTelCliente(cliente.Tel_Cliente);
+            setIdCarrito(cliente.Id_Carrito);
+        }
+    };
 
     useEffect(() => {
-        setData()
-    }, [entity])
+        setData();
+    }, [cliente]);
 
     return (
-        <form id="entityForm" onSubmit={sendForm} className="table table-striped">
-            <label htmlFor="field1">Campo 1</label>
-            <input type="text" id="field1" value={field1} onChange={(e) => setField1(e.target.value)} />
-            {/* Aquí colocas los demás campos */}
-            <input type="submit" value={buttonForm} className="btn btn-success" />
-        </form>
-    )
-}
+        <>
+            <form id="clienteForm" onSubmit={sendForm} className="table table-striped">
+                <label htmlFor="nomCliente">Nombre Cliente</label>
+                <input
+                    type="text"
+                    id="nomCliente"
+                    name="Nom_Cliente"
+                    value={nomCliente}
+                    onChange={handleChange}
+                    required
+                />
+                <br />
 
-export default FormCliente
+                <label htmlFor="corCliente">Correo Cliente</label>
+                <input
+                    type="email"
+                    id="corCliente"
+                    name="Cor_Cliente"
+                    value={corCliente}
+                    onChange={handleChange}
+                    required
+                />
+                <br />
+
+                <label htmlFor="telCliente">Teléfono Cliente</label>
+                <input
+                    type="text"
+                    id="telCliente"
+                    name="Tel_Cliente"
+                    value={telCliente}
+                    onChange={handleChange}
+                    required
+                />
+                <br />
+
+                <label htmlFor="idCarrito">ID Carrito</label>
+                <input
+                    type="number"
+                    id="idCarrito"
+                    name="Id_Carrito"
+                    value={idCarrito}
+                    onChange={handleChange}
+                />
+                <br />
+
+                <input
+                    type="submit"
+                    id="boton"
+                    value={buttonForm}
+                    className="btn btn-success"
+                />
+            </form>
+        </>
+    );
+};
+
+export default FormCliente;

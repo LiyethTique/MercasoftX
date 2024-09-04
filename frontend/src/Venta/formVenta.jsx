@@ -1,97 +1,73 @@
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState, useEffect} from "react";
 
 const FormVenta = ({ buttonForm, venta, URI, updateTextButton }) => {
-    const [Fec_Venta, setFechaVenta] = useState('');
-    const [Val_Venta, setValorVenta] = useState('');
-    const [Id_Pedido, setIdPedido] = useState('');
+    const [Fec_Venta, setFecha] = useState('')
+    const [Val_Venta, setValor] = useState('')
+    const [Id_Pedido, setId_Pedido] = useState('')
 
     const sendForm = (e) => {
-        e.preventDefault();
+        e.preventDefault()
 
-        if (buttonForm === 'Actualizar') {
-            console.log('Actualizando venta...');
+        if (buttonForm == 'Actualizar') {
+            console.log('actualizando ando...')
 
             axios.put(URI + venta.Id_Venta, {
                 Fec_Venta: Fec_Venta,
                 Val_Venta: Val_Venta,
                 Id_Pedido: Id_Pedido
-            });
+            })
 
-            updateTextButton('Enviar');
-            clearForm();
+            updateTextButton('Enviar')
+            clearForm()
 
-        } else if (buttonForm === 'Enviar') {
-            console.log('Guardando venta...');
+        } else if (buttonForm == 'Enviar') {
+            console.log('guardando ando...')
+
             axios.post(URI, {
                 Fec_Venta: Fec_Venta,
                 Val_Venta: Val_Venta,
                 Id_Pedido: Id_Pedido
-            });
+            })
 
-            clearForm();
+            clearForm()
+            sendForm()
         }
-    };
-
+    }
     const clearForm = () => {
-        setFechaVenta('');
-        setValorVenta('');
-        setIdPedido('');
-    };
-
+        setFecha('')
+        setValor('')
+        setId_Pedido('')
+    }
     const setData = () => {
-        setFechaVenta(venta.Fec_Venta || '');
-        setValorVenta(venta.Val_Venta || '');
-        setIdPedido(venta.Id_Pedido || '');
-    };
+        setFecha(venta.Fec_Venta)
+        setValor(venta.Val_Venta)
+        setId_Pedido(venta.Id_Pedido)
+    }
 
     useEffect(() => {
-        setData();
-    }, [venta]);
+        setData()
+    }, [venta])
 
     return (
         <>
-            <form id="ventaForm" onSubmit={sendForm} className="table table-striped">
-                <label htmlFor="fechaVenta">Fecha de Venta</label>
-                <input
-                    type="date"
-                    id="fechaVenta"
-                    value={Fec_Venta}
-                    onChange={(e) => setFechaVenta(e.target.value)}
-                    required
-                />
+            <form id="ventaForm" action="" onSubmit={sendForm} className="table table-striped">
+                <label htmlFor="fechaVenta">Fecha Venta</label>
+                <input type="date" id="fechaVenta" value={Fec_Venta} required onChange={(e) => setFecha(e.target.value)} />
                 <br />
 
-                <label htmlFor="valorVenta">Valor de la Venta</label>
-                <input
-                    type="number"
-                    id="valorVenta"
-                    value={Val_Venta}
-                    onChange={(e) => setValorVenta(e.target.value)}
-                    step="0.01"
-                    required
-                />
+                <label htmlFor="valorVenta">Valor Venta</label>
+                <input type="number" id="valorVenta" value={Val_Venta} required onChange={(e) => setValor(e.target.value)} />
                 <br />
 
-                <label htmlFor="idPedido">ID del Pedido</label>
-                <input
-                    type="number"
-                    id="idPedido"
-                    value={Id_Pedido}
-                    onChange={(e) => setIdPedido(e.target.value)}
-                    required
-                />
+                <label htmlFor="codigoPedido">Codigo del pedido</label>
+                <input type="number" id="codigoPedido" value={Id_Pedido} required onChange={(e) => setId_Pedido(e.target.value)} />
                 <br />
+                <input type="submit" id="boton" value={buttonForm} className="btn btn-success" />
 
-                <input
-                    type="submit"
-                    id="boton"
-                    value={buttonForm}
-                    className="btn btn-success"
-                />
             </form>
         </>
-    );
-};
+    )
 
-export default FormVenta;
+}
+export default FormVenta

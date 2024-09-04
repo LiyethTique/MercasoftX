@@ -1,12 +1,12 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-import FormResponsable from './formResponsable';
-import FormQueryResponsable from './formQueryResponsable';
+import FormResponsable from '../Responsable/formResponsable';
+import Sidebar from '../Sidebar/Sidebar';
 import Swal from 'sweetalert2';
-import { Link } from'react-router-dom';
-import Sidebar from '../Sidebar/Sidebar.jsx';
+import WriteTable from '../Tabla/Data-Table';
 
-const URI = process.env.SERVER_BACK + '/responsable/';
+
+const URI = (process.env.SERVER_BACK || 'http://localhost:3002') + '/responsable/';
 
 const CrudResponsable = () => {
     const [responsableList, setResponsableList] = useState([]);
@@ -21,21 +21,21 @@ const CrudResponsable = () => {
     });
 
     useEffect(() => {
-        getAllResponsables();
+        getAllResponsable();
     }, []);
 
-    const getAllResponsables = async () => {
+    const getAllResponsable = async () => {
         try {
             const respuesta = await axios.get(URI);
-            setResponsableList(respuesta.data);
+            setResponsableList(Array.isArray(respuesta.data) ? respuesta.data : []);
         } catch (error) {
-            alert(error.response.data.message);
+            alert(error.response?.data?.message || "Error al obtener los Responsables");
         }
     };
 
-    const getResponsable = async (idResponsable) => {
+    const getResponsable = async (Id_Responsable) => {
         setButtonForm('Actualizar');
-        const respuesta = await axios.get(URI + idResponsable);
+        const respuesta = await axios.get(URI + Id_Responsable);
         setResponsable({
             ...respuesta.data
         });
@@ -45,7 +45,7 @@ const CrudResponsable = () => {
         setButtonForm(texto);
     };
 
-    const deleteResponsable = async (idResponsable) => {
+    const deleteResponsable = (Id_Responsable) => {
         Swal.fire({
             title: "¿Estás seguro?",
             text: "¡No podrás revertir esto!",
@@ -56,69 +56,39 @@ const CrudResponsable = () => {
             confirmButtonText: "Sí, borrar!"
         }).then(async (result) => {
             if (result.isConfirmed) {
-                await axios.delete(URI + idResponsable);
+                await axios.delete(URI + Id_Responsable);
                 Swal.fire({
                     title: "¡Borrado!",
                     text: "El registro ha sido borrado.",
                     icon: "success"
                 });
-                getAllResponsables(); // Refresh the list after deletion
+                getAllResponsable(); // Refrescar la lista después de eliminar
             }
         });
     };
 
-    const handleFormSubmit = async () => {
-        await getAllResponsables(); // Refresh list after form submission
-    };
+    // Preparar los títulos de las columnas y los datos
+    const titles = ['ID', 'Nombre', 'Correo', 'Teléfono', 'Tipo Responsable', 'Género', 'Acciones'];
+    const data = responsableList.map(responsable => [
+        responsable.Id_Responsable,
+        responsable.Nom_Responsable,
+        responsable.Cor_Responsable,
+        responsable.Tel_Responsable,
+        responsable.Tip_Responsable,
+        responsable.Tip_Genero,
+        <div>
+            <button className="btn btn-warning" onClick={() => getResponsable(responsable.Id_Responsable)}>Editar</button>
+            <button className="btn btn-danger" onClick={() => deleteResponsable(responsable.Id_Responsable)}>Borrar</button>
+        </div>
+    ]);
 
     return (
         <>
-        <Sidebar/>            
-        <table className="table table-striped">
-                <thead>
-                    <tr>
-                        <th>ID Responsable</th>
-                        <th>Nombre Completo</th>
-                        <th>Correo Electronico</th>
-                        <th>Teléfono</th>
-                        <th>Tip Responsable</th>
-                        <th>Género</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {responsableList.map((responsable) => (
-                        <tr key={responsable.Id_Responsable}>
-                            <td>{responsable.Id_Responsable}</td>
-                            <td>{responsable.Nom_Responsable}</td>
-                            <td>{responsable.Cor_Responsable}</td>
-                            <td>{responsable.Tel_Responsable}</td>
-                            <td>{responsable.Tip_Responsable}</td>
-                            <td>{responsable.Tip_Genero}</td>
-                            <td>
-                                <button className="btn btn-warning" onClick={() => getResponsable(responsable.Id_Responsable)}>Editar</button>
-                                <button className="btn btn-danger" onClick={() => deleteResponsable(responsable.Id_Responsable)}>Borrar</button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            <center><h1>Gestionar Responsables</h1></center>
+            <Sidebar />
+            <WriteTable titles={titles} data={data} />
             <hr />
-            <FormResponsable 
-                buttonForm={buttonForm} 
-                responsable={responsable} 
-                URI={URI} 
-                updateTextButton={updateTextButton}
-                onSubmit={handleFormSubmit} // Add this prop to handle form submission
-            />
-            <hr />
-            <FormQueryResponsable 
-                URI={URI} 
-                getResponsable={getResponsable} 
-                deleteResponsable={deleteResponsable} 
-                buttonForm={buttonForm} 
-                onSubmit={handleFormSubmit} // Add this prop to handle form submission
-            />
+            <FormResponsable buttonForm={buttonForm} responsable={responsable} URI={URI} updateTextButton={updateTextButton} />
         </>
     );
 };

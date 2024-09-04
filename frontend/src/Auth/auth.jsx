@@ -12,12 +12,9 @@ const Auth = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('URL_DE_TU_API_DE_AUTENTICACION', {
-        email,
-        password
-      });
-      const user = response.data;
-      localStorage.setItem('userMercasoft', JSON.stringify(user));
+      const response = await axios.post(`${process.env.SERVER_BACK}/auth/login`, { email, password });
+      const { tokenUser } = response.data;
+      localStorage.setItem('userMercasoft', JSON.stringify({ tokenUser }));
       navigate('/');
     } catch (error) {
       setError('Credenciales incorrectas, por favor intenta de nuevo.');

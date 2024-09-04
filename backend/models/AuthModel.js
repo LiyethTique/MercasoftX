@@ -2,16 +2,12 @@ import { DataTypes } from "sequelize";
 import db from '../database/db.js';
 
 const UserModel = db.define('usuario', {
-    id: {
+    Id_Usuario: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true
     },
-    name: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    email: {
+    Cor_Usuario: {
         type: DataTypes.STRING,
         unique: true,
         allowNull: false,
@@ -19,14 +15,13 @@ const UserModel = db.define('usuario', {
             isEmail: true // Validación para asegurar que el email tiene el formato correcto
         }
     },
-    password: {
+    Password_Usuario: {
         type: DataTypes.STRING,
         allowNull: false
     }
 }, {
-    tableName: 'usuarios', // Nombre de la tabla en la base de datos
-    timestamps: true, // Agrega columnas createdAt y updatedAt por defecto
-    paranoid: true, // Habilita el soporte para "soft deletes" (borrado lógico)
+    freezeTableName: true,
+    tableName: 'usuario'
 });
 
 export default UserModel;

@@ -14,7 +14,7 @@ router.post('/',
     router.get('/verify', verifyToken)
     router.post('/login', loginUser)
 
-    router.post('/request_password-reset', getResetPassword)
-    router.post('reset-password', setNewPassword)
+    router.post('/request-password-reset', getResetPassword);
+    router.post('/reset-password', setNewPassword);
 
 export default router

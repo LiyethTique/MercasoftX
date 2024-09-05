@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import NavPub from '../NavPub/NavPub';
@@ -9,13 +9,24 @@ const Auth = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('userMercasoft'));
+    if (user) {
+      navigate('/home'); // Redirigir si ya está autenticado
+    }
+  }, [navigate]);
+
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post(`${process.env.SERVER_BACK}/auth/login`, { email, password });
       const { tokenUser } = response.data;
+
+      // Guardar token en localStorage
       localStorage.setItem('userMercasoft', JSON.stringify({ tokenUser }));
-      navigate('/');
+
+      // Redirigir a la página principal o dashboard
+      navigate('/home');
     } catch (error) {
       setError('Credenciales incorrectas, por favor intenta de nuevo.');
     }

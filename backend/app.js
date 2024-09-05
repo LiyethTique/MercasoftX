@@ -1,10 +1,10 @@
 import express from 'express'
 import cors from 'cors'
-
+import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 import db from './database/db.js'
 
-// Se importan todas rutas
+// Se importan todas las rutas
 import carritoRoutes from './routes/carritoRoutes.js'
 import catagoriaRoutes from './routes/categoriaRoutes.js'
 import clienteRoutes from './routes/clienteRoutes.js'
@@ -23,35 +23,65 @@ dotenv.config({ path: './.env'})
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Middleware para verificar el token
+const VerifyToken = (req, res, next) => {
+  console.log('hola esto es un middleware');
+  
+  // Verificar si el encabezado de autorización está presente
+  if (!req.headers.authorization) {
+    return res.status(401).json({ message: 'No tiene autorización' });
+  }
+
+  const token = req.headers.authorization.replace('Bearer ', '').trim();
+
+  // Validar si el token es válido
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_LLAVE);
+
+    // Si el token es válido, almacenamos la información del usuario decodificada en req.user
+    req.user = decoded.user;
+
+    // Permitir que la solicitud continúe
+    next();
+  } catch (error) {
+    // Si el token no es válido, devolvemos un error de autorización
+    return res.status(401).json({ message: 'Token no válido o expirado' });
+  }
+};
+
+// Middlewares
 app.use(cors())
 app.use(express.json())
-app.use('/carrito', carritoRoutes)
-app.use('/categoria', catagoriaRoutes)
-app.use('/cliente', clienteRoutes)
-app.use('/entrada', entradasRoutes)
-app.use('/pedido', pedidoRoutes)
-app.use('/pedidoProducto', pedidoProductoRoutes)
-app.use('/producto', productoRoutes)
-app.use('/responsable', responsableRoutes)
-app.use('/auth', authRoutes)
-app.use('/traslado', trasladoRoutes)
-app.use('/unidad', unidadRoutes)
-app.use('/venta', ventaRoutes)
 
+// Rutas protegidas y no protegidas
+app.use('/carrito',VerifyToken, carritoRoutes)
+app.use('/categoria',VerifyToken, catagoriaRoutes)
+app.use('/cliente',VerifyToken, clienteRoutes)
+app.use('/entrada', VerifyToken, entradasRoutes)  // Rutas protegidas con VerifyToken
+app.use('/pedido', VerifyToken, pedidoRoutes)
+app.use('/pedidoProducto', VerifyToken, pedidoProductoRoutes)
+app.use('/producto',VerifyToken, productoRoutes)
+app.use('/responsable', VerifyToken, responsableRoutes)
+app.use('/auth', authRoutes)  // Rutas de autenticación no protegidas
+app.use('/traslado',VerifyToken, trasladoRoutes)
+app.use('/unidad',VerifyToken, unidadRoutes)
+app.use('/venta',VerifyToken, ventaRoutes)
+
+// Conexión a la base de datos
 try {
   await db.authenticate()
-  console.log("conexión exitosa a la db")
+  console.log("Conexión exitosa a la db")
 } catch (error) {
   console.error(`Error de conexión a la db: ${error}`)
-  // Aquí puedes manejar el error, por ejemplo, deteniendo la aplicación
   process.exit(1)
 }
 
-// Rutas principales
+// Ruta principal
 app.get('/', (req, res) => {
   res.send('Hola Mundo')
 })
 
+// Iniciar servidor
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })

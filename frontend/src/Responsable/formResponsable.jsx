@@ -1,63 +1,45 @@
-import axios from "axios";
-import { useState, useEffect } from "react";
+import axios from 'axios';
+import { useState, useEffect } from 'react';
 
-const FormResponsable = ({ buttonForm, responsable, URI, updateTextButton }) => {
+const FormResponsable = ({ buttonForm, responsable, URI, updateTextButton, setIsFormVisible }) => {
     const [Nom_Responsable, setNom_Responsable] = useState('');
     const [Cor_Responsable, setCor_Responsable] = useState('');
     const [Tel_Responsable, setTel_Responsable] = useState('');
     const [Tip_Responsable, setTip_Responsable] = useState('');
     const [Tip_Genero, setTip_Genero] = useState('');
-
-    // Estado para controlar la visibilidad del formulario
-    const [isFormVisible, setIsFormVisible] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [error, setError] = useState(null); // Agregar estado para manejar errores
 
-    const sendForm = (e) => {
+    const sendForm = async (e) => {
         e.preventDefault();
+        setIsSubmitting(true);
+        setError(null); // Limpiar errores antes de enviar
 
-        setIsSubmitting(true); // Marcar como en proceso de envío
+        const data = {
+            Nom_Responsable,
+            Cor_Responsable,
+            Tel_Responsable,
+            Tip_Responsable,
+            Tip_Genero
+        };
 
-        if (buttonForm === 'Actualizar') {
-            axios.put(`${URI}${responsable.Id_Responsable}`, {
-                Nom_Responsable,
-                Cor_Responsable,
-                Tel_Responsable,
-                Tip_Responsable,
-                Tip_Genero
-            })
-            .then(() => {
-                updateTextButton('Enviar');
-                clearForm();
-                // Solo ocultar el formulario si la acción fue exitosa
-                // setIsFormVisible(false); // No ocultar automáticamente
-            })
-            .catch(error => {
-                console.log("Error updating:", error);
-                alert(error.response?.data?.message || "Error al actualizar");
-            })
-            .finally(() => {
-                setIsSubmitting(false); // Marcar como no en proceso de envío
-            });
-        } else if (buttonForm === 'Enviar') {
-            axios.post(URI, {
-                Nom_Responsable,
-                Cor_Responsable,
-                Tel_Responsable,
-                Tip_Responsable,
-                Tip_Genero
-            })
-            .then(() => {
-                clearForm();
-                // Solo ocultar el formulario si la acción fue exitosa
-                // setIsFormVisible(false); // No ocultar automáticamente
-            })
-            .catch(error => {
-                console.log("Error posting:", error);
-                alert(error.response?.data?.message || "Error al guardar");
-            })
-            .finally(() => {
-                setIsSubmitting(false); // Marcar como no en proceso de envío
-            });
+        const url = buttonForm === 'Actualizar'
+            ? `${URI}${responsable.Id_Responsable}`
+            : URI;
+
+        const method = buttonForm === 'Actualizar' ? axios.put : axios.post;
+
+        try {
+            await method(url, data);
+            updateTextButton('Enviar');
+            clearForm();
+            setIsFormVisible(false); // Ocultar modal tras registro/actualización exitosa
+            document.querySelector('[data-bs-dismiss="modal"]').click(); // Cerrar modal manualmente
+        } catch (error) {
+            console.error("Error:", error);
+            setError(error.response?.data?.message || "Error al guardar"); // Mostrar error en el estado
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -84,81 +66,87 @@ const FormResponsable = ({ buttonForm, responsable, URI, updateTextButton }) => 
     }, [responsable]);
 
     return (
-        <>
-            {/* Botón para mostrar el formulario */}
-            <center>
-                <button 
-                    onClick={() => setIsFormVisible(!isFormVisible)}
-                    style={{ padding: '10px 20px', fontSize: '16px', cursor: 'pointer', marginTop: '20px' }}
-                    className="btn btn-primary"
-                >
-                    {isFormVisible ? 'Ocultar Formulario' : 'Registrar Responsable'}
-                </button>
-            </center>
+        <form id="responsableForm" onSubmit={sendForm} className="table table-striped">
+            {error && <div className="alert alert-danger">{error}</div>} {/* Mostrar mensaje de error */}
+            <div className="mb-3">
+                <label htmlFor="nomResponsable" className="form-label">Nombre</label>
+                <input 
+                    type="text" 
+                    id="nomResponsable" 
+                    className="form-control" 
+                    value={Nom_Responsable} 
+                    required 
+                    onChange={(e) => setNom_Responsable(e.target.value)} 
+                />
+            </div>
 
-            {/* Mostrar el formulario solo si isFormVisible es true */}
-            {isFormVisible && (
-                <form id="responsableForm" action="" onSubmit={sendForm} className="table table-striped">
-                    <label htmlFor="nomResponsable">Nombre</label>
-                    <input 
-                        type="text" 
-                        id="nomResponsable" 
-                        value={Nom_Responsable} 
-                        required 
-                        onChange={(e) => setNom_Responsable(e.target.value)} 
-                    />
-                    <br />
+            <div className="mb-3">
+                <label htmlFor="corResponsable" className="form-label">Correo</label>
+                <input 
+                    type="email" 
+                    id="corResponsable" 
+                    className="form-control" 
+                    value={Cor_Responsable} 
+                    required 
+                    onChange={(e) => setCor_Responsable(e.target.value)} 
+                />
+            </div>
 
-                    <label htmlFor="corResponsable">Correo</label>
-                    <input 
-                        type="email" 
-                        id="corResponsable" 
-                        value={Cor_Responsable} 
-                        required 
-                        onChange={(e) => setCor_Responsable(e.target.value)} 
-                    />
-                    <br />
+            <div className="mb-3">
+                <label htmlFor="telResponsable" className="form-label">Teléfono</label>
+                <input 
+                    type="text" 
+                    id="telResponsable" 
+                    className="form-control" 
+                    value={Tel_Responsable} 
+                    required 
+                    onChange={(e) => setTel_Responsable(e.target.value)} 
+                />
+            </div>
 
-                    <label htmlFor="telResponsable">Teléfono</label>
-                    <input 
-                        type="text" 
-                        id="telResponsable" 
-                        value={Tel_Responsable} 
-                        required 
-                        onChange={(e) => setTel_Responsable(e.target.value)} 
-                    />
-                    <br />
+            <div className="mb-3">
+                <label htmlFor="tipResponsable" className="form-label">Tipo de Responsable</label>
+                <input 
+                    type="text" 
+                    id="tipResponsable" 
+                    className="form-control" 
+                    value={Tip_Responsable} 
+                    required 
+                    onChange={(e) => setTip_Responsable(e.target.value)} 
+                />
+            </div>
 
-                    <label htmlFor="tipResponsable">Tipo de Responsable</label>
-                    <input 
-                        type="text" 
-                        id="tipResponsable" 
-                        value={Tip_Responsable} 
-                        required 
-                        onChange={(e) => setTip_Responsable(e.target.value)} 
-                    />
-                    <br />
+            <div className="mb-3">
+                <label htmlFor="tipGenero" className="form-label">Género</label>
+                <input 
+                    type="text" 
+                    id="tipGenero" 
+                    className="form-control" 
+                    value={Tip_Genero} 
+                    required 
+                    onChange={(e) => setTip_Genero(e.target.value)} 
+                />
+            </div>
 
-                    <label htmlFor="tipGenero">Género</label>
-                    <input 
-                        type="text" 
-                        id="tipGenero" 
-                        value={Tip_Genero} 
-                        required 
-                        onChange={(e) => setTip_Genero(e.target.value)} 
-                    />
-                    <br />
-                    <br/>
-                    <input 
-                        type="submit" 
-                        id="boton" 
-                        value={isSubmitting ? 'Enviando...' : buttonForm} 
-                        className="btn btn-success" 
-                        disabled={isSubmitting} 
-                    />
-                </form>
-            )}
-        </>
+            <button 
+                type="submit" 
+                className="btn btn-primary" 
+                disabled={isSubmitting}
+            >
+                {isSubmitting ? 'Enviando...' : buttonForm}
+            </button>
+            <button 
+                type="button" 
+                className="btn btn-secondary ms-2" 
+                onClick={() => {
+                    clearForm();
+                    setIsFormVisible(false); // Ocultar formulario al cancelar
+                    document.querySelector('[data-bs-dismiss="modal"]').click(); // Cerrar modal manualmente
+                }}
+            >
+                Cancelar
+            </button>
+        </form>
     );
 };
 

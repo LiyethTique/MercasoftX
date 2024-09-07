@@ -110,3 +110,62 @@
     border: 1px solid #ccc;
     border-radius: 4px;
 }
+/* Estilos generales para el contenedor del formulario */
+.form-container {
+    padding: 20px;
+    background-color: #f8f9fa; /* Fondo suave para el contenedor */
+    border-radius: 8px; /* Bordes redondeados del contenedor */
+    margin-top: 20px; /* Espacio superior para separar del título */
+}
+
+/* Estilos para el botón de mostrar/ocultar formulario */
+.btn-primary {
+    background-color: #ff9800; /* Color de fondo naranja para el botón */
+    border: 1px solid #ff9800; /* Borde naranja para el botón */
+    color: #ffffff; /* Color del texto blanco en el botón */
+    padding: 10px 20px; /* Espaciado interno del botón */
+    font-size: 16px; /* Tamaño de fuente del botón */
+    cursor: pointer; /* Cursor de puntero al pasar sobre el botón */
+    display: block; /* Hace que el botón esté en una nueva línea */
+    margin-bottom: 20px; /* Espacio debajo del botón */
+}
+
+.btn-primary:hover {
+    background-color: #e68900; /* Color de fondo naranja más oscuro al pasar el cursor */
+    border-color: #e68900; /* Borde más oscuro al pasar el cursor */
+}
+
+/* Estilos para el formulario */
+.form-responsive {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Estilos para los campos del formulario */
+.form-responsive label {
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.form-responsive input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+/* Estilos para el botón de enviar del formulario */
+.btn-success {
+    background-color: #4caf50; /* Color de fondo verde para el botón */
+    border: 1px solid #4caf50; /* Borde verde para el botón */
+    color: #ffffff; /* Color del texto blanco en el botón */
+    padding: 10px 20px; /* Espaciado interno del botón */
+    font-size: 16px; /* Tamaño de fuente del botón */
+    cursor: pointer; /* Cursor de puntero al pasar sobre el botón */
+}
+
+.btn-success:hover {
+    background-color: #388e3c; /* Color de fondo verde más oscuro al pasar el cursor */
+    border-color: #388e3c; /* Borde más oscuro al pasar el cursor */
+}
+

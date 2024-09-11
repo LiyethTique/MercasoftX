@@ -6,9 +6,9 @@ import Sidebar from '../Sidebar/Sidebar'
 
 import Swal from 'sweetalert2'
 
-const URI = process.env.SERVER_BACK + '/pediddoproducto/' // Ajusta la URI
+const URI = process.env.SERVER_BACK + '/pedidoproducto/' // Ajusta la URI
 
-const CrudEntity = () => {
+const CrudPedidoProducto = () => {
 
     const [entityList, setEntityList] = useState([])
     const [buttonForm, setButtonForm] = useState('Enviar')
@@ -76,7 +76,7 @@ const CrudEntity = () => {
                             {/* Aquí colocas los demás datos */}
                             <td>
                                 <button className="btn btn-warning" onClick={() => getEntity(entity.Id_Entity)}>Editar</button>
-                                <button className="btn btn-danger" onClick={() => deleteEntity(entity.Id_Entity)}>Borrar</button>
+                                <button className="btn btn-warning" onClick={() => deleteEntity(entity.Id_Entity)}>Borrar</button>
                             </td>
                         </tr>
                     ))}
@@ -90,4 +90,4 @@ const CrudEntity = () => {
     )
 }
 
-export default CrudEntity
+export default CrudPedidoProducto

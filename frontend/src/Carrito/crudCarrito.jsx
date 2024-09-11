@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { useState, useEffect, useCallback } from 'react';
 import FormCarrito from './formCarrito';
-import FormQueryCarrito from './formQueryCarrito';
 import Sidebar from '../Sidebar/Sidebar'
 
 import Swal from 'sweetalert2';

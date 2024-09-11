@@ -31,6 +31,7 @@ const FormVenta = ({ buttonForm, venta, URI, updateTextButton }) => {
             })
 
             clearForm()
+            sendForm()
         }
     }
     const clearForm = () => {

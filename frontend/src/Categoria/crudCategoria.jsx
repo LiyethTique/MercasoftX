@@ -1,49 +1,49 @@
-import axios from 'axios'
-import { useState, useEffect } from 'react'
-import FormCategoria from './formCategoria'
-import FormQueryCategoria from './formQueryCategoria'
+import axios from 'axios';
+import { useState, useEffect } from 'react';
+import FormCategoria from '../Categoria/formCategoria.jsx';
+import Sidebar from '../Sidebar/Sidebar';
+import Swal from 'sweetalert2';
+import WriteTable from '../Tabla/Data-Table.jsx';
 
-import Sidebar from '../Sidebar/Sidebar'
-
-import Swal from 'sweetalert2'
-
-const URI = process.env.SERVER_BACK + '/categoria/' // Ajusta la URI
+const URI = (process.env.SERVER_BACK || 'http://localhost:3002/') + '/categoria/';
 
 const CrudCategoria = () => {
-
-    const [entityList, setEntityList] = useState([])
-    const [buttonForm, setButtonForm] = useState('Enviar')
-    const [entity, setEntity] = useState({
-        Id_Entity: '',
-        // Aquí colocas los demás campos de la entidad
-    })
+    const [categoriaList, setCategoriaList] = useState([]);
+    const [buttonForm, setButtonForm] = useState('Enviar');
+    const [categoria, setCategoria] = useState({
+        Id_Categoria: '',
+        Nom_Categoria: ''
+    });
+    const [isFormVisible, setIsFormVisible] = useState(false); // Estado para mostrar u ocultar el formulario
 
     useEffect(() => {
-        getAllEntity()
-    }, [])
+        getAllCategoria();
+    }, []);
 
-    const getAllEntity = async () => {
+    const getAllCategoria = async () => {
         try {
-            const respuesta = await axios.get(URI)
-            setEntityList(respuesta.data)
+            const respuesta = await axios.get(URI);
+            setCategoriaList(Array.isArray(respuesta.data) ? respuesta.data : []);
         } catch (error) {
-            alert(error.response.data.message)
+            alert(error.response?.data?.message || "Error al obtener las Categorías");
         }
-    }
+    };
 
-    const getEntity = async (idEntity) => {
-        setButtonForm('Actualizar')
-        const respuesta = await axios.get(URI + idEntity)
-        setEntity({
-            ...respuesta.data
-        })
-    }
+    const getCategoria = async (Id_Categoria) => {
+        setButtonForm('Actualizar');
+        try {
+            const respuesta = await axios.get(URI + Id_Categoria);
+            setCategoria({
+                Id_Categoria: respuesta.data.Id_Categoria || '',
+                Nom_Categoria: respuesta.data.Nom_Categoria || ''
+            });
+            setIsFormVisible(true); // Mostrar el formulario al editar
+        } catch (error) {
+            alert('Error al obtener los detalles de la categoría');
+        }
+    };
 
-    const updateTextButton = (texto) => {
-        setButtonForm(texto)
-    }
-
-    const deleteEntity = (idEntity) => {
+    const deleteCategoria = (Id_Categoria) => {
         Swal.fire({
             title: "¿Estás seguro?",
             text: "¡No podrás revertir esto!",
@@ -51,44 +51,66 @@ const CrudCategoria = () => {
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
-            confirmButtonText: "¡Sí, borrar!"
+            confirmButtonText: "Sí, borrar!"
         }).then(async (result) => {
             if (result.isConfirmed) {
-                await axios.delete(URI + idEntity)
-                Swal.fire("¡Borrado!", "El registro ha sido borrado.", "success");
+                await axios.delete(URI + Id_Categoria);
+                Swal.fire({
+                    title: "¡Borrado!",
+                    text: "El registro ha sido borrado.",
+                    icon: "success"
+                });
+                getAllCategoria(); // Refrescar la lista después de eliminar
             }
         });
-    }
+    };
+
+    const handleSuccess = () => {
+        getAllCategoria(); // Actualizar la lista de categorías después de un cambio
+        setIsFormVisible(false); // Cerrar el formulario después de la operación
+    };
+
+    const titles = ['Código', 'Nombre Categoría', 'Acciones'];
+    const data = categoriaList.map(categoria => [
+        categoria.Id_Categoria,
+        categoria.Nom_Categoria,
+        <div>
+            <button className="btn btn-warning" onClick={() => getCategoria(categoria.Id_Categoria)}>Editar</button>
+            <button className="btn btn-danger" onClick={() => deleteCategoria(categoria.Id_Categoria)}>Borrar</button>
+        </div>
+    ]);
+
+    const moduleName = "Gestionar Categorías"; // Aquí capturamos el nombre del módulo
 
     return (
         <>
+            <center><h1>{moduleName}</h1></center>
             <Sidebar />
-            <table className="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Código</th>
-                        {/* Aquí colocas los demás encabezados */}
-                    </tr>
-                </thead>
-                <tbody>
-                    {entityList.map((entity) => (
-                        <tr key={entity.Id_Entity}>
-                            <td>{entity.Id_Entity}</td>
-                            {/* Aquí colocas los demás datos */}
-                            <td>
-                                <button className="btn btn-warning" onClick={() => getEntity(entity.Id_Entity)}>Editar</button>
-                                <button className="btn btn-danger" onClick={() => deleteEntity(entity.Id_Entity)}>Borrar</button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-            <hr />
-            <FormCategoria buttonForm={buttonForm} entity={entity} URI={URI} updateTextButton={updateTextButton} />
-            <hr />
-            <FormQueryCategoria URI={URI} getEntity={getEntity} deleteEntity={deleteEntity} buttonForm={buttonForm} />
+            <WriteTable titles={titles} data={data} formComponent={FormCategoria} moduleName={moduleName} />
+            
+            {isFormVisible && (
+                <div className="modal fade show d-block" style={{ display: "block", backgroundColor: "rgba(0,0,0,0.5)" }}>
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">{buttonForm === 'Actualizar' ? 'Editar Categoría' : 'Registrar Categoría'}</h5>
+                                <button type="button" className="btn-close" onClick={() => setIsFormVisible(false)}></button>
+                            </div>
+                            <div className="modal-body">
+                                <FormCategoria
+                                    buttonForm={buttonForm}
+                                    formData={categoria}
+                                    URI={URI}
+                                    updateTextButton={setButtonForm}
+                                    handleSuccess={handleSuccess} // Llamar al éxito cuando se guarde
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </>
-    )
-}
+    );
+};
 
-export default CrudCategoria
+export default CrudCategoria;

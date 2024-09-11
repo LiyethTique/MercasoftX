@@ -1,55 +1,49 @@
-import React from 'react';
+import React from "react";
+import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHome, faEnvelope, faSignInAlt, faUserPlus, faUsers } from "@fortawesome/free-solid-svg-icons";
+import './NavPub.css'
 
-function NavPub() {
+const NavPub = () => {
     return (
-        <>
-            <nav className="navbar navbar-expand-lg bg-black">
+        <React.Fragment>
+            <nav className="navbar navbar-expand-lg navbar-light w-100" style={{ backgroundColor: '#343a40' }}>
                 <div className="container-fluid">
-                    <a className="navbar-brand text-white" href="/">Login</a>
+                    <Link className="navbar-brand" to="/home" style={{ color: '#fff', fontWeight: 'bold' }}>
+                        <FontAwesomeIcon icon={faHome} className="me-2" />
+                        Home
+                    </Link>
+                    <Link className="navbar-brand" to="/contacto" style={{ color: '#fff', fontWeight: 'bold' }}>
+                        <FontAwesomeIcon icon={faUsers} className="me-2" />
+                        Contacto
+                    </Link>
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                        <span className="navbar-toggler-icon"></span>
+                        <span className="navbar-toggler-icon" style={{ backgroundColor: '#fff' }}></span>
                     </button>
                     <div className="collapse navbar-collapse" id="navbarNav">
-                        <ul className="navbar-nav">
+                        <ul className="navbar-nav ms-auto">
                             <li className="nav-item">
-                                <a className="nav-link active text-white" aria-current="page" href="/carrito/">Carrito</a>
-                            </li>
-                            <li className="nav-item">
-                                <a className="nav-link text-white" href="/categoria/">Categoria</a>
-                            </li>
-                            <li className="nav-item">
-                                <a className="nav-link text-white" href="/cliente/">Cliente</a>
-                            </li>
-                            <li className="nav-item">
-                                <a className="nav-link text-white" href="/entrada/">Entrada</a>
-                            </li>
-                            <li className="nav-item">
-                                <a className="nav-link text-white" href="/pedido/">Pedido</a>
-                            </li>
-                            <li className="nav-item">
-                                <a className="nav-link text-white" href="/pedidoprodcuto/">PedidoProducto</a>
-                            </li>
-                            <li className="nav-item">
-                                <a className="nav-link text-white" href="/prodcuto/">Producto</a>
-                            </li>
-                            <li className="nav-item">
-                                <a className="nav-link text-white" href="/responsable/">Responsable</a>
-                            </li>
-                            <li className="nav-item">
-                                <a className="nav-link text-white" href="/traslado/">Traslado</a>
-                            </li>
-                            <li className="nav-item">
-                                <a className="nav-link text-white" href="/unidad/">Unidad</a>
-                            </li>
-                            <li className="nav-item">
-                                <a className="nav-link text-white" href="/venta/">Venta</a>
+                                <Link 
+                                    className="nav-link" 
+                                    to="/login" 
+                                    style={{ 
+                                        color: '#fff', 
+                                        fontWeight: 'bold',
+                                        textDecoration: 'none'
+                                    }}
+                                    onMouseOver={(e) => e.currentTarget.style.color = '#fff'}
+                                    onMouseOut={(e) => e.currentTarget.style.color = '#fff'}
+                                >
+                                    <FontAwesomeIcon icon={faSignInAlt} className="me-2" />
+                                    Iniciar Sesión
+                                </Link>
                             </li>
                         </ul>
                     </div>
                 </div>
             </nav>
-        </>
-    )
+        </React.Fragment>
+    );
 }
 
 export default NavPub;

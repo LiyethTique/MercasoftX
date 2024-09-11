@@ -1,50 +1,50 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 
-const FormUnidad = ({ buttonForm, unidad, URI, updateTextButton }) => {
-    const [Nom_Undidad, setNom_Unidad] = useState('')
+const FormUnidad = ({ buttonForm, entity, URI, updateTextButton }) => {
+    const [field1, setField1] = useState('')
+    // Aquí colocas los demás campos
 
     const sendForm = (e) => {
         e.preventDefault()
 
         if (buttonForm === 'Actualizar') {
-            console.log('actualizando ando...')
-
-            axios.put(URI + unidad.Id_Unidad, {
-                Nom_Undidad: Nom_Undidad
+            axios.put(URI + entity.Id_Entity, {
+                field1: field1,
+                // Aquí colocas los demás campos
             })
             updateTextButton('Enviar')
             clearForm()
 
         } else if (buttonForm === 'Enviar') {
-            console.log('guardando ando...')
-
             axios.post(URI, {
-                Nom_Undidad: Nom_Undidad
+                field1: field1,
+                // Aquí colocas los demás campos
             })
-
             clearForm()
         }
     }
 
     const clearForm = () => {
-        setNom_Unidad('')
+        setField1('')
+        // Aquí reseteas los demás campos
     }
 
     const setData = () => {
-        setNom_Unidad(unidad.Nom_Undidad)
+        setField1(entity.field1)
+        // Aquí configuras los demás campos
     }
 
     useEffect(() => {
         setData()
-    }, [unidad])
+    }, [entity])
 
     return (
-        <form id="unidadForm" action="" onSubmit={sendForm} className="table table-striped">
-            <label htmlFor="nombreUnidad">Nombre de la iunidad</label>
-            <input type="text" id="nombreUnidad" value={Nom_Undidad} onChange={(e) => setNom_Unidad(e.target.value)} />
+        <form id="entityForm" onSubmit={sendForm} className="table table-striped">
+            <label htmlFor="field1">Campo 1</label>
+            <input type="text" id="field1" value={field1} onChange={(e) => setField1(e.target.value)} />
             {/* Aquí colocas los demás campos */}
-            <input type="submit" id="boton" value={buttonForm} className="btn btn-success" />
+            <input type="submit" value={buttonForm} className="btn btn-success" />
         </form>
     )
 }

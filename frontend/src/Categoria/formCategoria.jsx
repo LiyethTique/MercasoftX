@@ -1,52 +1,78 @@
-import axios from "axios";
-import { useState, useEffect } from "react";
+import axios from 'axios';
+import { useState, useEffect } from 'react';
+import Swal from 'sweetalert2';
 
-const FormCategoria = ({ buttonForm, entity, URI, updateTextButton }) => {
-    const [field1, setField1] = useState('')
-    // Aquí colocas los demás campos
+const FormCategoria = ({ buttonForm, formData = { Nom_Categoria: "" }, handleSuccess }) => {
+    // Cambia la URI del backend según sea necesario
+    const URI = "http://localhost:3002/categoria/"; // Asegúrate de que este puerto y ruta sean correctos
 
-    const sendForm = (e) => {
-        e.preventDefault()
-
-        if (buttonForm === 'Actualizar') {
-            axios.put(URI + entity.Id_Entity, {
-                field1: field1,
-                // Aquí colocas los demás campos
-            })
-            updateTextButton('Enviar')
-            clearForm()
-
-        } else if (buttonForm === 'Enviar') {
-            axios.post(URI, {
-                field1: field1,
-                // Aquí colocas los demás campos
-            })
-            clearForm()
-        }
-    }
-
-    const clearForm = () => {
-        setField1('')
-        // Aquí reseteas los demás campos
-    }
-
-    const setData = () => {
-        setField1(entity.field1)
-        // Aquí configuras los demás campos
-    }
+    const [categoria, setCategoria] = useState(formData);
 
     useEffect(() => {
-        setData()
-    }, [entity])
+        setCategoria(formData);
+    }, [formData]);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setCategoria({ ...categoria, [name]: value });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            if (buttonForm === 'Actualizar') {
+                // Verifica que 'Id_Categoria' esté definido para la actualización
+                if (!categoria.Id_Categoria) {
+                    throw new Error("ID de categoría no proporcionado.");
+                }
+                await axios.put(`${URI}${categoria.Id_Categoria}`, categoria);
+                Swal.fire({
+                    title: "¡Actualizado!",
+                    text: "La categoría ha sido actualizada exitosamente.",
+                    icon: "success",
+                    confirmButtonColor: "#3085d6",
+                    confirmButtonText: "OK"
+                });
+            } else {
+                await axios.post(URI, categoria);
+                Swal.fire({
+                    title: "¡Creado!",
+                    text: "La categoría ha sido creada exitosamente.",
+                    icon: "success",
+                    confirmButtonColor: "#3085d6",
+                    confirmButtonText: "OK"
+                });
+            }
+
+            handleSuccess(); // Refrescar datos en el componente padre
+        } catch (error) {
+            Swal.fire({
+                title: "Error",
+                text: error.response?.data?.message || "Error al guardar la categoría",
+                icon: "error",
+                confirmButtonColor: "#d33",
+                confirmButtonText: "OK"
+            });
+        }
+    };
 
     return (
-        <form id="entityForm" onSubmit={sendForm} className="table table-striped">
-            <label htmlFor="field1">Campo 1</label>
-            <input type="text" id="field1" value={field1} onChange={(e) => setField1(e.target.value)} />
-            {/* Aquí colocas los demás campos */}
-            <input type="submit" value={buttonForm} className="btn btn-success" />
+        <form onSubmit={handleSubmit}>
+            <div className="mb-3">
+                <label htmlFor="Nom_Categoria" className="form-label">Nombre de la Categoría</label>
+                <input
+                    type="text"
+                    className="form-control"
+                    id="Nom_Categoria"
+                    name="Nom_Categoria"
+                    value={categoria.Nom_Categoria || ""}
+                    onChange={handleChange}
+                    required
+                />
+            </div>
+            <button type="submit" className="btn btn-primary">{buttonForm}</button>
         </form>
-    )
-}
+    );
+};
 
-export default FormCategoria
+export default FormCategoria;

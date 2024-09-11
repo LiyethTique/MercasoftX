@@ -1,0 +1,50 @@
+/* Estilos generales del formulario */
+#entradaForm {
+    background-color: #f9f9f9; /* Color de fondo claro */
+    border-radius: 10px; /* Bordes redondeados */
+    padding: 20px; /* Espaciado interno */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+    max-width: 600px; /* Ancho máximo del formulario */
+    margin: 0 auto; /* Centrar el formulario */
+}
+
+/* Estilos de las etiquetas */
+#entradaForm label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333; /* Color de texto oscuro */
+}
+
+/* Estilos de los campos de entrada */
+#entradaForm input[type="date"],
+#entradaForm input[type="time"],
+#entradaForm input[type="text"] {
+    width: 100%; /* Ancho completo del contenedor */
+    padding: 10px; /* Espaciado interno */
+    border: 1px solid #ddd; /* Borde ligero */
+    border-radius: 5px; /* Bordes redondeados */
+    box-sizing: border-box; /* Incluir padding y border en el ancho total */
+    margin-bottom: 15px; /* Espaciado entre los campos */
+    font-size: 16px; /* Tamaño de fuente */
+}
+
+/* Estilo del botón */
+#entradaForm button {
+    background-color: orange; /* Color de fondo verde */
+    border: none; /* Sin borde */
+    color: white; /* Color del texto */
+    padding: 15px 20px; /* Espaciado interno */
+    text-align: center; /* Centrar el texto */
+    text-decoration: none; /* Sin subrayado */
+    display: inline-block; /* Ajustar al contenido */
+    font-size: 16px; /* Tamaño de fuente */
+    border-radius: 5px; /* Bordes redondeados */
+    cursor: pointer; /* Cursor de mano */
+    transition: background-color 0.3s; /* Transición de color suave */
+}
+
+/* Estilo del botón en hover */
+#entradaForm button:hover {
+    background-color: orange; /* Color de fondo en hover */
+}

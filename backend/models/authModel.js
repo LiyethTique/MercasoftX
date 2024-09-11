@@ -1,5 +1,5 @@
 import { DataTypes } from 'sequelize';
-import bcrypt from 'bcrypt'; // Asegúrate de tener instalado bcrypt o bcryptjs
+import bcryptjs from 'bcryptjs'; // Asegúrate de tener instalado bcryptjs o bcryptjsjs
 import db from '../database/db.js';
 
 const UserModel = db.define('usuario', {
@@ -8,7 +8,7 @@ const UserModel = db.define('usuario', {
     autoIncrement: true,
     primaryKey: true,
   },
-  Cor_Usuario: {
+  Cor_Usuario: {  // Corregido el nombre de la columna
     type: DataTypes.STRING,
     unique: true,
     allowNull: false,
@@ -23,12 +23,15 @@ const UserModel = db.define('usuario', {
 }, {
   freezeTableName: true,
   tableName: 'usuario',
+  timestamps: true, // Asegura que los timestamps sean manejados correctamente
+  createdAt: 'createdAT', // Mapear el nombre correcto de la columna
+  updatedAt: 'updatedAT', // Mapear el nombre correcto de la columna
 });
 
 // Hash de la contraseña antes de guardar el usuario en la base de datos
 UserModel.beforeCreate(async (user) => {
-  const salt = await bcrypt.genSalt(10);
-  user.Password_Usuario = await bcrypt.hash(user.Password_Usuario, salt);
+  const salt = await bcryptjs.genSalt(10);
+  user.Password_Usuario = await bcryptjs.hash(user.Password_Usuario, salt);
 });
 
 export default UserModel;

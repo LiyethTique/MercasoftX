@@ -334,7 +334,7 @@ DROP TABLE IF EXISTS `usuario`;
 CREATE TABLE `usuario` (
   `Id_Usuario` int NOT NULL AUTO_INCREMENT,
   `Nom_Usuario` varchar(100) DEFAULT NULL,
-  `Con_Usuario` varchar(100) DEFAULT NULL,
+  `Cor_Usuario` varchar(100) DEFAULT NULL,
   `Password_Usuario` varchar(255) DEFAULT NULL,
   `createdAT` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updatedAT` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

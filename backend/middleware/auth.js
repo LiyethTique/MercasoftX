@@ -8,7 +8,7 @@ export const verifyToken = (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_LLAVE);
     req.userId = decoded.id; // Guardamos el ID del usuario para futuras referencias
     next(); // Si el token es válido, continuamos
   } catch (err) {

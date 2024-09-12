@@ -1,0 +1,46 @@
+/* WriteTable.css */
+
+/* Estilos para los botones con tamaño común */
+.btn-custom {
+  border-radius: 4px; /* Bordes redondeados */
+  padding: 10px 20px; /* Espaciado interno del botón */
+  font-size: 16px; /* Tamaño del texto del botón */
+  font-weight: bold; /* Negrita en el texto del botón */
+  text-align: center; /* Alineación del texto al centro */
+  cursor: pointer; /* Cambiar cursor al pasar sobre el botón */
+  transition: background-color 0.3s, color 0.3s; /* Transición suave para cambios de color */
+}
+
+btn-custom-primary {
+  background-color: #007bff; /* Color de fondo azul */
+  border: 1px solid #007bff; /* Borde azul */
+  color: #ffffff; /* Color del texto blanco */
+  padding: 10px 20px; /* Ajusta el relleno (padding) para cambiar el tamaño del botón */
+  font-size: 16px; /* Ajusta el tamaño del texto */
+  border-radius: 5px; /* Ajusta el radio del borde (esquinas redondeadas) */
+  display: flex; /* Usa flexbox para centrar el contenido */
+  align-items: center; /* Centra verticalmente el contenido */
+  justify-content: center; /* Centra horizontalmente el contenido */
+  min-width: 100px; /* Ancho mínimo del botón */
+  height: 40px; /* Altura del botón */
+  text-align: center; /* Alinea el texto al centro */
+  cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+}
+
+.btn-custom-primary img {
+  max-width: 20px; /* Ajusta el tamaño máximo de las imágenes dentro del botón */
+  max-height: 20px;
+}
+
+
+/* Botón de acción secundaria (Cancelar) */
+.btn-custom-secondary {
+  background-color: #6c757d; /* Color de fondo gris */
+  border: 1px solid #6c757d; /* Borde gris */
+  color: #ffffff; /* Color del texto blanco */
+}
+
+.btn-custom-secondary:hover {
+  background-color: #5a6268; /* Color de fondo gris oscuro al pasar el cursor */
+  border-color: #5a6268; /* Borde gris oscuro al pasar el cursor */
+}

@@ -1,73 +1,96 @@
-import axios from "axios";
-import { useState, useEffect} from "react";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
-const FormVenta = ({ buttonForm, venta, URI, updateTextButton }) => {
-    const [Fec_Venta, setFecha] = useState('')
-    const [Val_Venta, setValor] = useState('')
-    const [Id_Pedido, setId_Pedido] = useState('')
+const FormVenta = ({ buttonForm, venta, onSubmit }) => {
+  const [formData, setFormData] = useState({
+    Fec_Venta: '',
+    Val_Venta: '',
+    Id_Pedido: ''
+  });
+  const [pedidos, setPedidos] = useState([]); // Estado para los pedidos
 
-    const sendForm = (e) => {
-        e.preventDefault()
-
-        if (buttonForm == 'Actualizar') {
-            console.log('actualizando ando...')
-
-            axios.put(URI + venta.Id_Venta, {
-                Fec_Venta: Fec_Venta,
-                Val_Venta: Val_Venta,
-                Id_Pedido: Id_Pedido
-            })
-
-            updateTextButton('Enviar')
-            clearForm()
-
-        } else if (buttonForm == 'Enviar') {
-            console.log('guardando ando...')
-
-            axios.post(URI, {
-                Fec_Venta: Fec_Venta,
-                Val_Venta: Val_Venta,
-                Id_Pedido: Id_Pedido
-            })
-
-            clearForm()
-            sendForm()
-        }
+  useEffect(() => {
+    if (venta) {
+      setFormData(venta);
     }
-    const clearForm = () => {
-        setFecha('')
-        setValor('')
-        setId_Pedido('')
-    }
-    const setData = () => {
-        setFecha(venta.Fec_Venta)
-        setValor(venta.Val_Venta)
-        setId_Pedido(venta.Id_Pedido)
-    }
+  }, [venta]);
 
-    useEffect(() => {
-        setData()
-    }, [venta])
+  useEffect(() => {
+    const fetchPedidos = async () => {
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_SERVER_BACK}/pedido/`);
+        setPedidos(response.data);
+      } catch (error) {
+        console.error('Error al obtener los pedidos:', error);
+      }
+    };
 
-    return (
-        <>
-            <form id="ventaForm" action="" onSubmit={sendForm} className="table table-striped">
-                <label htmlFor="fechaVenta">Fecha Venta</label>
-                <input type="date" id="fechaVenta" value={Fec_Venta} required onChange={(e) => setFecha(e.target.value)} />
-                <br />
+    fetchPedidos();
+  }, []);
 
-                <label htmlFor="valorVenta">Valor Venta</label>
-                <input type="number" id="valorVenta" value={Val_Venta} required onChange={(e) => setValor(e.target.value)} />
-                <br />
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-                <label htmlFor="codigoPedido">Codigo del pedido</label>
-                <input type="number" id="codigoPedido" value={Id_Pedido} required onChange={(e) => setId_Pedido(e.target.value)} />
-                <br />
-                <input type="submit" id="boton" value={buttonForm} className="btn btn-success" />
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit(formData);
+  };
 
-            </form>
-        </>
-    )
+  return (
+    <form onSubmit={handleSubmit}>
+      <div className="mb-3">
+        <label htmlFor="Fec_Venta" className="form-label">Fecha Venta</label>
+        <input
+          type="date"
+          className="form-control"
+          id="Fec_Venta"
+          name="Fec_Venta"
+          value={formData.Fec_Venta}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <div className="mb-3">
+        <label htmlFor="Val_Venta" className="form-label">Valor Venta</label>
+        <input
+          type="number"
+          step="0.01"
+          className="form-control"
+          id="Val_Venta"
+          name="Val_Venta"
+          value={formData.Val_Venta}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <div className="mb-3">
+        <label htmlFor="Id_Pedido" className="form-label">ID Pedido</label>
+        <select
+          className="form-control"
+          id="Id_Pedido"
+          name="Id_Pedido"
+          value={formData.Id_Pedido}
+          onChange={handleChange}
+          required
+        >
+          <option value="">Seleccione el valor del pedido</option>
+          {pedidos && pedidos.length > 0 ? (
+            pedidos.map((pedido) => (
+              <option key={pedido.Id_Pedido} value={pedido.Id_Pedido}>
+                {pedido.Val_Pedido}
+              </option>
+            ))
+          ) : (
+            <option value="">Cargando pedidos...</option>
+          )}
+        </select>
+      </div>
+      <button type="submit" className="btn btn-primary">
+        {buttonForm}
+      </button>
+    </form>
+  );
+};
 
-}
-export default FormVenta
+export default FormVenta;

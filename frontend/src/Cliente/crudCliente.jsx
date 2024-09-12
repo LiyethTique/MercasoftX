@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import FormCliente from '../Cliente/formCliente.jsx';
 import Sidebar from '../Sidebar/Sidebar';
 import Swal from 'sweetalert2';
-import WriteTable from '../Tabla/Data-Table.jsx';
+
 
 const URI = (process.env.SERVER_BACK || 'http://localhost:3002') + '/cliente/';
 

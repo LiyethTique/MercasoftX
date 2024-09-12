@@ -11,11 +11,11 @@ function NavPri() {
                     </button>
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li className="nav-item">
+                            <li className="nav-item">
                                 <a className="nav-link active text-white" aria-current="page" href="/carrito/">Carrito</a>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link text-white" href="/categoria/">Categoria</a>
+                                <a className="nav-link text-white" href="/categoria/">Categoría</a>
                             </li>
                             <li className="nav-item">
                                 <a className="nav-link text-white" href="/cliente/">Cliente</a>
@@ -27,10 +27,10 @@ function NavPri() {
                                 <a className="nav-link text-white" href="/pedido/">Pedido</a>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link text-white" href="/pedidoprodcuto/">PedidoProducto</a>
+                                <a className="nav-link text-white" href="/pedidoproducto/">PedidoProducto</a>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link text-white" href="/prodcuto/">Producto</a>
+                                <a className="nav-link text-white" href="/producto/">Producto</a>
                             </li>
                             <li className="nav-item">
                                 <a className="nav-link text-white" href="/responsable/">Responsable</a>
@@ -45,15 +45,14 @@ function NavPri() {
                                 <a className="nav-link text-white" href="/venta/">Venta</a>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link text-white" href="/contacto"></a>
+                                <a className="nav-link text-white" href="/contacto/">Contacto</a>
                             </li>
                         </ul>
-                       
                     </div>
                 </div>
             </nav>
         </>
-    )
+    );
 }
 
 export default NavPri;

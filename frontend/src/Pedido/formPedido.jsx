@@ -1,113 +1,103 @@
-import axios from "axios";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
-const FormPedido = ({ buttonForm, pedido, URI, updateTextButton, onSuccess }) => {
-    const [fecPedido, setFecPedido] = useState('');
-    const [idCliente, setIdCliente] = useState('');
-    const [estPedido, setEstPedido] = useState('');
-    const [valPedido, setValPedido] = useState('');
+const FormPedido = ({ buttonForm, pedido, onSubmit }) => {
+  const [formData, setFormData] = useState({
+    Fec_Pedido: '',
+    Id_Cliente: '',
+    Est_Pedido: '',
+    Val_Pedido: ''
+  });
+  const [clientes, setClientes] = useState([]);
 
-    const sendForm = async (e) => {
-        e.preventDefault();
+  useEffect(() => {
+    if (pedido) {
+      setFormData(pedido);
+    }
+    // Fetch clientes on component mount
+    fetchClientes();
+  }, [pedido]);
 
-        try {
-            if (buttonForm === 'Actualizar') {
-                await axios.put(URI + pedido.Id_Pedido, {
-                    Fec_Pedido: fecPedido,
-                    Id_Cliente: idCliente,
-                    Est_Pedido: estPedido,
-                    Val_Pedido: valPedido
-                });
+  const fetchClientes = async () => {
+    try {
+      const response = await axios.get(process.env.REACT_APP_SERVER_BACK + '/cliente/');
+      setClientes(response.data);
+    } catch (error) {
+      console.error("Error fetching clientes:", error);
+    }
+  };
 
-                updateTextButton('Enviar');
-                onSuccess(); // Notifica el éxito a CrudPedido
-                clearForm();
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-            } else if (buttonForm === 'Enviar') {
-                await axios.post(URI, {
-                    Fec_Pedido: fecPedido,
-                    Id_Cliente: idCliente,
-                    Est_Pedido: estPedido,
-                    Val_Pedido: valPedido
-                });
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit(formData);
+  };
 
-                onSuccess(); // Notifica el éxito a CrudPedido
-                clearForm();
-            }
-        } catch (error) {
-            alert('Error al guardar el pedido');
-        }
-    };
-
-    const clearForm = () => {
-        setFecPedido('');
-        setIdCliente('');
-        setEstPedido('');
-        setValPedido('');
-    };
-
-    useEffect(() => {
-        if (pedido.Fec_Pedido) {
-            setFecPedido(pedido.Fec_Pedido);
-            setIdCliente(pedido.Id_Cliente);
-            setEstPedido(pedido.Est_Pedido);
-            setValPedido(pedido.Val_Pedido);
-        }
-    }, [pedido]);
-
-    return (
-        <>
-            <form id="pedidoForm" action="" onSubmit={sendForm} className="table table-striped">
-                <label htmlFor="fecPedido">Fecha Pedido</label>
-                <input
-                    type="date"
-                    id="fecPedido"
-                    value={fecPedido}
-                    required
-                    onChange={(e) => setFecPedido(e.target.value)}
-                />
-                <br />
-
-                <label htmlFor="idCliente">ID Cliente</label>
-                <input
-                    type="number"
-                    id="idCliente"
-                    value={idCliente}
-                    required
-                    onChange={(e) => setIdCliente(e.target.value)}
-                />
-                <br />
-
-                <label htmlFor="estPedido">Estado Pedido</label>
-                <input
-                    type="text"
-                    id="estPedido"
-                    value={estPedido}
-                    required
-                    onChange={(e) => setEstPedido(e.target.value)}
-                />
-                <br />
-
-                <label htmlFor="valPedido">Valor Pedido</label>
-                <input
-                    type="number"
-                    id="valPedido"
-                    value={valPedido}
-                    step="0.01"
-                    required
-                    onChange={(e) => setValPedido(e.target.value)}
-                />
-                <br />
-
-                <input
-                    type="submit"
-                    id="boton"
-                    value={buttonForm}
-                    className="btn btn-success"
-                />
-            </form>
-        </>
-    );
+  return (
+    <form onSubmit={handleSubmit}>
+      <div className="mb-3">
+        <label htmlFor="Fec_Pedido" className="form-label">Fecha Pedido</label>
+        <input
+          type="date"
+          className="form-control"
+          id="Fec_Pedido"
+          name="Fec_Pedido"
+          value={formData.Fec_Pedido}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <div className="mb-3">
+        <label htmlFor="Id_Cliente" className="form-label">Cliente</label>
+        <select
+          className="form-control"
+          id="Id_Cliente"
+          name="Id_Cliente"
+          value={formData.Id_Cliente}
+          onChange={handleChange}
+          required
+        >
+          <option value="">Seleccione un cliente</option>
+          {clientes.map(cliente => (
+            <option key={cliente.Id_Cliente} value={cliente.Id_Cliente}>
+              {cliente.Nom_Cliente}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div className="mb-3">
+        <label htmlFor="Est_Pedido" className="form-label">Estado Pedido</label>
+        <input
+          type="text"
+          className="form-control"
+          id="Est_Pedido"
+          name="Est_Pedido"
+          value={formData.Est_Pedido}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <div className="mb-3">
+        <label htmlFor="Val_Pedido" className="form-label">Valor Pedido</label>
+        <input
+          type="number"
+          step="0.01"
+          className="form-control"
+          id="Val_Pedido"
+          name="Val_Pedido"
+          value={formData.Val_Pedido}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <button type="submit" className="btn btn-primary">
+        {buttonForm}
+      </button>
+    </form>
+  );
 };
 
 export default FormPedido;

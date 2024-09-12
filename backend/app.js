@@ -17,6 +17,11 @@ import trasladoRoutes from './routes/trasladoRoutes.js'
 import unidadRoutes from './routes/unidadRoutes.js'
 import ventaRoutes from './routes/ventaRoutes.js'
 
+// Importar modelos para id
+import Venta from './models/ventaModel.js'
+import Pedido from './models/pedidoModel.js'
+import Cliente from './models/clienteModel.js'
+
 
 
 // Carga las variables de entorno antes de conectar a la basse de datos
@@ -57,3 +62,13 @@ app.get('/', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
+
+
+// En el modelo o archivo de asociaciones
+Venta.belongsTo(Pedido, { as: 'pedido', foreignKey: 'Id_Pedido' });
+Pedido.hasMany(Venta, { as: 'ventas', foreignKey: 'Id_Pedido' });
+
+Cliente.hasMany(Pedido, { as: 'pedidos', foreignKey: 'Id_Cliente' });
+Pedido.belongsTo(Cliente, { as: 'cliente', foreignKey: 'Id_Cliente' });
+
+export {Venta, Pedido, Cliente }

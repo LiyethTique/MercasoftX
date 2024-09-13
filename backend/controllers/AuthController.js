@@ -11,24 +11,25 @@ export const generateToken = (user) => {
 };
 
 // Registro de usuario
+// Registro de usuario
 export const registerUser = async (req, res) => {
   const { Cor_Usuario, Password_Usuario } = req.body;
   try {
     // Hash de la contraseña
-    // const hashedPassword = await bcrypt.hash(Password_Usuario, 10);
+    const hashedPassword = await bcrypt.hash(Password_Usuario, 10);
 
     // Guardar el usuario en la base de datos
     const user = await UserModel.create({
       Cor_Usuario,
-      Password_Usuario: Password_Usuario
+      Password_Usuario: hashedPassword // Usa el hash de la contraseña
     });
-    console.log(user)
     res.status(201).json({ message: 'Usuario creado', user });
   } catch (error) {
-    console.log('Error al registrar usuario:', error); // Añadir log para ver detalles del error
+    console.log('Error al registrar usuario:', error);
     res.status(500).json({ error: 'Error al registrar usuario' });
   }
 };
+
 
 // Login de usuario
 export const loginUser = async (req, res) => {

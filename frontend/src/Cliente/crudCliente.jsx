@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 import WriteTable from '../Tabla/Data-Table';
 import ModalForm from '../Model/Model';
 
-const URI = (process.env.REACT_APP_SERVER_BACK || 'http://localhost:3001') + '/cliente/'; // Ruta de clientes
+const URI = process.env.REACT_APP_SERVER_BACK + '/cliente/'; // Ruta de clientes
 
 const CrudCliente = () => {
   const [clienteList, setClienteList] = useState([]);

@@ -24,7 +24,6 @@ function App() {
     <>
       <Routes>
         <Route path="/" element={<Imagen />} />
-        <Route path="/home" element={<Home />} />
         <Route path="/carrito" element={<Carrito />} />
         <Route path="/categoria" element={<Categoria />} />
         <Route path="/cliente" element={<Cliente />} />

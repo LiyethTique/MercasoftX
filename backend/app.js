@@ -39,10 +39,10 @@ app.use(express.json())
 app.post('/auth/login', loginUser);  // Login de usuario
 app.post('/auth/register', registerUser);  // Registro de usuario
 
-app.use(verifyToken);
+
 
 // Aplicar el middleware `verifyToken` globalmente a todas las rutas protegidas
-app.use(verifyToken);
+// app.use(verifyToken);
 app.use('/carrito', carritoRoutes)
 app.use('/categoria', catagoriaRoutes)
 app.use('/cliente', clienteRoutes)

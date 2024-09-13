@@ -65,7 +65,7 @@ const FormVenta = ({ buttonForm, venta, onSubmit }) => {
         />
       </div>
       <div className="mb-3">
-        <label htmlFor="Id_Pedido" className="form-label">ID Pedido</label>
+        <label htmlFor="Id_Pedido" className="form-label">Valor del Pedido</label>
         <select
           className="form-control"
           id="Id_Pedido"

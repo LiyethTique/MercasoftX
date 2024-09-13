@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 import WriteTable from '../Tabla/Data-Table';
 import ModalForm from '../Model/Model';
 
-const URI = (process.env.REACT_APP_SERVER_BACK || 'http://localhost:3001') + '/venta/'; // Ruta de ventas
+const URI = process.env.REACT_APP_SERVER_BACK  + '/venta/'; // Ruta de ventas
 
 const CrudVenta = () => {
   const [ventaList, setVentaList] = useState([]);
@@ -90,7 +90,7 @@ const CrudVenta = () => {
     setIsModalOpen(true);
   };
 
-  const titles = ['ID Venta', 'Fecha Venta', 'Valor Venta', 'Valor del Pedido', 'Acciones'];
+  const titles = ['Codigo de Venta', 'Fecha de la Venta', 'Valor de la Venta', 'Valor del Pedido', 'Acciones'];
   const data = ventaList.map(venta => [
     venta.Id_Venta,
     venta.Fec_Venta,

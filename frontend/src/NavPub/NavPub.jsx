@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHome, faEnvelope, faSignInAlt, faUserPlus, faUsers } from "@fortawesome/free-solid-svg-icons";
-import './NavPub.css'
+import { faHome, faEnvelope, faSignInAlt, faUserPlus, faUsers, faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+import './NavPub.css';
 
 const NavPub = () => {
     return (
@@ -16,6 +16,10 @@ const NavPub = () => {
                     <Link className="navbar-brand" to="/contacto" style={{ color: '#fff', fontWeight: 'bold' }}>
                         <FontAwesomeIcon icon={faUsers} className="me-2" />
                         Contacto
+                    </Link>
+                    <Link className="navbar-brand" to="/carrito" style={{ color: '#fff', fontWeight: 'bold' }}>
+                        <FontAwesomeIcon icon={faShoppingCart} className="me-2" />
+                        Carrito
                     </Link>
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon" style={{ backgroundColor: '#fff' }}></span>

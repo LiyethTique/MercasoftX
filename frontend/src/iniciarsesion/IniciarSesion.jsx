@@ -1,99 +1,105 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
-import Swal from 'sweetalert2';
-import { Link } from 'react-router-dom';
-import '../css/iniciarSesion.css';
+import { ClientSession } from 'react-client-session';
+import './IniciarSesion.css'; // Importa los estilos que ya definiste
 import NavPub from '../NavPub/NavPub';
+import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Asegúrate de importar los íconos correctamente
+import { Link } from 'react-router-dom'; // Asegúrate de importar Link si lo estás usando
 
-const Login = ({ setAuthenticated }) => {
-  const [formData, setFormData] = useState({ email: '', password: '' });
+const URI = process.env.REACT_APP_SERVER_BACK + '/auth/login';
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
+ClientSession && ClientSession.setStoreType("localStorage"); // Guardar la sesión en el localStorage
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    const { email, password } = formData;
+const LoginForm = () => {
+  // Estados para los campos del formulario
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
-    if (!email || !password) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Todos los campos son obligatorios',
-      });
-      return;
-    }
+  // Manejar el submit del formulario
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setError('');
 
     try {
-      const response = await axios.post((process.env.REACT_APP_SERVER_BACK || 'http://localhost:3002') + '/auth/login', { email, password });
+      const response = await axios.post(URI, {
+        Cor_Usuario: email,
+        Password_Usuario: password,
+      });
+
+      console.log(response.data); // Imprime la respuesta para verificar el formato
 
       if (response.data.success) {
-        Swal.fire({
-          icon: 'success',
-          title: 'Inicio de sesión exitoso',
-        });
-        setAuthenticated(true);
+        ClientSession.set('userId', response.data.userId);
+        alert('Login exitoso');
       } else {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: response.data.message || 'Credenciales incorrectas',
-        });
+        setError('Correo o contraseña incorrectos.');
+        console.log(response.data.error);
       }
     } catch (error) {
-      console.error(error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Error de servidor',
-        text: error.response?.data?.message || 'Error al intentar conectarse con el servidor',
-      });
+      console.error('Error en el inicio de sesión:', error.response ? error.response.data : error.message);
+      setError('Hubo un problema con el inicio de sesión.');
+    }
+  };
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    if (name === 'email') {
+      setEmail(value);
+    } else if (name === 'password') {
+      setPassword(value);
     }
   };
 
   return (
     <>
-      <NavPub/>  {/* Barra de navegación en la parte superior */}
-      
+      <NavPub />  {/* Barra de navegación en la parte superior */}
       <div className="login-container">
-       
-        <form className="login-form" onSubmit={handleLogin}>
+        <form className="login-form" onSubmit={handleSubmit}>
           <center>
-        <h2>Iniciar Sesión</h2>
-        <img rel="icon" type="image/svg+xml" src="/Logo-Icono.svg" width="100px" alt="Logo" />
-        </center>
+            <h2>Iniciar Sesión</h2>
+            <img rel="icon" type="image/svg+xml" src="/Logo-Icono.svg" width="150px" alt="Logo" />
+          </center>
           <label htmlFor="email">Correo Electrónico</label>
           <input
             type="email"
             id="email"
             name="email"
-            value={formData.email}
+            value={email}
             onChange={handleInputChange}
             placeholder="Ingrese su correo"
           />
 
           <label htmlFor="password">Contraseña</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleInputChange}
-            placeholder="Ingrese su contraseña"
-          />
+          <div className="password-container">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              id="password"
+              name="password"
+              value={password}
+              onChange={handleInputChange}
+              placeholder="Ingrese su contraseña"
+            />
+            <button
+              type="button"
+              className="password-toggle"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
+          </div>
 
           <button type="submit" className="login-button">Iniciar Sesión</button>
+          <br />
+          <br />
+          <p className="register-prompt">
+            ¿No tienes una cuenta? <Link to="/register" className="register-link">Regístrate aquí</Link>
+          </p>
         </form>
-        <p className="register-prompt">
-          ¿No tienes una cuenta? <Link to="/register">Regístrate aquí</Link>
-        </p>
       </div>
     </>
   );
 };
 
-export default Login;
+export default LoginForm;

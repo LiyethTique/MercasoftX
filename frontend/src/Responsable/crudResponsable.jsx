@@ -100,28 +100,27 @@ const CrudResponsable = () => {
     responsable.Tip_Genero,
     <div key={responsable.Id_Responsable}>
       <button 
-                className="btn btn-warning me-2" 
-                onClick={() => getResponsable(responsable.Id_Responsable)}
-                title="Editar"
-            >
-                <img 
-                    src="/pencil-square.svg" 
-                    alt="Editar" 
-                    style={{ width: '24px', height: '24px' }}
-                />
-            </button>
-            <button 
-                className="btn btn-danger" 
-                onClick={() => deleteResponsable(responsable.Id_Responsable)}
-                title="Borrar"
-            >
-                <img 
-                    src="/archive.svg" 
-                    alt="Borrar" 
-                    style={{ width: '24px', height: '24px' }}
-                />
-            </button>
-
+        className="btn btn-warning btn-sm me-2" // btn-sm reduce el tamaño del botón
+        onClick={() => getResponsable(responsable.Id_Responsable)}
+        title="Editar"
+      >
+        <img 
+          src="/pencil-square.svg" 
+          alt="Editar" 
+          style={{ width: '16px', height: '16px' }} // Tamaño más pequeño
+        />
+      </button>
+      <button 
+        className="btn btn-danger btn-sm" // btn-sm también en el botón de borrar
+        onClick={() => deleteResponsable(responsable.Id_Responsable)}
+        title="Borrar"
+      >
+        <img 
+          src="/archive.svg" 
+          alt="Borrar" 
+          style={{ width: '16px', height: '16px' }} // Tamaño más pequeño
+        />
+      </button>
     </div>
   ]);
 
@@ -133,22 +132,19 @@ const CrudResponsable = () => {
           <h1>Gestionar Responsables</h1>
         </center>
         
-        {/* Botón para abrir el modal */}
         <div className="d-flex justify-content-between mb-3">
           <button className="btn btn-success d-flex align-items-center" onClick={handleShowForm}>   
-             <img
-             src="/plus-circle (1).svg" // Reemplaza con la ruta de tu icono de agregar
-             alt="Add Icon"
-             style={{ width: '20px', height: '20px', marginRight: '8px', filter: 'invert(100%)' }} // Color blanco
-           />
+            <img
+              src="/plus-circle (1).svg"
+              alt="Add Icon"
+              style={{ width: '20px', height: '20px', marginRight: '8px', filter: 'invert(100%)' }}
+            />
             Registrar
           </button>
         </div>
 
-        {/* Tabla de datos */}
         <WriteTable titles={titles} data={data} />
 
-        {/* Modal Reutilizable */}
         <ModalForm
           isOpen={isModalOpen}
           onClose={() => { setIsModalOpen(false); setResponsable(null); setButtonForm('Enviar'); }}
@@ -169,3 +165,4 @@ const CrudResponsable = () => {
 };
 
 export default CrudResponsable;
+  

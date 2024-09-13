@@ -1,128 +1,69 @@
-import axios from "axios";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
+const FormCliente = ({ buttonForm, cliente, onSubmit }) => {
+  const [formData, setFormData] = useState({
+    Nom_Cliente: '',
+    Cor_Cliente: '',
+    Tel_Cliente: '',
+    Id_Carrito: ''
+  });
 
-const FormCliente = ({ buttonForm, cliente, URI, updateTextButton, onSuccess }) => {
-    const [nomCliente, setNomCliente] = useState('');
-    const [corCliente, setCorCliente] = useState('');
-    const [telCliente, setTelCliente] = useState('');
-    const [idCarrito, setIdCarrito] = useState('');
+  useEffect(() => {
+    if (cliente) {
+      setFormData(cliente);
+    }
+  }, [cliente]);
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        if (name === 'Nom_Cliente') setNomCliente(value);
-        if (name === 'Cor_Cliente') setCorCliente(value);
-        if (name === 'Tel_Cliente') setTelCliente(value);
-        if (name === 'Id_Carrito') setIdCarrito(value);
-    };
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-    const sendForm = async (e) => {
-        e.preventDefault();
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit(formData);
+  };
 
-        try {
-            if (buttonForm === 'Actualizar') {
-                await axios.put(URI + cliente.Id_Cliente, {
-                    Nom_Cliente: nomCliente,
-                    Cor_Cliente: corCliente,
-                    Tel_Cliente: telCliente,
-                    Id_Carrito: idCarrito
-                });
-
-                updateTextButton('Enviar');
-                onSuccess(); // Notifica el éxito a CrudCliente
-                clearForm();
-
-            } else if (buttonForm === 'Enviar') {
-                await axios.post(URI, {
-                    Nom_Cliente: nomCliente,
-                    Cor_Cliente: corCliente,
-                    Tel_Cliente: telCliente,
-                    Id_Carrito: idCarrito
-                });
-
-                onSuccess(); // Notifica el éxito a CrudCliente
-                clearForm();
-            }
-        } catch (error) {
-            alert('Error al guardar el cliente');
-        }
-    };
-
-    const clearForm = () => {
-        setNomCliente('');
-        setCorCliente('');
-        setTelCliente('');
-        setIdCarrito('');
-    };
-
-    const setData = () => {
-        if (cliente.Nom_Cliente) {
-            setNomCliente(cliente.Nom_Cliente);
-            setCorCliente(cliente.Cor_Cliente);
-            setTelCliente(cliente.Tel_Cliente);
-            setIdCarrito(cliente.Id_Carrito);
-        }
-    };
-
-    useEffect(() => {
-        setData();
-    }, [cliente]);
-
-    return (
-        <>
-            <form id="clienteForm" onSubmit={sendForm} className="table table-striped">
-                <label htmlFor="nomCliente">Nombre Cliente</label>
-                <input
-                    type="text"
-                    id="nomCliente"
-                    name="Nom_Cliente"
-                    value={nomCliente}
-                    onChange={handleChange}
-                    required
-                />
-                <br />
-
-                <label htmlFor="corCliente">Correo Cliente</label>
-                <input
-                    type="email"
-                    id="corCliente"
-                    name="Cor_Cliente"
-                    value={corCliente}
-                    onChange={handleChange}
-                    required
-                />
-                <br />
-
-                <label htmlFor="telCliente">Teléfono Cliente</label>
-                <input
-                    type="text"
-                    id="telCliente"
-                    name="Tel_Cliente"
-                    value={telCliente}
-                    onChange={handleChange}
-                    required
-                />
-                <br />
-
-                <label htmlFor="idCarrito">ID Carrito</label>
-                <input
-                    type="number"
-                    id="idCarrito"
-                    name="Id_Carrito"
-                    value={idCarrito}
-                    onChange={handleChange}
-                />
-                <br />
-
-                <input
-                    type="submit"
-                    id="boton"
-                    value={buttonForm}
-                    className="btn btn-success"
-                />
-            </form>
-        </>
-    );
+  return (
+    <form onSubmit={handleSubmit}>
+      <div className="mb-3">
+        <label htmlFor="Nom_Cliente" className="form-label">Nombre Cliente</label>
+        <input
+          type="text"
+          className="form-control"
+          id="Nom_Cliente"
+          name="Nom_Cliente"
+          value={formData.Nom_Cliente}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <div className="mb-3">
+        <label htmlFor="Cor_Cliente" className="form-label">Correo Cliente</label>
+        <input
+          type="email"
+          className="form-control"
+          id="Cor_Cliente"
+          name="Cor_Cliente"
+          value={formData.Cor_Cliente}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <div className="mb-3">
+        <label htmlFor="Tel_Cliente" className="form-label">Teléfono Cliente</label>
+        <input
+          type="text"
+          className="form-control"
+          id="Tel_Cliente"
+          name="Tel_Cliente"
+          value={formData.Tel_Cliente}
+          onChange={handleChange}
+          required
+        />
+      </div>
+    </form>
+  );
 };
 
 export default FormCliente;

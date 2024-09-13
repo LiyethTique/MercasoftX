@@ -61,7 +61,7 @@ const FormPedido = ({ buttonForm, pedido, onSubmit }) => {
           required
         >
           <option value="">Seleccione un cliente</option>
-          {clientes.map(cliente => (
+          {clientes && clientes.map(cliente => (
             <option key={cliente.Id_Cliente} value={cliente.Id_Cliente}>
               {cliente.Nom_Cliente}
             </option>

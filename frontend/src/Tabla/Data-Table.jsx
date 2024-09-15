@@ -1,179 +1,140 @@
-import React, { useEffect, useState } from "react";
-import DataTable from "datatables.net-dt";
-import "datatables.net-responsive-dt";
-import $ from "jquery";
-import { jsPDF } from "jspdf";
-import "jspdf-autotable";
-import * as XLSX from "xlsx";
-import "./WriteTable.css";
-import FormResponsable from "../Responsable/formResponsable";
-import FormCliente from "../Cliente/formCliente"; // Ejemplo de otro formulario
+import React, { useState } from 'react';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import * as XLSX from 'xlsx';
 
-function WriteTable({ titles, data, formComponent, moduleName }) {
-  const [isFormVisible, setIsFormVisible] = useState(false);
-  const [formData, setFormData] = useState({});
-  const [buttonForm, setButtonForm] = useState("Enviar");
+const WriteTable = ({ titles, data, moduleName }) => {
+    const [currentPage, setCurrentPage] = useState(1);
+    const [searchTerm, setSearchTerm] = useState('');
+    const rowsPerPage = 5;
 
-  const handleOpenForm = () => {
-    setIsFormVisible(true);
-  };
-
-  const handleCloseForm = () => {
-    setIsFormVisible(false);
-  };
-
-  const exportToPDF = () => {
-    const doc = new jsPDF();
-    const text = moduleName || "Gestionar"; // Asegúrate de que siempre tenga un valor válido
-    doc.setFontSize(16);
-
-    const pageWidth = doc.internal.pageSize.width;
-    const textX = pageWidth ? pageWidth / 2 : 105; // Establecer un valor predeterminado en caso de que el ancho no esté disponible
-
-    doc.text(text, textX, 10, { align: "center" });
-
-    // Filtrar las columnas a incluir en el PDF
-    const filteredData = data.map(row => row.slice(0, -1)); // Excluye la última columna (Acciones)
+    const exportToPDF = () => {
+        const filteredTitles = titles.slice(0, -1); // Filtrar los títulos
+        const filteredDataToExport = filteredData.map(row => row.slice(0, -1)); // Filtrar los datos
     
-    doc.autoTable({
-        head: [titles.slice(0, -1)], // Excluye la columna "Acciones"
-        body: filteredData,
-        startY: 20,
-    });
-
-    doc.save(`${text.replace(/ /g, "_")}_data.pdf`);
-  };
-
-  const exportToExcel = () => {
-    // Filtrar las columnas a incluir en el Excel
-    const filteredData = data.map(row => row.slice(0, -1)); // Excluye la última columna (Acciones)
-
-    const ws = XLSX.utils.json_to_sheet(
-      filteredData.map((row) =>
-        titles.slice(0, -1).reduce((obj, title, index) => {
-          obj[title] = row[index];
-          return obj;
-        }, {})
-      )
-    );
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-    XLSX.writeFile(wb, `${moduleName.replace(/ /g, "_")}_data.xlsx`);
-  };
-
-  const exportToSQL = () => {
-    const tableName = "data";
-    const columns = titles.slice(0, -1).map((title) => `\`${title}\``).join(", "); // Excluye la columna "Acciones"
-    let sql = `CREATE TABLE ${tableName} (${columns} TEXT);\n`;
-
-    const values = data.map((row) => {
-      const formattedRow = row
-        .slice(0, -1) // Excluye la última columna (Acciones)
-        .map((value) => (typeof value === "string" ? `'${value.replace(/'/g, "''")}'` : value))
-        .join(", ");
-      return `(${formattedRow})`;
-    });
-
-    sql += `INSERT INTO ${tableName} (${columns}) VALUES\n`;
-    sql += values.join(",\n");
-    sql += ";";
-
-    const blob = new Blob([sql], { type: "text/sql" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `${moduleName.replace(/ /g, "_")}_data.sql`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
-  useEffect(() => {
-    if (data.length > 0) {
-      if (!$.fn.DataTable.isDataTable("#TableDinamic")) {
-        new DataTable("#TableDinamic", {
-          responsive: true,
-          lengthChange: false,
-          pageLength: 10,
-          language: {
-            search: "",
-            searchPlaceholder: "Buscar...",
-            emptyTable: "No hay datos disponibles en la tabla",
-            paginate: {
-              first: "Primero",
-              last: "Último",
-              next: "Siguiente",
-              previous: "Anterior",
-            },
-          },
+        const doc = new jsPDF();
+    
+        // Añadir el título centrado en la parte superior
+        doc.setFontSize(20); // Tamaño de fuente para el título
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const titleWidth = doc.getTextWidth(moduleName);
+        doc.text(moduleName, (pageWidth - titleWidth) / 2, 20);
+    
+        // Añadir la primera tabla (puedes ajustar el startY si es necesario)
+        doc.autoTable({
+            startY: 30, // Asegúrate de que esta posición esté debajo del título
+            head: [filteredTitles],
+            body: filteredDataToExport,
         });
-      }
-    }
-  }, [data]);
+    
+        // Guardar el documento
+        doc.save(`${moduleName}.pdf`); // Usar nombre del módulo
+    };
 
-  return (
-    <div className="container mt-4">
-      <div className="d-flex align-items-center mb-3">
-        <button className="btn btn-success text-white fw-bold me-2" onClick={handleOpenForm}>
-          Registrar
-        </button>
-        <div className="btn-group" role="group">
-          <button className="btn" onClick={exportToPDF} title="Export PDF">
-            <img src="/pdf.png" alt="Export PDF" width="17" height="20" className="text-danger" />
-          </button>
-          <button className="btn" onClick={exportToExcel} title="Export EXCEL">
-            <img src="/excel.png" alt="Export EXCEL" width="17" height="20" className="text-success" />
-          </button>
-          <button className="btn" onClick={exportToSQL} title="Export SQL">
-            <img src="/sql.png" alt="Export SQL" width="17" height="20" className="text-secondary" />
-          </button>
-        </div>
-      </div>
+    const exportToExcel = () => {
+        const filteredTitles = titles.slice(0, -1);
+        const filteredDataToExport = filteredData.map(row => row.slice(0, -1));
 
-      <table className="table table-responsive" id="TableDinamic">
-        <thead>
-          <tr>
-            {titles.map((title, index) => (
-              <th scope="col" key={index}>
-                {title}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((row, rowIndex) => (
-            <tr key={rowIndex}>
-              {row.map((cell, cellIndex) => (
-                <td key={cellIndex}>{cell}</td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+        const ws = XLSX.utils.aoa_to_sheet([[moduleName], filteredTitles, ...filteredDataToExport]);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+        XLSX.writeFile(wb, `${moduleName}.xlsx`); // Usar nombre del módulo
+    };
 
-      {isFormVisible && (
-        <div className="modal fade show d-block" style={{ display: "block", backgroundColor: "rgba(0,0,0,0.5)" }}>
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Registrar {moduleName}</h5>
-                <button type="button" className="btn-close" onClick={handleCloseForm}></button>
-              </div>
-              <div className="modal-body">
-                {React.createElement(formComponent, {
-                  buttonForm: buttonForm,
-                  formData: formData,
-                  URI: "/categoria",
-                  updateTextButton: setButtonForm,
-                  setIsFormVisible: setIsFormVisible,
-                })}
-              </div>
+    const exportToSQL = () => {
+        const filteredTitles = titles.slice(0, -1);
+        const filteredDataToExport = filteredData.map(row => row.slice(0, -1));
+
+        let sql = `-- ${moduleName}\n\n`; // Añadir nombre del módulo como comentario
+        sql += 'CREATE TABLE table_name (\n';
+        sql += filteredTitles.map(title => `  \`${title}\` VARCHAR(255)`).join(',\n');
+        sql += '\n);\n\n';
+
+        filteredDataToExport.forEach(row => {
+            const values = row.map(value => `'${value}'`).join(', ');
+            sql += `INSERT INTO table_name (${filteredTitles.map(title => `\`${title}\``).join(', ')}) VALUES (${values});\n`;
+        });
+
+        const blob = new Blob([sql], { type: 'text/sql' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `${moduleName}.sql`; // Usar nombre del módulo
+        link.click();
+    };
+
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+
+    const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value);
+    };
+
+    const filteredData = data.filter(row =>
+        row.some(cell => typeof cell === 'string' && cell.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+
+    const indexOfLastRow = currentPage * rowsPerPage;
+    const indexOfFirstRow = indexOfLastRow - rowsPerPage;
+    const currentRows = filteredData.slice(indexOfFirstRow, indexOfLastRow);
+
+    const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+
+    return (
+        <div>
+            <div className="d-flex justify-content-between">
+                <button className="btn btn-outline-primary" onClick={exportToPDF}>Exportar a PDF</button>
+                <button className="btn btn-outline-success" onClick={exportToExcel}>Exportar a Excel</button>
+                <button className="btn btn-outline-danger" onClick={exportToSQL}>Exportar a SQL</button>
             </div>
-          </div>
+
+            <div className="mt-3">
+                <input
+                    type="text"
+                    placeholder="Buscar..."
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                    className="form-control mb-3"
+                />
+                <table className="table table-striped">
+                    <thead>
+                        <tr>
+                            {titles.map((title, index) => (
+                                <th key={index}>{title}</th>
+                            ))}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {currentRows.map((row, index) => (
+                            <tr key={index}>
+                                {row.map((cell, cellIndex) => (
+                                    <td key={cellIndex}>{cell}</td>
+                                ))}
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+
+                <div className="d-flex justify-content-between">
+                    <button
+                        className="btn btn-primary"
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        disabled={currentPage === 1}
+                    >
+                        Anterior
+                    </button>
+                    <span>Página {currentPage} de {totalPages}</span>
+                    <button
+                        className="btn btn-primary"
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                    >
+                        Siguiente
+                    </button>
+                </div>
+            </div>
         </div>
-      )}
-    </div>
-  );
-}
+    );
+};
 
 export default WriteTable;

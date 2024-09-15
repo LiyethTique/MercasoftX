@@ -1,5 +1,5 @@
 import express from "express";
-import { createVenta, deleteVenta, getAllVenta, getVenta, updateVenta, getQueryVenta } from "../controllers/ventaController.js";
+import { createVenta, deleteVenta, getAllVenta, getVenta, updateVenta } from "../controllers/ventaController.js";
 import winston from "winston";
 import DailyRotateFile from "winston-daily-rotate-file";
 
@@ -30,7 +30,7 @@ router.get('/:id', getVenta);
 router.post('/', createVenta);
 router.put('/:id', updateVenta);
 router.delete('/:id', deleteVenta);
-router.get('/consulta/:id', getQueryVenta);
+
 
 // router.use(logError);
 

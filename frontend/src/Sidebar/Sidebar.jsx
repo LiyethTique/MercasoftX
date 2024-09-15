@@ -57,7 +57,7 @@ function Sidebar() {
                 <div className="dropdown">
                     <a href="#" className="d-flex align-items-center text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                         <img src="/user-men.svg" alt="Usuario" style={{ width: '50px', height: '50px' }} />
-                        <strong>Cerrar Sesión</strong>
+                        <strong>Jesus</strong>
                     </a>
                     <ul className="dropdown-menu dropdown-menu-dark text-small shadow">
                         <li><a className="dropdown-item" href="#">New project...</a></li>

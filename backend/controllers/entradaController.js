@@ -102,22 +102,3 @@ export const deleteEntrada = async (req, res, next) => {
         next(error);
     }
 };
-
-export const getQueryEntrada = async (req, res) => {
-    try {
-        const entrada = await EntradasModel.findAll({
-            where: {
-                Fec_Entrada: {
-                    [Sequelize.Op.like]: `%${req.params.Fec_Entrada}%`
-                }
-            }
-        })
-        if(entrada.length > 0){
-            res.status(200).json(entrada)
-        } else {
-            res.status(404).json({ message: "No se encontraron registros para la fecha especificada" })
-        }
-    } catch (error) {
-        res.status(500).json({ message: error.message })
-    }
-}

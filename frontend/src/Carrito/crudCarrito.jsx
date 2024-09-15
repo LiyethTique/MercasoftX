@@ -111,7 +111,6 @@ const CrudCarrito = () => {
             <hr />
             <FormCarrito buttonForm={buttonForm} carrito={carrito} URI={URI} updateTextButton={updateTextButton} />
             <hr />
-            <FormQueryCarrito URI={URI} getCarrito={getCarrito} deleteCarrito={deleteCarrito} />
         </>
     );
 };

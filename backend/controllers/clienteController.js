@@ -77,22 +77,3 @@ export const deleteCliente = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
-
-export const getQueryCliente = async (req, res) => {
-    try {
-        const clientes = await ClientesModel.findAll({
-            where: {
-                Nom_Cliente: {
-                    [Sequelize.Op.like]: `%${req.params.Nom_Cliente}%`
-                }
-            }
-        });
-        if (clientes.length > 0) {
-            res.status(200).json(clientes);
-        } else {
-            res.status(404).json({ message: "No se encontraron registros para el nombre especificado" });
-        }
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};

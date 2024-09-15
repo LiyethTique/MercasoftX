@@ -103,22 +103,3 @@ export const deleteProducto = async (req, res) => {
         res.status(500).json({ message: 'Error al eliminar el producto' });
     }
 };
-
-export const getQueryProducto = async (req, res) => {
-    try {
-        const productos = await ProductosModel.findAll({
-            where: {
-                Nom_Producto: {
-                    [Sequelize.Op.iLike]: `%${req.params.Nom_Producto}%`
-                }
-            }
-        });
-        if (productos.length > 0) {
-            res.status(200).json(productos);
-        } else {
-            res.status(404).json({ message: "No se encontraron registros para el nombre especificado" });
-        }
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};

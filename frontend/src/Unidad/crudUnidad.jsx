@@ -1,7 +1,6 @@
 import axios from 'axios'
 import { useState, useEffect } from 'react'
 import FormUnidad from './formUnidad'
-import FormQueryUnidad from './formQueryUnidad'
 import Sidebar from '../Sidebar/Sidebar'
 
 import Swal from 'sweetalert2'
@@ -85,7 +84,6 @@ const CrudUndiad = () => {
             <hr />
             <FormUnidad buttonForm={buttonForm} entity={entity} URI={URI} updateTextButton={updateTextButton} />
             <hr />
-            <FormQueryUnidad URI={URI} getEntity={getEntity} deleteEntity={deleteEntity} buttonForm={buttonForm} />
         </>
     )
 }

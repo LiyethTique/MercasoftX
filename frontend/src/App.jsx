@@ -17,28 +17,34 @@ import TeamPresentation from './contact/equipo.jsx';
 import ContactPage from './contact/imageCarrousel.jsx';
 import Login from './iniciarsesion/IniciarSesion.jsx';
 import Auth from './registrar/registrar.jsx';
+// import ModalForms from './Model/Model.jsx';  // Ruta correcta
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Imagen />} />
-      <Route path="/home" element={<Home />} />
-      <Route path="/carrito" element={<Carrito />} />
-      <Route path="/categoria" element={<Categoria />} />
-      <Route path="/cliente" element={<Cliente />} />
-      <Route path="/entrada" element={<Entrada />} />
-      <Route path="/pedido" element={<Pedido />} />
-      <Route path="/pedidoProducto" element={<PedidoProducto />} />
-      <Route path="/producto" element={<Producto />} />
-      <Route path="/responsable" element={<Responsable />} />
-      <Route path="/traslado" element={<Traslado />} />
-      <Route path="/unidad" element={<Unidad />} />
-      <Route path="/venta" element={<Venta />} />
-      <Route path="/team-presentation" element={<TeamPresentation />} />
-      <Route path="/contacto" element={<ContactPage />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Auth />} />
-    </Routes>
+    <>
+      <Routes>
+        <Route path="/" element={<Imagen />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/carrito" element={<Carrito />} />
+        <Route path="/categoria" element={<Categoria />} />
+        <Route path="/cliente" element={<Cliente />} />
+        <Route path="/entrada" element={<Entrada />} />
+        <Route path="/pedido" element={<Pedido />} />
+        <Route path="/pedidoProducto" element={<PedidoProducto />} />
+        <Route path="/producto" element={<Producto />} />
+        <Route path="/responsable" element={<Responsable />} />
+        <Route path="/traslado" element={<Traslado />} />
+        <Route path="/unidad" element={<Unidad />} />
+        <Route path="/venta" element={<Venta />} />
+        <Route path="/team-presentation" element={<TeamPresentation />} />
+        <Route path="/contacto" element={<ContactPage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Auth />} />
+      </Routes>
+
+      {/* Aquí agregas el modal */}
+      {/* <ModalForms /> */}
+    </>
   );
 }
 

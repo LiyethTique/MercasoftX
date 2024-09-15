@@ -1,7 +1,6 @@
 import axios from 'axios'
 import { useState, useEffect } from 'react'
 import FormPedidoProducto from './formPedidoProducto'
-import FormQueryPedidoProducto from './formQueryPedidoProducto'
 import Sidebar from '../Sidebar/Sidebar'
 
 import Swal from 'sweetalert2'
@@ -85,7 +84,6 @@ const CrudPedidoProducto = () => {
             <hr />
             <FormPedidoProducto buttonForm={buttonForm} entity={entity} URI={URI} updateTextButton={updateTextButton} />
             <hr />
-            <FormQueryPedidoProducto URI={URI} getEntity={getEntity} deleteEntity={deleteEntity} buttonForm={buttonForm} />
         </>
     )
 }

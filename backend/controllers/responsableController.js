@@ -103,22 +103,3 @@ export const deleteResponsable = async (req, res) => {
         res.status(500).json({ message: 'Error al eliminar el responsable' });
     }
 };
-
-export const getQueryResponsable = async (req, res) => {
-    try {
-        const responsables = await ResponsablesModel.findAll({
-            where: {
-                Nom_Responsable: {
-                    [Sequelize.Op.like]: `%${req.params.Nom_Responsable}%`
-                }
-            }
-        });
-        if (responsables.length > 0) {
-            res.status(200).json(responsables);
-        } else {
-            res.status(404).json({ message: "No se encontraron registros para el nombre especificado" });
-        }
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};

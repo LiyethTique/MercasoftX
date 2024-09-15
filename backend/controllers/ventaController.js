@@ -88,7 +88,7 @@ export const deleteVenta = async (req, res) => {
         const deleted = await Venta.destroy({
             where: { id: req.params.id }
         });
-        if (deletedVenta) {
+        if (deleteVenta) {
             res.status(200).json({ message: '¡Registro Borrado Exitosamente!' });
         } else {
             res.status(404).json({ message: 'Venta no encontrada' });
@@ -96,24 +96,4 @@ export const deleteVenta = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
-}
-
-// Consulta personalizada
-export const getQueryVenta = async (req, res) => {
-    try {
-        const ventas = await Venta.findAll({
-            where: {
-                Id_Venta: {
-                    [Sequelize.Op.like]: `%${req.params.id}%`
-                }
-            }
-        });
-        if (ventas.length > 0) {
-            res.status(200).json(ventas);
-        } else {
-            res.status(404).json({ message: 'No se encontraron ventas' });
-        }
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-}
+};

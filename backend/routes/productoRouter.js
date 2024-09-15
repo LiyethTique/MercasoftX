@@ -1,5 +1,5 @@
 import express from "express";
-import { createProducto, deleteProducto, getAllProducto, getProducto, updateProducto, getQueryProducto } from "../controllers/productoController.js";
+import { createProducto, deleteProducto, getAllProducto, getProducto, updateProducto } from "../controllers/productoController.js";
 import winston from "winston";
 import DailyRotateFile from "winston-daily-rotate-file";
 
@@ -30,6 +30,5 @@ router.get('/:id', getProducto);
 router.post('/', createProducto);
 router.put('/:id', updateProducto);
 router.delete('/:id', deleteProducto);
-router.get('/Nom_Responsable/:Nom_Responsable', getQueryProducto);
 
 export default router;

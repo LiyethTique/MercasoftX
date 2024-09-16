@@ -1,4 +1,4 @@
-.btn-custom {
+  .btn-custom {
     display: inline-flex;
     align-items: center;
     font-size: 0.6rem; /* Tamaño del texto más pequeño */
@@ -13,3 +13,5 @@
     width: 12px; /* Tamaño del ícono más pequeño */
     height: 12px; /* Tamaño del ícono más pequeño */
   }
+
+ 

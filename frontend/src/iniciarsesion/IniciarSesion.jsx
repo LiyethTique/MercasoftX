@@ -89,13 +89,16 @@ const LoginForm = () => {
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
           </div>
-
+          <br />
+          <center>
           <button type="submit" className="login-button">Iniciar Sesión</button>
           <br />
-          <br />
+          
           <p className="register-prompt">
+            <br />
             ¿No tienes una cuenta? <Link to="/register" className="register-link">Regístrate aquí</Link>
           </p>
+          </center>
         </form>
       </div>
     </>

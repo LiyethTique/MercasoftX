@@ -17,7 +17,7 @@ import responsableRoutes from './routes/responsableRoutes.js'
 import trasladoRoutes from './routes/trasladoRoutes.js'
 import unidadRoutes from './routes/unidadRoutes.js'
 import ventaRoutes from './routes/ventaRoutes.js'
-
+import carritoproductoRoutes from './routes/carritoproductoRoutes.js'
 
 // Importar modelos para id
 import Venta from './models/ventaModel.js'
@@ -54,6 +54,7 @@ app.use('/responsable', responsableRoutes)
 app.use('/traslado', trasladoRoutes)
 app.use('/unidad', unidadRoutes)
 app.use('/venta', ventaRoutes)
+app.use('/carritoproducto', carritoproductoRoutes)
 
 
 

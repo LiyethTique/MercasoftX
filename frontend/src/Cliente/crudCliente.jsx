@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import FormCliente from './formCliente'; // Adaptamos el nombre
+import FormCliente from '../Cliente/formCliente';
 import Sidebar from '../Sidebar/Sidebar';
 import Swal from 'sweetalert2';
 import WriteTable from '../Tabla/Data-Table';
 import ModalForm from '../Model/Model';
+import './crudCliente.css';
 
-const URI = process.env.REACT_APP_SERVER_BACK + '/cliente/'; // Ruta de clientes
+const URI = process.env.REACT_APP_SERVER_BACK + '/cliente/';
 
 const CrudCliente = () => {
   const [clienteList, setClienteList] = useState([]);
@@ -90,35 +91,38 @@ const CrudCliente = () => {
     setIsModalOpen(true);
   };
 
-  const titles = ['ID Cliente', 'Nombre Cliente', 'Correo Cliente', 'Teléfono Cliente', 'Acciones'];
+  const titles = ['ID', 'Nombre Cliente', 'Correo Cliente', 'Teléfono Cliente', 'Acciones'];
   const data = clienteList.map(cliente => [
     cliente.Id_Cliente,
     cliente.Nom_Cliente,
     cliente.Cor_Cliente,
     cliente.Tel_Cliente,
     <div key={cliente.Id_Cliente}>
-      <button 
-        className="btn btn-warning me-2" 
+      <a
+       href="#!"
+      
+        className="btn-custom me-2" 
         onClick={() => getCliente(cliente.Id_Cliente)}
         title="Editar"
       >
         <img 
           src="/pencil-square.svg" 
           alt="Editar" 
-          style={{ width: '24px', height: '24px' }}
+          style={{ width: '13px', height: '13px' }}
         />
-      </button>
-      <button 
-        className="btn btn-danger" 
+      </a>
+      <a
+       href="#!"
+        className="btn-custom" 
         onClick={() => deleteCliente(cliente.Id_Cliente)}
         title="Borrar"
       >
         <img 
-          src="/archive.svg" 
+          src="/trash3.svg" 
           alt="Borrar" 
-          style={{ width: '24px', height: '24px' }}
+          
         />
-      </button>
+      </a>
     </div>
   ]);
 
@@ -132,14 +136,18 @@ const CrudCliente = () => {
         
         {/* Botón para abrir el modal */}
         <div className="d-flex justify-content-between mb-3">
-          <button className="btn btn-success d-flex align-items-center" onClick={handleShowForm}>   
+          <a
+           href="#!"
+
+          className="btn btn-success d-flex align-items-center"
+           onClick={handleShowForm}>   
             <img
               src="/plus-circle (1).svg"
               alt="Add Icon"
               style={{ width: '20px', height: '20px', marginRight: '8px', filter: 'invert(100%)' }}
             />
-            Registrar Cliente
-          </button>
+            Registrar
+          </a>
         </div>
 
         {/* Tabla de datos */}
@@ -154,6 +162,9 @@ const CrudCliente = () => {
           <FormCliente 
             buttonForm={buttonForm}
             cliente={cliente}
+            URI={URI}
+            updateTextButton={setButtonForm}
+            setIsFormVisible={setIsModalOpen}
             onSubmit={handleSubmitCliente}
           />
         </ModalForm>

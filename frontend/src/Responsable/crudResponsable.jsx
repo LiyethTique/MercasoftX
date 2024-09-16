@@ -5,9 +5,9 @@ import Sidebar from '../Sidebar/Sidebar';
 import Swal from 'sweetalert2';
 import WriteTable from '../Tabla/Data-Table'; 
 import ModalForm from '../Model/Model';
-import './crudResponsable.css'
+import './crudResponsable.css';
 
-const URI = process.env.SERVER_BACK  + '/responsable/';
+const URI = process.env.REACT_APP_SERVER_BACK + '/responsable/';
 
 const CrudResponsable = () => {
   const [responsableList, setResponsableList] = useState([]);
@@ -101,7 +101,7 @@ const CrudResponsable = () => {
     responsable.Tip_Genero,
     <div key={responsable.Id_Responsable}>
       <a 
-        href="#!" // Cambia el href según tu necesidad, por ejemplo a la función getResponsable
+        href="#!"
         className="btn-custom me-2"
         onClick={() => getResponsable(responsable.Id_Responsable)}
         title="Editar"
@@ -109,11 +109,11 @@ const CrudResponsable = () => {
         <img 
           src="/pencil-square.svg" 
           alt="Editar"
-          style={{ width: '13px', height: '13px',  }}  // Inverte el color de la imagen
+          style={{ width: '13px', height: '13px' }}  
         />
       </a>
       <a 
-        href="#!" // Cambia el href según tu necesidad, por ejemplo a la función deleteResponsable
+        href="#!"
         className="btn-custom"
         onClick={() => deleteResponsable(responsable.Id_Responsable)}
         title="Borrar"

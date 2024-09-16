@@ -17,13 +17,13 @@ import TeamPresentation from './contact/equipo.jsx';
 import ContactPage from './contact/imageCarrousel.jsx';
 import Login from './iniciarsesion/IniciarSesion.jsx';
 import Auth from './registrar/registrar.jsx';
-// import ModalForms from './Model/Model.jsx';  // Ruta correcta
+import CarritoProducto from './CarritoProducto/crudCarritoProducto.jsx';
 
 function App() {
   return (
     <>
       <Routes>
-        <Route path="/" element={<Imagen />} />
+        <Route path="/" element={<Home />} />
         <Route path="/carrito" element={<Carrito />} />
         <Route path="/categoria" element={<Categoria />} />
         <Route path="/cliente" element={<Cliente />} />
@@ -39,6 +39,7 @@ function App() {
         <Route path="/contacto" element={<ContactPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Auth />} />
+        <Route path="/carritoproducto" element={<CarritoProducto />} /> {/* Corrección aquí */}
       </Routes>
 
       {/* Aquí agregas el modal */}

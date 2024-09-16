@@ -1,52 +1,44 @@
-import axios from "axios";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 
-const FormUnidad = ({ buttonForm, entity, URI, updateTextButton }) => {
-    const [field1, setField1] = useState('')
-    // Aquí colocas los demás campos
+const FormUnidad = ({ buttonForm, unidad, onSubmit }) => {
+  const [formData, setFormData] = useState({
+    Nom_Unidad: ''
+  });
 
-    const sendForm = (e) => {
-        e.preventDefault()
-
-        if (buttonForm === 'Actualizar') {
-            axios.put(URI + entity.Id_Entity, {
-                field1: field1,
-                // Aquí colocas los demás campos
-            })
-            updateTextButton('Enviar')
-            clearForm()
-
-        } else if (buttonForm === 'Enviar') {
-            axios.post(URI, {
-                field1: field1,
-                // Aquí colocas los demás campos
-            })
-            clearForm()
-        }
+  useEffect(() => {
+    if (unidad) {
+      setFormData(unidad);
     }
+  }, [unidad]);
 
-    const clearForm = () => {
-        setField1('')
-        // Aquí reseteas los demás campos
-    }
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-    const setData = () => {
-        setField1(entity.field1)
-        // Aquí configuras los demás campos
-    }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit(formData);
+  };
 
-    useEffect(() => {
-        setData()
-    }, [entity])
+  return (
+    <form onSubmit={handleSubmit}>
+      <div className="mb-3">
+        <label htmlFor="Nom_Unidad" className="form-label">Nombre de la Unidad</label>
+        <input
+          type="text"
+          className="form-control"
+          id="Nom_Unidad"
+          name="Nom_Unidad"
+          value={formData.Nom_Unidad}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <button type="submit" className="btn btn-primary">
+        {buttonForm}
+      </button>
+    </form>
+  );
+};
 
-    return (
-        <form id="entityForm" onSubmit={sendForm} className="table table-striped">
-            <label htmlFor="field1">Campo 1</label>
-            <input type="text" id="field1" value={field1} onChange={(e) => setField1(e.target.value)} />
-            {/* Aquí colocas los demás campos */}
-            <input type="submit" value={buttonForm} className="btn btn-success" />
-        </form>
-    )
-}
-
-export default FormUnidad
+export default FormUnidad;

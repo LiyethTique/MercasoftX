@@ -80,7 +80,7 @@ export const updateResponsable = async (req, res) => {
             const updatedResponsable = await Responsable.findByPk(req.params.id);
             res.status(200).json({ message: 'Responsable actualizado exitosamente', updatedResponsable });
         } else {
-            res.status(404).json({ message: 'Responsable no encontrado' });
+            res.status(404).json({ icon: 'warning', message: 'Debe Modificar al menos un campo.' });
         }
     } catch (error) {
         logger.error(error.message);

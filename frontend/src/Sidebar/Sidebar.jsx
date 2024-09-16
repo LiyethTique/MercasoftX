@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import '../Estilos/Sidebar.css'
-
+import '../Estilos/Sidebar.css';
 
 function Sidebar() {
     const [isVisible, setIsVisible] = useState(false); // Estado para la visibilidad del sidebar
@@ -39,17 +38,18 @@ function Sidebar() {
 
                 {/* Lista de navegación */}
                 <ul className="nav nav-pills flex-column mb-auto">
-                    {/* {renderNavItem('/carrito/', 'shopping_cart.svg', 'Carrito', selectedOption, handleOptionSelect)} */}
+                    {renderNavItem('/carrito/', 'shopping_cart.svg', 'Carrito', selectedOption, handleOptionSelect)}
                     {renderNavItem('/categoria/', 'category.svg', 'Categoria', selectedOption, handleOptionSelect)}
                     {renderNavItem('/cliente/', 'customer.svg', 'Cliente', selectedOption, handleOptionSelect)}
-                    {/* {renderNavItem('/entrada/', 'transfer.svg', 'Entrada', selectedOption, handleOptionSelect)} */}
+                    {renderNavItem('/entrada/', 'transfer.svg', 'Entrada', selectedOption, handleOptionSelect)}
                     {renderNavItem('/pedido/', 'orders.svg', 'Pedido', selectedOption, handleOptionSelect)}
-                    {/* {renderNavItem('/pedidoproducto/', 'orderproduct.svg', 'PedidoProducto', selectedOption, handleOptionSelect)} */}
+                    {renderNavItem('/pedidoproducto/', 'orderproduct.svg', 'PedidoProducto', selectedOption, handleOptionSelect)}
                     {renderNavItem('/producto/', 'product.svg', 'Producto', selectedOption, handleOptionSelect)}
                     {renderNavItem('/responsable/', 'responsible.svg', 'Responsable', selectedOption, handleOptionSelect)}
-                    {/* {renderNavItem('/traslado/', 'entrance.svg', 'Traslado', selectedOption, handleOptionSelect)} */}
-                    {/* {renderNavItem('/unidad/', 'unit.svg', 'Unidad', selectedOption, handleOptionSelect)} */}
+                    {renderNavItem('/traslado/', 'entrance.svg', 'Traslado', selectedOption, handleOptionSelect)}
+                    {renderNavItem('/unidad/', 'unit.svg', 'Unidad', selectedOption, handleOptionSelect)}
                     {renderNavItem('/venta/', 'sale.svg', 'Venta', selectedOption, handleOptionSelect)}
+                    {renderNavItem('/carritoproducto/', 'cartproduct.svg', 'CarritoProducto', selectedOption, handleOptionSelect)} 
                 </ul>
                 <hr />
 
@@ -81,7 +81,11 @@ function renderNavItem(href, iconSrc, text, selectedOption, handleOptionSelect) 
                 className={`nav-link text-white ${selectedOption === href ? 'active' : ''}`} 
                 onClick={() => handleOptionSelect(href)} 
             >
-                <img src={`/${iconSrc}`} alt={text} />
+                <img 
+                    src={`/${iconSrc}`} 
+                    alt={text} 
+                    style={{ marginRight: '10px' }} // Estilo en línea para separar el icono del texto
+                />
                 {text}
             </a>
         </li>

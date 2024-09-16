@@ -1,5 +1,12 @@
 import express from "express";
-import { createCarrito, deleteCarrito, getAllCarrito, getCarrito, updateCarrito } from "../controllers/carritoController.js";
+import {
+    createCarrito,
+    deleteCarrito,
+    getAllCarrito,
+    getCarrito,
+    updateCarrito,
+    getQueryCarrito
+} from "../controllers/carritoController.js";
 import winston from "winston";
 import DailyRotateFile from "winston-daily-rotate-file";
 
@@ -25,11 +32,13 @@ const logError = (err, req, res, next) => {
     res.status(500).json({ error: 'Internal Server Error' });
 };
 
+// Rutas para el modelo Carrito
 router.get('/', getAllCarrito);
 router.get('/:id', getCarrito);
 router.post('/', createCarrito);
 router.put('/:id', updateCarrito);
 router.delete('/:id', deleteCarrito);
+router.get('/query/:Id_Cliente', getQueryCarrito);
 
 router.use(logError);
 

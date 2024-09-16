@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 
-const FormCliente = ({ buttonForm, cliente, onSubmit }) => {
+const FormCliente = ({ buttonForm, cliente, URI, updateTextButton, setIsFormVisible, onSubmit }) => {
   const [formData, setFormData] = useState({
     Nom_Cliente: '',
     Cor_Cliente: '',
@@ -27,7 +26,7 @@ const FormCliente = ({ buttonForm, cliente, onSubmit }) => {
   return (
     <form onSubmit={handleSubmit}>
       <div className="mb-3">
-        <label htmlFor="Nom_Cliente" className="form-label">Nombre Cliente</label>
+        <label htmlFor="Nom_Cliente" className="form-label">Nombre del Cliente</label>
         <input
           type="text"
           className="form-control"
@@ -39,7 +38,7 @@ const FormCliente = ({ buttonForm, cliente, onSubmit }) => {
         />
       </div>
       <div className="mb-3">
-        <label htmlFor="Cor_Cliente" className="form-label">Correo Cliente</label>
+        <label htmlFor="Cor_Cliente" className="form-label">Correo del Cliente</label>
         <input
           type="email"
           className="form-control"
@@ -51,7 +50,7 @@ const FormCliente = ({ buttonForm, cliente, onSubmit }) => {
         />
       </div>
       <div className="mb-3">
-        <label htmlFor="Tel_Cliente" className="form-label">Teléfono Cliente</label>
+        <label htmlFor="Tel_Cliente" className="form-label">Teléfono del Cliente</label>
         <input
           type="text"
           className="form-control"
@@ -62,6 +61,21 @@ const FormCliente = ({ buttonForm, cliente, onSubmit }) => {
           required
         />
       </div>
+      <div className="mb-3">
+        <label htmlFor="Id_Carrito" className="form-label">ID del Carrito</label>
+        <input
+          type="number"
+          className="form-control"
+          id="Id_Carrito"
+          name="Id_Carrito"
+          value={formData.Id_Carrito}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <button type="submit" className="btn btn-primary">
+        {buttonForm}
+      </button>
     </form>
   );
 };

@@ -1,211 +1,159 @@
-// FormProducto.jsx
-import axios from "axios";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 
-const FormProducto = ({ buttonForm, producto, URI, updateTextButton, onSuccess }) => {
-    const [nomProducto, setNomProducto] = useState('');
-    const [carProducto, setCarProducto] = useState('');
-    const [prePromedio, setPrePromedio] = useState('');
-    const [exiProducto, setExiProducto] = useState('');
-    const [imaProducto, setImaProducto] = useState('');
-    const [fecVencimiento, setFecVencimiento] = useState('');
-    const [idCategoria, setIdCategoria] = useState('');
-    const [preAnterior, setPreAnterior] = useState('');
-    const [uniDeMedida, setUniDeMedida] = useState('');
-    const [preProducto, setPreProducto] = useState('');
+const FormProducto = ({ buttonForm, producto, onSubmit }) => {
+  const [formData, setFormData] = useState({
+    Nom_Producto: '',
+    Car_Producto: '',
+    Pre_Promedio: '',
+    Exi_Producto: '',
+    Ima_Producto: '',
+    Fec_Vencimiento: '',
+    Id_Categoria: '',
+    Pre_Anterior: '',
+    Uni_DeMedida: '',
+    Pre_Producto: ''
+  });
 
-    const sendForm = async (e) => {
-        e.preventDefault();
+  useEffect(() => {
+    if (producto) {
+      setFormData(producto);
+    }
+  }, [producto]);
 
-        try {
-            if (buttonForm === 'Actualizar') {
-                console.log('actualizando...');
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-                await axios.put(URI + producto.Id_Producto, {
-                    Nom_Producto: nomProducto,
-                    Car_Producto: carProducto,
-                    Pre_Promedio: prePromedio,
-                    Exi_Producto: exiProducto,
-                    Ima_Producto: imaProducto,
-                    Fec_Vencimiento: fecVencimiento,
-                    Id_Categoria: idCategoria,
-                    Pre_Anterior: preAnterior,
-                    Uni_DeMedida: uniDeMedida,
-                    Pre_Producto: preProducto
-                });
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit(formData);
+  };
 
-                updateTextButton('Enviar');
-                onSuccess(); // Notifica el éxito a CrudProducto
-                clearForm();
-
-            } else if (buttonForm === 'Enviar') {
-                console.log('guardando...');
-
-                await axios.post(URI, {
-                    Nom_Producto: nomProducto,
-                    Car_Producto: carProducto,
-                    Pre_Promedio: prePromedio,
-                    Exi_Producto: exiProducto,
-                    Ima_Producto: imaProducto,
-                    Fec_Vencimiento: fecVencimiento,
-                    Id_Categoria: idCategoria,
-                    Pre_Anterior: preAnterior,
-                    Uni_DeMedida: uniDeMedida,
-                    Pre_Producto: preProducto
-                });
-
-                onSuccess(); // Notifica el éxito a CrudProducto
-                clearForm();
-            }
-        } catch (error) {
-            alert('Error al guardar el producto');
-        }
-    };
-
-    const clearForm = () => {
-        setNomProducto('');
-        setCarProducto('');
-        setPrePromedio('');
-        setExiProducto('');
-        setImaProducto('');
-        setFecVencimiento('');
-        setIdCategoria('');
-        setPreAnterior('');
-        setUniDeMedida('');
-        setPreProducto('');
-    };
-
-    const setData = () => {
-        if (producto.Nom_Producto) {
-            setNomProducto(producto.Nom_Producto);
-            setCarProducto(producto.Car_Producto);
-            setPrePromedio(producto.Pre_Promedio);
-            setExiProducto(producto.Exi_Producto);
-            setImaProducto(producto.Ima_Producto);
-            setFecVencimiento(producto.Fec_Vencimiento);
-            setIdCategoria(producto.Id_Categoria);
-            setPreAnterior(producto.Pre_Anterior);
-            setUniDeMedida(producto.Uni_DeMedida);
-            setPreProducto(producto.Pre_Producto);
-        }
-    };
-
-    useEffect(() => {
-        setData();
-    }, [producto]);
-
-    return (
-        <>
-            <form id="productoForm" action="" onSubmit={sendForm} className="table table-striped">
-                <label htmlFor="nomProducto">Nombre del Producto</label>
-                <input
-                    type="text"
-                    id="nomProducto"
-                    value={nomProducto}
-                    required
-                    onChange={(e) => setNomProducto(e.target.value)}
-                />
-                <br />
-
-                <label htmlFor="carProducto">Descripción del Producto</label>
-                <input
-                    type="text"
-                    id="carProducto"
-                    value={carProducto}
-                    required
-                    onChange={(e) => setCarProducto(e.target.value)}
-                />
-                <br />
-
-                <label htmlFor="prePromedio">Precio Promedio</label>
-                <input
-                    type="number"
-                    id="prePromedio"
-                    value={prePromedio}
-                    required
-                    onChange={(e) => setPrePromedio(e.target.value)}
-                />
-                <br />
-
-                <label htmlFor="exiProducto">Existencia</label>
-                <input
-                    type="number"
-                    id="exiProducto"
-                    value={exiProducto}
-                    required
-                    onChange={(e) => setExiProducto(e.target.value)}
-                />
-                <br />
-
-                <label htmlFor="imaProducto">Imagen</label>
-                <input
-                    type="text"
-                    id="imaProducto"
-                    value={imaProducto}
-                    required
-                    onChange={(e) => setImaProducto(e.target.value)}
-                />
-                <br />
-
-                <label htmlFor="fecVencimiento">Fecha de Vencimiento</label>
-                <input
-                    type="date"
-                    id="fecVencimiento"
-                    value={fecVencimiento}
-                    required
-                    onChange={(e) => setFecVencimiento(e.target.value)}
-                />
-                <br />
-
-                <label htmlFor="idCategoria">Categoría</label>
-                <input
-                    type="number"
-                    id="idCategoria"
-                    value={idCategoria}
-                    required
-                    onChange={(e) => setIdCategoria(e.target.value)}
-                />
-                <br />
-
-                <label htmlFor="preAnterior">Precio Anterior</label>
-                <input
-                    type="number"
-                    id="preAnterior"
-                    value={preAnterior}
-                    required
-                    onChange={(e) => setPreAnterior(e.target.value)}
-                />
-                <br />
-
-                <label htmlFor="uniDeMedida">Unidad de Medida</label>
-                <input
-                    type="text"
-                    id="uniDeMedida"
-                    value={uniDeMedida}
-                    required
-                    onChange={(e) => setUniDeMedida(e.target.value)}
-                />
-                <br />
-
-                <label htmlFor="preProducto">Precio Producto</label>
-                <input
-                    type="number"
-                    id="preProducto"
-                    value={preProducto}
-                    required
-                    onChange={(e) => setPreProducto(e.target.value)}
-                />
-                <br />
-
-                <input
-                    type="submit"
-                    id="boton"
-                    value={buttonForm}
-                    className="btn btn-success"
-                />
-            </form>
-        </>
-    );
+  return (
+    <form onSubmit={handleSubmit}>
+      <div className="mb-3">
+        <label htmlFor="Nom_Producto" className="form-label">Nombre del Producto</label>
+        <input
+          type="text"
+          className="form-control"
+          id="Nom_Producto"
+          name="Nom_Producto"
+          value={formData.Nom_Producto}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <div className="mb-3">
+        <label htmlFor="Car_Producto" className="form-label">Descripción</label>
+        <input
+          type="text"
+          className="form-control"
+          id="Car_Producto"
+          name="Car_Producto"
+          value={formData.Car_Producto}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <div className="mb-3">
+        <label htmlFor="Pre_Promedio" className="form-label">Precio Promedio</label>
+        <input
+          type="number"
+          className="form-control"
+          id="Pre_Promedio"
+          name="Pre_Promedio"
+          value={formData.Pre_Promedio}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <div className="mb-3">
+        <label htmlFor="Exi_Producto" className="form-label">Existencias</label>
+        <input
+          type="number"
+          className="form-control"
+          id="Exi_Producto"
+          name="Exi_Producto"
+          value={formData.Exi_Producto}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <div className="mb-3">
+        <label htmlFor="Ima_Producto" className="form-label">Imagen del Producto</label>
+        <input
+          type="text"
+          className="form-control"
+          id="Ima_Producto"
+          name="Ima_Producto"
+          value={formData.Ima_Producto}
+          onChange={handleChange}
+        />
+      </div>
+      <div className="mb-3">
+        <label htmlFor="Fec_Vencimiento" className="form-label">Fecha de Vencimiento</label>
+        <input
+          type="date"
+          className="form-control"
+          id="Fec_Vencimiento"
+          name="Fec_Vencimiento"
+          value={formData.Fec_Vencimiento}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <div className="mb-3">
+        <label htmlFor="Id_Categoria" className="form-label">Categoría</label>
+        <input
+          type="number"
+          className="form-control"
+          id="Id_Categoria"
+          name="Id_Categoria"
+          value={formData.Id_Categoria}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <div className="mb-3">
+        <label htmlFor="Pre_Anterior" className="form-label">Precio Anterior</label>
+        <input
+          type="number"
+          className="form-control"
+          id="Pre_Anterior"
+          name="Pre_Anterior"
+          value={formData.Pre_Anterior}
+          onChange={handleChange}
+        />
+      </div>
+      <div className="mb-3">
+        <label htmlFor="Uni_DeMedida" className="form-label">Unidad de Medida</label>
+        <input
+          type="text"
+          className="form-control"
+          id="Uni_DeMedida"
+          name="Uni_DeMedida"
+          value={formData.Uni_DeMedida}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <div className="mb-3">
+        <label htmlFor="Pre_Producto" className="form-label">Precio</label>
+        <input
+          type="number"
+          className="form-control"
+          id="Pre_Producto"
+          name="Pre_Producto"
+          value={formData.Pre_Producto}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <button type="submit" className="btn btn-primary">
+        {buttonForm}
+      </button>
+    </form>
+  );
 };
 
 export default FormProducto;

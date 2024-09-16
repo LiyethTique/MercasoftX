@@ -9,9 +9,9 @@ const NavPub = () => {
         <React.Fragment>
             <nav className="navbar navbar-expand-lg navbar-light w-100" style={{ backgroundColor: '#343a40' }}>
                 <div className="container-fluid">
-                    <Link className="navbar-brand" to="/home" style={{ color: '#fff', fontWeight: 'bold' }}>
+                    <Link className="navbar-brand" to="/" style={{ color: '#fff', fontWeight: 'bold' }}>
                         <FontAwesomeIcon icon={faHome} className="me-2" />
-                        Home
+                        Inicio
                     </Link>
                     <Link className="navbar-brand" to="/contacto" style={{ color: '#fff', fontWeight: 'bold' }}>
                         <FontAwesomeIcon icon={faUsers} className="me-2" />

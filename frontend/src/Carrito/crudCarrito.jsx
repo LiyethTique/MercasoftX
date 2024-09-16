@@ -1,120 +1,168 @@
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useState, useEffect, useCallback } from 'react';
-import FormCarrito from './formCarrito';
-import FormQueryCarrito from './formQueryCarrito';
-import Sidebar from '../Sidebar/Sidebar'
-
+import FormCarrito from '../Carrito/formCarrito'; // Asegúrate de que el camino sea correcto
+import Sidebar from '../Sidebar/Sidebar';
 import Swal from 'sweetalert2';
+import WriteTable from '../Tabla/Data-Table'; 
+import ModalForm from '../Model/Model';
 
-// Esta es la URI a la que se conectará el backend
-const URI = process.env.SERVER_BACK + '/carrito/'; // Asegúrate de que esta variable esté configurada correctamente
+const URI = process.env.REACT_APP_SERVER_BACK + '/carrito/';
 
 const CrudCarrito = () => {
-    const [carritoList, setCarritoList] = useState([]);
-    const [buttonForm, setButtonForm] = useState('Enviar');
-    const [carrito, setCarrito] = useState({
-        Id_Carrito: '',
-        Can_Producto: ''
+  const [carritoList, setCarritoList] = useState([]);
+  const [buttonForm, setButtonForm] = useState('Enviar');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [carrito, setCarrito] = useState(null);
+
+  useEffect(() => {
+    getAllCarrito();
+  }, []);
+
+  const getAllCarrito = async () => {
+    try {
+      const respuesta = await axios.get(URI);
+      if (Array.isArray(respuesta.data)) {
+        setCarritoList(respuesta.data);
+      } else {
+        console.error("Unexpected response format:", respuesta.data);
+        setCarritoList([]);
+      }
+    } catch (error) {
+      console.error("Error fetching carritos:", error);
+      Swal.fire("Error", error.response?.data?.message || "Error al obtener los Carritos", "error");
+    }
+  };
+
+  const getCarrito = async (Id_Carrito) => {
+    setButtonForm('Actualizar');
+    try {
+      const respuesta = await axios.get(`${URI}${Id_Carrito}`);
+      setCarrito(respuesta.data);
+      setIsModalOpen(true);
+    } catch (error) {
+      Swal.fire("Error", error.response?.data?.message || "Error al obtener el Carrito", "error");
+    }
+  };
+
+  const handleSubmitCarrito = async (data) => {
+    try {
+      if (buttonForm === 'Actualizar') {
+        await axios.put(`${URI}${carrito.Id_Carrito}`, data);
+        Swal.fire("Actualizado!", "El carrito ha sido actualizado.", "success");
+      } else {
+        await axios.post(URI, data);
+        Swal.fire("Creado!", "El carrito ha sido creado.", "success");
+      }
+      getAllCarrito();
+      setIsModalOpen(false);
+      setButtonForm('Enviar');
+      setCarrito(null);
+    } catch (error) {
+      Swal.fire("Error", error.response?.data?.message || "Error al guardar el Carrito", "error");
+    }
+  };
+
+  const deleteCarrito = async (Id_Carrito) => {
+    Swal.fire({
+      title: "¿Estás seguro?",
+      text: "¡No podrás revertir esto!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, borrar!"
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await axios.delete(`${URI}${Id_Carrito}`);
+          Swal.fire("¡Borrado!", "El registro ha sido borrado.", "success");
+          getAllCarrito();
+        } catch (error) {
+          Swal.fire("Error", error.response?.data?.message || "Error al eliminar el Carrito", "error");
+        }
+      }
     });
+  };
 
-    useEffect(() => {
-        getAllCarritos();
-    }, []);
+  const handleShowForm = () => {
+    setButtonForm('Enviar');
+    setCarrito(null);
+    setIsModalOpen(true);
+  };
 
-    const getAllCarritos = useCallback(async () => {
-        try {
-            const respuesta = await axios.get(URI);
-            setCarritoList(respuesta.data);
-        } catch (error) {
-            Swal.fire({
-                title: 'Error',
-                text: error.response?.data?.message || 'Hubo un problema al obtener los carritos.',
-                icon: 'error'
-            });
-        }
-    }, []);
+  const titles = ['ID   ', ' Producto', 'CanProducto', 'Cliente','Acciones'];
+  const data = carritoList.map(carrito => [
+    carrito.Id_Carrito,
+    carrito.Id_Producto,
+    carrito.Can_Producto,
+    carrito.Id_Cliente,
+    <div key={carrito.Id_Carrito}>
+      <a 
+        href="#!"
+        className="btn-custom me-2"
+        onClick={() => getCarrito(carrito.Id_Carrito)}
+        title="Editar"
+      >
+        <img 
+          src="/pencil-square.svg" 
+          alt="Editar"
+          style={{ width: '13px', height: '13px' }}  
+        />
+      </a>
+      <a 
+        href="#!"
+        className="btn-custom"
+        onClick={() => deleteCarrito(carrito.Id_Carrito)}
+        title="Borrar"
+      >
+        <img 
+          src="/trash3.svg" 
+          alt="Borrar" 
+        />
+      </a>
+    </div>
+  ]);
 
-    const getCarrito = useCallback(async (idCarrito) => {
-        setButtonForm('Actualizar');
-        try {
-            const respuesta = await axios.get(URI + idCarrito);
-            setCarrito(respuesta.data);
-        } catch (error) {
-            Swal.fire({
-                title: 'Error',
-                text: error.response?.data?.message || 'Hubo un problema al obtener el carrito.',
-                icon: 'error'
-            });
-        }
-    }, []);
+  return (
+    <>
+      <Sidebar />
+      <div className="container mt-4">
+        <center>
+          <h1>Gestionar Carritos</h1>
+        </center>
+        
+        <div className="d-flex justify-content-between mb-3">
+          <a 
+            href="#!"
+            className="btn btn-success d-flex align-items-center"
+            onClick={handleShowForm}
+          >   
+            <img
+              src="/plus-circle (1).svg"
+              alt="Add Icon"
+              style={{ width: '20px', height: '20px', marginRight: '8px', filter: 'invert(100%)' }}
+            />
+            Registrar
+          </a>
+        </div>
 
-    const updateTextButton = (texto) => {
-        setButtonForm(texto);
-        if (texto === 'Enviar') {
-            setCarrito({ Id_Carrito: '', Can_Producto: '' }); // Limpiar el estado del carrito si es necesario
-        }
-    };
+        <WriteTable titles={titles} data={data} />
 
-    const deleteCarrito = async (idCarrito) => {
-        Swal.fire({
-            title: "¿Estás seguro?",
-            text: "¡No podrás revertir esto!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Sí, borrar!"
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                try {
-                    await axios.delete(URI + idCarrito);
-                    Swal.fire({
-                        title: "¡Borrado!",
-                        text: "El registro ha sido borrado.",
-                        icon: "success"
-                    });
-                    getAllCarritos(); // Refresh the list after deletion
-                } catch (error) {
-                    Swal.fire({
-                        title: 'Error',
-                        text: error.response?.data?.message || 'Hubo un problema al borrar el carrito.',
-                        icon: 'error'
-                    });
-                }
-            }
-        });
-    };
-
-    return (
-        <>
-        <Sidebar />
-            <table className="table table-striped">
-                <thead>
-                    <tr>
-                        <th>ID Carrito</th>
-                        <th>Can_Producto</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {carritoList.map((carrito) => (
-                        <tr key={carrito.Id_Carrito}>
-                            <td>{carrito.Id_Carrito}</td>
-                            <td>{carrito.Can_Producto}</td>
-                            <td>
-                                <button className="btn btn-warning" onClick={() => getCarrito(carrito.Id_Carrito)}>Editar</button>
-                                <button className="btn btn-danger" onClick={() => deleteCarrito(carrito.Id_Carrito)}>Borrar</button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-            <hr />
-            <FormCarrito buttonForm={buttonForm} carrito={carrito} URI={URI} updateTextButton={updateTextButton} />
-            <hr />
-            <FormQueryCarrito URI={URI} getCarrito={getCarrito} deleteCarrito={deleteCarrito} />
-        </>
-    );
+        <ModalForm
+          isOpen={isModalOpen}
+          onClose={() => { setIsModalOpen(false); setCarrito(null); setButtonForm('Enviar'); }}
+          title={buttonForm === 'Actualizar' ? "Actualizar Carrito" : "Agregar Carrito"}
+        >
+          <FormCarrito 
+            buttonForm={buttonForm}
+            carrito={carrito}
+            onSubmit={handleSubmitCarrito}
+            onClose={() => { setIsModalOpen(false); setCarrito(null); setButtonForm('Enviar'); }}
+          />
+        </ModalForm>
+      </div>
+    </>
+  );
 };
 
 export default CrudCarrito;

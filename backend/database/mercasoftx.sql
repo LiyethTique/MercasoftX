@@ -24,10 +24,16 @@ DROP TABLE IF EXISTS `carrito`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `carrito` (
   `Id_Carrito` int NOT NULL AUTO_INCREMENT,
+  `Id_Producto` int DEFAULT NULL,
   `Can_Producto` int DEFAULT NULL,
+  `Id_Cliente` int DEFAULT NULL,
   `createdAT` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updatedAT` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`Id_Carrito`)
+  PRIMARY KEY (`Id_Carrito`),
+  KEY `fk_carrito_producto_idx` (`Id_Producto`),
+  KEY `fk_carrito_cliente_idx` (`Id_Cliente`),
+  CONSTRAINT `fk_carrito_cliente` FOREIGN KEY (`Id_Cliente`) REFERENCES `cliente` (`Id_Cliente`),
+  CONSTRAINT `fk_carrito_producto` FOREIGN KEY (`Id_Producto`) REFERENCES `producto` (`Id_Producto`)
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -37,8 +43,38 @@ CREATE TABLE `carrito` (
 
 LOCK TABLES `carrito` WRITE;
 /*!40000 ALTER TABLE `carrito` DISABLE KEYS */;
-INSERT INTO `carrito` VALUES (1,6,'2024-08-22 02:25:07','2024-08-22 02:25:07'),(2,6,'2024-08-22 02:28:47','2024-08-22 02:28:47'),(4,14,'2024-08-13 05:00:00','2024-08-13 05:00:00'),(5,14,'2024-08-13 05:00:00','2024-08-13 05:00:00'),(6,99,'2024-08-13 05:00:00','2024-08-13 05:00:00'),(8,15,'2024-08-22 02:06:59','2024-08-22 02:06:59'),(9,13,'2024-08-22 02:07:36','2024-08-22 02:07:36'),(10,12,'2024-08-22 02:08:25','2024-08-22 02:08:25'),(11,1111,'2024-08-22 02:19:23','2024-08-22 02:19:23'),(12,22,'2024-08-22 03:58:10','2024-08-22 03:58:10');
+INSERT INTO `carrito` VALUES (1,NULL,6,NULL,'2024-08-22 02:25:07','2024-08-22 02:25:07'),(2,NULL,6,NULL,'2024-08-22 02:28:47','2024-08-22 02:28:47'),(4,NULL,14,NULL,'2024-08-13 05:00:00','2024-08-13 05:00:00'),(5,NULL,14,NULL,'2024-08-13 05:00:00','2024-08-13 05:00:00'),(6,NULL,99,NULL,'2024-08-13 05:00:00','2024-08-13 05:00:00'),(8,NULL,15,NULL,'2024-08-22 02:06:59','2024-08-22 02:06:59'),(9,NULL,13,NULL,'2024-08-22 02:07:36','2024-08-22 02:07:36'),(10,NULL,12,NULL,'2024-08-22 02:08:25','2024-08-22 02:08:25'),(11,NULL,1111,NULL,'2024-08-22 02:19:23','2024-08-22 02:19:23'),(12,NULL,22,NULL,'2024-08-22 03:58:10','2024-08-22 03:58:10');
 /*!40000 ALTER TABLE `carrito` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `carritoproducto`
+--
+
+DROP TABLE IF EXISTS `carritoproducto`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `carritoproducto` (
+  `Id_carritoProducto` int NOT NULL AUTO_INCREMENT,
+  `Id_Carrito` int DEFAULT NULL,
+  `Id_Producto` int DEFAULT NULL,
+  `createdAT` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `updatedAT` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`Id_carritoProducto`),
+  KEY `fk_carritoproducto_carrito_idx` (`Id_Carrito`),
+  KEY `fk_carritoproducto_producto_idx` (`Id_Producto`),
+  CONSTRAINT `fk_carritoproducto_carrito` FOREIGN KEY (`Id_Carrito`) REFERENCES `carrito` (`Id_Carrito`),
+  CONSTRAINT `fk_carritoproducto_producto` FOREIGN KEY (`Id_Producto`) REFERENCES `producto` (`Id_Producto`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `carritoproducto`
+--
+
+LOCK TABLES `carritoproducto` WRITE;
+/*!40000 ALTER TABLE `carritoproducto` DISABLE KEYS */;
+/*!40000 ALTER TABLE `carritoproducto` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -85,7 +121,7 @@ CREATE TABLE `cliente` (
   PRIMARY KEY (`Id_Cliente`),
   KEY `Id_Carrito_idx` (`Id_Carrito`),
   CONSTRAINT `Id_Carrito` FOREIGN KEY (`Id_Carrito`) REFERENCES `carrito` (`Id_Carrito`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -94,7 +130,7 @@ CREATE TABLE `cliente` (
 
 LOCK TABLES `cliente` WRITE;
 /*!40000 ALTER TABLE `cliente` DISABLE KEYS */;
-INSERT INTO `cliente` VALUES (1,'Fabian Moreno','fmoreno@example.com','5551234567',1,'2024-08-13 05:00:00','2024-08-13 05:00:00'),(2,'Sofia','mmontealegre@example.com','5551234568',6,'2024-08-13 05:00:00','2024-08-22 04:20:40'),(4,'Maria Montealegre','mmontealegre@example.com','5551234568',9,'2024-08-13 05:00:00','2024-08-22 03:41:09'),(6,'Maria Montealegre','mmontealegre@example.com','5551234568',10,'2024-08-13 05:00:00','2024-08-22 03:41:52'),(7,'Maria','mmontealegre@example.com','5551234568',10,'2024-08-13 05:00:00','2024-08-22 03:49:55'),(9,'Maria2','mmontealegre@example.com','5551234568',1,'2024-08-13 05:00:00','2024-08-22 04:18:45'),(10,'Fiona','mmontealegre@example.com','5551234568',4,'2024-08-13 05:00:00','2024-08-22 04:21:13'),(11,'Fiona','mmontealegre@example.com','5551234568',4,'2024-08-22 04:21:39','2024-08-22 04:21:39');
+INSERT INTO `cliente` VALUES (1,'Fabian','fabian@example.com','5551234567',2,'2024-08-13 05:00:00','2024-09-15 15:10:18'),(2,'Sofia','mmontealegre@example.com','5551234568',6,'2024-08-13 05:00:00','2024-08-22 04:20:40'),(4,'Maria Montealegre','mmontealegre@example.com','5551234568',9,'2024-08-13 05:00:00','2024-09-15 15:09:55'),(6,'Maria Montealegre','mmontealegre@example.com','5551234568',10,'2024-08-13 05:00:00','2024-08-22 03:41:52'),(7,'Maria','mmontealegre@example.com','555123456',10,'2024-08-13 05:00:00','2024-09-15 15:10:10'),(9,'Maria2','mmontealegre@example.com','5551234568',1,'2024-08-13 05:00:00','2024-08-22 04:18:45'),(10,'Fiona','mmontealegre@example.com','5551234568',4,'2024-08-13 05:00:00','2024-08-22 04:21:13'),(11,'Fiona','mmontealegre@example.com','5551234568',4,'2024-08-22 04:21:39','2024-08-22 04:21:39'),(14,'asd','ads@gmail.com','1231',1,'2024-09-15 13:43:06','2024-09-15 13:46:09');
 /*!40000 ALTER TABLE `cliente` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -162,7 +198,7 @@ CREATE TABLE `pedido` (
 
 LOCK TABLES `pedido` WRITE;
 /*!40000 ALTER TABLE `pedido` DISABLE KEYS */;
-INSERT INTO `pedido` VALUES (1,'2024-08-17',1,'Pendiente',250.75,'2024-08-22 05:04:33','2024-08-22 05:04:33'),(2,'2024-08-17',11,'Pendiente',250.75,'2024-08-22 05:04:50','2024-08-22 05:04:50'),(5,'2024-08-17',9,'Pendiente',250.75,'2024-08-22 05:05:23','2024-08-22 05:05:23');
+INSERT INTO `pedido` VALUES (1,'2024-08-17',2,'En espera',250.75,'2024-09-15 13:48:09','2024-09-15 13:48:09'),(2,'2024-08-17',11,'Pendiente',250.75,'2024-08-22 05:04:50','2024-08-22 05:04:50'),(5,'2024-08-17',9,'Pendiente',250.75,'2024-08-22 05:05:23','2024-08-22 05:05:23');
 /*!40000 ALTER TABLE `pedido` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -334,7 +370,7 @@ DROP TABLE IF EXISTS `usuario`;
 CREATE TABLE `usuario` (
   `Id_Usuario` int NOT NULL AUTO_INCREMENT,
   `Nom_Usuario` varchar(100) DEFAULT NULL,
-  `Cor_Usuario` varchar(100) DEFAULT NULL,
+  `Con_Usuario` varchar(100) DEFAULT NULL,
   `Password_Usuario` varchar(255) DEFAULT NULL,
   `createdAT` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updatedAT` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -389,4 +425,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-08-22  0:07:21
+-- Dump completed on 2024-09-15 10:16:36

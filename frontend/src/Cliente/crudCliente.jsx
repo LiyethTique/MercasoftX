@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import FormCliente from '../Cliente/formCliente';
+import FormCliente from '../Cliente/formCliente.jsx';
 import Sidebar from '../Sidebar/Sidebar';
 import Swal from 'sweetalert2';
 import WriteTable from '../Tabla/Data-Table';
-import ModalForm from '../Model/Model';
+import ModalForm from '../Model/Model.jsx'; // Asegúrate de que esta ruta sea correcta
 
 const URI = (process.env.SERVER_BACK || 'http://localhost:3002') + '/cliente/';
 
 const CrudCliente = () => {
   const [clienteList, setClienteList] = useState([]);
-  const [buttonForm, setButtonForm] = useState('Enviar');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [buttonForm, setButtonForm] = useState('Enviar');
   const [cliente, setCliente] = useState(null);
 
   useEffect(() => {
@@ -123,33 +123,38 @@ const CrudCliente = () => {
     </div>
   ]);
 
-  const moduleName = "Gestionar Clientes"; // Nombre del módulo
-
   return (
     <>
       <Sidebar />
       <div className="container mt-4">
         <center>
-          <h1>{moduleName}</h1>
+          <h1>Gestionar Clientes</h1>
         </center>
         
         <div className="d-flex justify-content-between mb-3">
           <button className="btn btn-success d-flex align-items-center" onClick={handleShowForm}>
-            <img
-              src="/plus-circle (1).svg"
-              alt="Add Icon"
-              style={{ width: '20px', height: '20px', marginRight: '8px', filter: 'invert(100%)' }}
+            <img 
+              src="/plus.svg" 
+              alt="Agregar Cliente" 
+              style={{ width: '24px', height: '24px', marginRight: '8px' }}
             />
-            Registrar
+            Agregar Cliente
           </button>
         </div>
 
-        <WriteTable titles={titles} data={data} moduleName={moduleName} />
+        <WriteTable 
+          titles={titles}
+          data={data}
+        />
 
-        <ModalForm
-          isOpen={isModalOpen}
-          onClose={() => { setIsModalOpen(false); setCliente(null); setButtonForm('Enviar'); }}
-          title={buttonForm === 'Actualizar' ? "Actualizar Cliente" : "Agregar Cliente"}
+        <ModalForm 
+          isOpen={isModalOpen} 
+          onClose={() => setIsModalOpen(false)} 
+          title={buttonForm === 'Actualizar' ? 'Actualizar Cliente' : 'Agregar Cliente'}
+          onSubmit={() => {
+            const form = document.querySelector('form');
+            if (form) form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+          }}
         >
           <FormCliente
             buttonForm={buttonForm}

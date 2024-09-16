@@ -1,0 +1,25 @@
+/* Estilo para la superposición del modal */
+.Overlay {
+    background-color: rgba(0, 0, 0, 0.5); /* Color gris oscuro con transparencia */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Estilo para el contenido del modal */
+  .Modal {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    max-width: 600px;
+    margin: auto;
+    position: relative;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Estilo para el contenido del modal */
+  .ModalContent {
+    display: flex;
+    flex-direction: column;
+  }
+  

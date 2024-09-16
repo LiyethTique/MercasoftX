@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 import bcryptjs from 'bcryptjs'; // Revisa si prefieres bcrypt o bcryptjs
 import jwt from 'jsonwebtoken';
 import { promisify } from 'util';
@@ -78,4 +76,3 @@ export const verifyToken = async (req, res, next) => {
     res.status(401).json({ error: 'Token inválido' });
   }
 };
->>>>>>> 9e456e8d794af7916e49787c3d63e4a093751241

@@ -23,6 +23,7 @@ const CrudResponsable = () => {
       const respuesta = await axios.get(URI);
       if (Array.isArray(respuesta.data)) {
         setResponsableList(respuesta.data);
+        console.log("Regitros erroneos")
       } else {
         console.error("Unexpected response format:", respuesta.data);
         setResponsableList([]);

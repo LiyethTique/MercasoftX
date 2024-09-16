@@ -30,7 +30,7 @@ app.post('/auth/login', loginUser);  // Login de usuario
 app.post('/auth/register', registerUser);  // Registro de usuario
 
 // Aplicar el middleware `verifyToken` globalmente a todas las rutas protegidas
-app.use(verifyToken);
+// app.use(verifyToken);
 
 // Rutas protegidas
 app.use('/carrito', carritoRoutes);

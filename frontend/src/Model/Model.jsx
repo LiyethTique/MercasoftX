@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
 
-const ModalForm = ({ isOpen, onClose, title, children }) => {
+const ModalForm = ({ isOpen, onClose, title, children, onSubmit }) => {
   return (
     <Modal show={isOpen} onHide={onClose} centered>
       <Modal.Header closeButton>
@@ -13,6 +13,9 @@ const ModalForm = ({ isOpen, onClose, title, children }) => {
       <Modal.Footer>
         <Button variant="secondary" onClick={onClose}>
           Cerrar
+        </Button>
+        <Button variant="primary" onClick={onSubmit}>
+          {title.includes('Actualizar') ? 'Actualizar' : 'Enviar'}
         </Button>
       </Modal.Footer>
     </Modal>

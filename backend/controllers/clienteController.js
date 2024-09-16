@@ -1,5 +1,6 @@
 import { Sequelize, Op } from "sequelize";
 import ClientesModel from "../models/clienteModel.js";
+import logger from "../logs/logger.js";
 
 export const getAllClientes = async (req, res) => {
     try {

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 
 const FormCliente = ({ buttonForm, cliente, URI, updateTextButton, setIsFormVisible, onSubmit }) => {
   const [formData, setFormData] = useState({
@@ -9,6 +8,8 @@ const FormCliente = ({ buttonForm, cliente, URI, updateTextButton, setIsFormVisi
     Id_Carrito: ''
   });
 
+  const [isModified, setIsModified] = useState(false); // Nueva variable para verificar si se ha hecho algún cambio
+
   useEffect(() => {
     if (cliente) {
       setFormData(cliente);
@@ -17,11 +18,18 @@ const FormCliente = ({ buttonForm, cliente, URI, updateTextButton, setIsFormVisi
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    setIsModified(true); // Activar modificación cuando algún campo cambie
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData);
+    if (isModified) { // Solo permitir el envío si se ha hecho algún cambio
+      onSubmit(formData);
+    }
+  };
+
+  const handleCancel = () => {
+    setIsFormVisible(false); // Cancelar y cerrar el formulario
   };
 
   return (
@@ -53,7 +61,7 @@ const FormCliente = ({ buttonForm, cliente, URI, updateTextButton, setIsFormVisi
       <div className="mb-3">
         <label htmlFor="Tel_Cliente" className="form-label">Teléfono Cliente</label>
         <input
-          type="text"
+          type="number"
           className="form-control"
           id="Tel_Cliente"
           name="Tel_Cliente"
@@ -73,9 +81,16 @@ const FormCliente = ({ buttonForm, cliente, URI, updateTextButton, setIsFormVisi
           onChange={handleChange}
         />
       </div>
-      <button type="submit" className="btn btn-primary">
-        {buttonForm}
-      </button>
+
+      {/* Contenedor para los botones */}
+      <div className="d-flex justify-content-between">
+        <button type="button" className="btn btn-secondary" onClick={handleCancel}>
+          Cancelar
+        </button>
+        <button type="submit" className="btn btn-primary" disabled={!isModified}>
+          {buttonForm}
+        </button>
+      </div>
     </form>
   );
 };

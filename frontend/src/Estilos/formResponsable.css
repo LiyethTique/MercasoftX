@@ -1,0 +1,171 @@
+/* Estilo general para la tabla */
+.table {
+    width: 90%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo para las filas y celdas de la tabla */
+.table th, .table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Estilo para los encabezados de la tabla */
+.table th {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+}
+
+/* Estilo para las filas alternas de la tabla */
+.table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Estilo para los botones de acción en la tabla */
+.table .btn {
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.table .btn-warning {
+    background-color: #ffc107;
+    color: black;
+}
+
+.table .btn-warning:hover {
+    background-color: #e0a800;
+}
+
+.table .btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.table .btn-danger:hover {
+    background-color: #c82333;
+}
+
+/* Estilo para la paginación */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px auto;
+}
+
+.pagination button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 0 5px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    font-size: 14px;
+}
+
+.pagination button:disabled {
+    background-color: #c0c0c0;
+    cursor: not-allowed;
+}
+
+.pagination button:hover:not(:disabled) {
+    background-color: #0056b3;
+}
+
+.pagination span {
+    margin: 0 15px;
+    font-size: 14px;
+}
+
+/* Animación para la tabla */
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Estilos para el campo del teléfono */
+#telefonoResponsable {
+    width: 100%;
+    padding: 0.5em;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+/* Estilos generales para el contenedor del formulario */
+.form-container {
+    padding: 20px;
+    background-color: #f8f9fa; /* Fondo suave para el contenedor */
+    border-radius: 8px; /* Bordes redondeados del contenedor */
+    margin-top: 20px; /* Espacio superior para separar del título */
+}
+
+/* Estilos para el botón de mostrar/ocultar formulario */
+.btn-primary {
+    background-color: #ff9800; /* Color de fondo naranja para el botón */
+    border: 1px solid #ff9800; /* Borde naranja para el botón */
+    color: #ffffff; /* Color del texto blanco en el botón */
+    padding: 10px 20px; /* Espaciado interno del botón */
+    font-size: 16px; /* Tamaño de fuente del botón */
+    cursor: pointer; /* Cursor de puntero al pasar sobre el botón */
+    display: block; /* Hace que el botón esté en una nueva línea */
+    margin-bottom: 20px; /* Espacio debajo del botón */
+}
+
+.btn-primary:hover {
+    background-color: #e68900; /* Color de fondo naranja más oscuro al pasar el cursor */
+    border-color: #e68900; /* Borde más oscuro al pasar el cursor */
+}
+
+/* Estilos para el formulario */
+.form-responsive {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Estilos para los campos del formulario */
+.form-responsive label {
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.form-responsive input {
+    padding: 8px;
+    border: 1px solid white;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+/* Estilos para el botón de enviar del formulario */
+.btn-success {
+    background-color: #4caf50; /* Color de fondo verde para el botón */
+    border: 1px solid #4caf50; /* Borde verde para el botón */
+    color: #ffffff; /* Color del texto blanco en el botón */
+    padding: 10px 20px; /* Espaciado interno del botón */
+    font-size: 16px; /* Tamaño de fuente del botón */
+    cursor: pointer; /* Cursor de puntero al pasar sobre el botón */
+}
+
+.btn-success:hover {
+    background-color: #388e3c; /* Color de fondo verde más oscuro al pasar el cursor */
+    border-color: #388e3c; /* Borde más oscuro al pasar el cursor */
+}
+

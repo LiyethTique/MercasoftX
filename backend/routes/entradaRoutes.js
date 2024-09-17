@@ -1,0 +1,36 @@
+import express from "express";
+import { createEntrada, deleteEntrada, getAllEntradas, getEntrada, updateEntrada } from "../controllers/entradaController.js";
+import winston from "winston";
+import DailyRotateFile from "winston-daily-rotate-file";
+
+const router = express.Router();
+
+const logger = winston.createLogger({
+    level: "error",
+    format: winston.format.combine(
+        winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
+        winston.format.printf(info => `${info.timestamp}: ${info.level}: ${info.message}`)
+    ),
+    transports: [
+        new DailyRotateFile({
+            filename: 'logs/entrada-%DATE%.log',
+            datePattern: 'YYYY-MM-DD',
+            maxFiles: '14d'
+        })
+    ]
+});
+
+const logError = (err, req, res, next) => {
+    logger.error(err.message);
+    res.status(500).json({ error: 'Internal Server Error' });
+};
+
+router.get('/', getAllEntradas);
+router.get('/:id', getEntrada);
+router.post('/', createEntrada);
+router.put('/:id', updateEntrada);
+router.delete('/:id', deleteEntrada);
+
+router.use(logError);
+
+export default router;

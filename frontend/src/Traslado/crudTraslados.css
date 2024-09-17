@@ -1,0 +1,67 @@
+/* crudTraslados.css */
+
+/* Botón personalizado para acciones */
+.btn-custom {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.75rem; /* Tamaño del texto un poco más grande para mejorar la legibilidad */
+    padding: 0.3rem 0.6rem; /* Padding ajustado para un botón más grande */
+    border-radius: 0.25rem; /* Borde redondeado un poco más grande */
+    text-decoration: none; /* Quita el subrayado de los enlaces */
+    color: #fff; /* Color del texto */
+    border: 1px solid #d9ff00; /* Color del borde, ajusta según el diseño */
+    background-color: #a6ff00; /* Color de fondo */
+    transition: background-color 0.3s, border-color 0.3s; /* Transición para efectos de hover */
+}
+
+.btn-custom:hover {
+    background-color: #0056b3; /* Color de fondo en hover */
+    border-color: #004085; /* Color del borde en hover */
+}
+
+/* Estilo para los íconos dentro del botón */
+.btn-custom img {
+    width: 16px; /* Tamaño del ícono ajustado */
+    height: 16px; /* Tamaño del ícono ajustado */
+    margin-right: 0.5rem; /* Espacio entre el ícono y el texto */
+}
+
+/* Tabla de traslados */
+.table-traslados {
+    width: 100%; /* Ancho completo de la tabla */
+    border-collapse: collapse; /* Elimina espacios entre celdas */
+}
+
+.table-traslados th, .table-traslados td {
+    padding: 0.75rem; /* Espacio interior de las celdas */
+    text-align: left; /* Alineación del texto a la izquierda */
+    border-bottom: 1px solid #dee2e6; /* Borde inferior de las celdas */
+}
+
+.table-traslados th {
+    background-color: #f8f9fa; /* Color de fondo para los encabezados */
+    font-weight: bold; /* Negrita en los encabezados */
+}
+
+.table-traslados tr:nth-child(even) {
+    background-color: #f2f2f2; /* Color de fondo alternativo para las filas */
+}
+
+.table-traslados td {
+    font-size: 0.875rem; /* Tamaño del texto en las celdas */
+}
+
+/* Estilo para los botones de editar y borrar */
+.btn-edit, .btn-delete {
+    border: none; /* Sin borde */
+    background: none; /* Sin fondo */
+    cursor: pointer; /* Cambia el cursor a mano */
+}
+
+.btn-edit {
+    color: #ffc107; /* Color para el botón de editar */
+}
+
+.btn-delete {
+    color: #dc3545; /* Color para el botón de borrar */
+}

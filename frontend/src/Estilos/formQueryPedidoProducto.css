@@ -1,0 +1,49 @@
+/* formQueryPedidoProducto.css */
+.query-form {
+    width: 50%;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.query-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.query-input {
+    width: calc(100% - 22px);
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.results-container {
+    width: 50%;
+    margin: 20px auto;
+}
+
+.results-container .table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.results-container .table th,
+.results-container .table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.results-container .table th {
+    background-color: #f4f4f4;
+}
+
+.results-container .table tbody tr:hover {
+    background-color: #f1f1f1;
+}

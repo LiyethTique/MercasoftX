@@ -1,0 +1,123 @@
+/* Estilos generales */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    font-family: Arial, sans-serif;
+}
+
+/* Contenedor principal del login */
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #f8f9fa;
+    padding: 20px;
+}
+
+/* Formulario de login */
+.login-form {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+}
+
+/* Cabecera del formulario */
+.form-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+/* Estilo del título */
+.form-header h2 {
+    margin: 0;
+    color: #343a40;
+    font-size: 24px;
+}
+
+/* Estilo de las etiquetas del formulario */
+.login-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #495057;
+}
+
+/* Estilo de los campos de entrada */
+.login-form input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+/* Estilo del botón de inicio de sesión */
+.login-button {
+    padding: 12px 20px;
+    border: none;
+    background-color: orange; /* Color azul */
+    color: #fff;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+
+
+/* Contenedor del mensaje de error */
+.error-message {
+    color: #dc3545; /* Color rojo para mensajes de error */
+    font-size: 14px;
+    margin-top: 10px;
+    text-align: center;
+}
+
+/* Estilo de los campos de entrada */
+.login-form input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Estilo de los campos de entrada cuando están en foco */
+.login-form input:focus {
+    border-color: rgb(0, 0, 0); /* Color negro para el borde */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.7); /* Sombra más oscura y pronunciada */
+    outline: none; /* Quita el contorno predeterminado del navegador */
+}
+
+/* Estilos para el enlace de registro */
+.register-link {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 16px;
+    color: #495057;
+}
+
+.register-link p {
+    margin: 0;
+    color: #6c757d; /* Color gris oscuro para el texto */
+}
+
+.register-link a {
+    color: #f4d03f; /* Color del enlace, combina con el botón */
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+

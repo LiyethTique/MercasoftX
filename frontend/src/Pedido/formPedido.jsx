@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Swal from 'sweetalert2';
 import axios from 'axios';
 
 const FormPedido = ({ buttonForm, pedido, URI, updateTextButton, setIsFormVisible, onSubmit }) => {
@@ -8,6 +9,8 @@ const FormPedido = ({ buttonForm, pedido, URI, updateTextButton, setIsFormVisibl
     Est_Pedido: '',
     Val_Pedido: ''
   });
+
+  const [isModified, setIsModified] = useState(false);
 
   useEffect(() => {
     if (pedido) {
@@ -22,10 +25,22 @@ const FormPedido = ({ buttonForm, pedido, URI, updateTextButton, setIsFormVisibl
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    setIsModified(true); // Marca el formulario como modificado
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validar que se hayan hecho cambios en el formulario
+    if (!isModified) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Sin Cambios',
+        text: 'Debe realizar al menos un cambio en el formulario para actualizar el registro.',
+      });
+      return;
+    }
+
     try {
       if (buttonForm === 'Actualizar') {
         await axios.put(`${URI}/${pedido.Id_Pedido}`, formData);
@@ -33,10 +48,16 @@ const FormPedido = ({ buttonForm, pedido, URI, updateTextButton, setIsFormVisibl
       } else {
         await axios.post(URI, formData);
       }
-      onSubmit(formData); // Llama a la función onSubmit para actualizar la lista
+
+      // Si pasa las validaciones, llamar a onSubmit
+      onSubmit(formData); 
       clearForm();
     } catch (error) {
-      alert('Error al procesar el pedido');
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Error al procesar el pedido.',
+      });
     }
   };
 
@@ -47,6 +68,7 @@ const FormPedido = ({ buttonForm, pedido, URI, updateTextButton, setIsFormVisibl
       Est_Pedido: '',
       Val_Pedido: ''
     });
+    setIsModified(false); // Resetea el estado de modificado
   };
 
   return (
@@ -100,9 +122,12 @@ const FormPedido = ({ buttonForm, pedido, URI, updateTextButton, setIsFormVisibl
           required
         />
       </div>
-      <button type="submit" className="btn btn-primary">
-        {buttonForm}
-      </button>
+
+      <div className="d-flex justify-content-start">
+        <button type="submit" className="btn btn-primary" disabled={!isModified}>
+          {buttonForm}
+        </button>
+      </div>
     </form>
   );
 };

@@ -17,7 +17,7 @@ import TeamPresentation from './contact/equipo.jsx';
 import ContactPage from './contact/imageCarrousel.jsx';
 import Login from './iniciarsesion/IniciarSesion.jsx';
 import Auth from './registrar/registrar.jsx';
-// import ModalForms from './Model/Model.jsx';  // Ruta correcta
+import ModalForms from './Model/Model.jsx';  // Ruta correcta
 
 function App() {
   return (
@@ -42,7 +42,7 @@ function App() {
       </Routes>
 
       {/* Aquí agregas el modal */}
-      {/* <ModalForms /> */}
+      <ModalForms />
     </>
   );
 }

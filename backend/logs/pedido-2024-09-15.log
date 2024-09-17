@@ -1,0 +1,1 @@
+2024-09-15 08:47:43: error: Cannot add or update a child row: a foreign key constraint fails (`mercasoftx`.`pedido`, CONSTRAINT `Id_Cliente` FOREIGN KEY (`Id_Cliente`) REFERENCES `cliente` (`Id_Cliente`))

@@ -1,0 +1,36 @@
+2024-09-17T02:30:17.404Z [info]: Todas las entradas recuperadas
+2024-09-17T02:30:17.439Z [info]: Todas las entradas recuperadas
+2024-09-17T02:52:29.275Z [info]: Todas las entradas recuperadas
+2024-09-17T02:52:29.283Z [info]: Todas las entradas recuperadas
+2024-09-17T02:52:31.260Z [info]: Todas las entradas recuperadas
+2024-09-17T03:04:49.217Z [info]: Todas las entradas recuperadas
+2024-09-17T03:04:49.243Z [info]: Todas las entradas recuperadas
+2024-09-17T03:12:16.593Z [error]: Error al crear la entrada: Cannot add or update a child row: a foreign key constraint fails (`mercasoftx`.`entrada`, CONSTRAINT `Id_Producto` FOREIGN KEY (`Id_Producto`) REFERENCES `producto` (`Id_Producto`))
+2024-09-17T04:15:09.720Z [info]: Entrada creada: 3
+2024-09-17T04:15:09.759Z [info]: Todas las entradas recuperadas
+2024-09-17T04:15:15.034Z [info]: Todas las entradas recuperadas
+2024-09-17T04:15:15.073Z [info]: Todas las entradas recuperadas
+2024-09-17T04:15:42.129Z [info]: Entrada creada: 4
+2024-09-17T04:15:42.152Z [info]: Todas las entradas recuperadas
+2024-09-17T04:15:44.037Z [info]: Entrada recuperada: 3
+2024-09-17T04:25:28.748Z [info]: Todas las entradas recuperadas
+2024-09-17T04:25:28.789Z [info]: Todas las entradas recuperadas
+2024-09-17T04:25:53.977Z [info]: Entrada creada: 1
+2024-09-17T04:25:53.995Z [info]: Todas las entradas recuperadas
+2024-09-17T04:27:16.396Z [info]: Entrada creada: 2
+2024-09-17T04:27:16.416Z [info]: Todas las entradas recuperadas
+2024-09-17T04:27:19.616Z [info]: Todas las entradas recuperadas
+2024-09-17T04:27:19.663Z [info]: Todas las entradas recuperadas
+2024-09-17T04:27:41.050Z [info]: Entrada recuperada: 2
+2024-09-17T04:27:51.143Z [info]: Entrada actualizada: 2
+2024-09-17T04:27:51.166Z [info]: Todas las entradas recuperadas
+2024-09-17T04:27:53.068Z [info]: Entrada recuperada: 2
+2024-09-17T04:27:57.209Z [info]: Entrada actualizada: 2
+2024-09-17T04:27:57.227Z [info]: Todas las entradas recuperadas
+2024-09-17T04:33:48.261Z [info]: Todas las entradas recuperadas
+2024-09-17T04:37:40.884Z [info]: Todas las entradas recuperadas
+2024-09-17T04:37:40.930Z [info]: Todas las entradas recuperadas
+2024-09-17T04:40:17.839Z [info]: Todas las entradas recuperadas
+2024-09-17T04:40:17.878Z [info]: Todas las entradas recuperadas
+2024-09-17T04:40:30.812Z [info]: Todas las entradas recuperadas
+2024-09-17T04:41:41.252Z [info]: Todas las entradas recuperadas

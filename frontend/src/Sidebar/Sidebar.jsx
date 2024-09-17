@@ -50,6 +50,7 @@ function Sidebar() {
                     {/* {renderNavItem('/traslado/', 'entrance.svg', 'Traslado', selectedOption, handleOptionSelect)} */}
                     {/* {renderNavItem('/unidad/', 'unit.svg', 'Unidad', selectedOption, handleOptionSelect)} */}
                     {renderNavItem('/venta/', 'sale.svg', 'Venta', selectedOption, handleOptionSelect)}
+                    {renderNavItem('/entrada/', 'entrance.svg', 'Entrada', selectedOption, handleOptionSelect)}
                 </ul>
                 <hr />
 

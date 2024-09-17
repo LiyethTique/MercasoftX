@@ -19,6 +19,11 @@
             "date": 1726493532715,
             "name": "logs\\venta-2024-09-16.log",
             "hash": "b97c06134f82a476af7803aba2e5f53fb4f5d8b7dfc73fea7b4ff2fd7a04c1a1"
+        },
+        {
+            "date": 1726553782968,
+            "name": "logs\\venta-2024-09-17.log",
+            "hash": "564f4b2e600bad0a3fe524e006ef3fdc33caa8e553fb26aa74c2747bc892eb68"
         }
     ],
     "hashType": "sha256"

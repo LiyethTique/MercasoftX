@@ -19,6 +19,11 @@
             "date": 1726493532709,
             "name": "logs\\unidad-2024-09-16.log",
             "hash": "691e5897093dff7487c801151377eb650098b9430d4b23542f4e1b39c74225d2"
+        },
+        {
+            "date": 1726553782963,
+            "name": "logs\\unidad-2024-09-17.log",
+            "hash": "3398e93c4810656fd79bc30632fc4cf6bc9e4b26635355d20e421874692ebbb6"
         }
     ],
     "hashType": "sha256"

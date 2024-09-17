@@ -19,6 +19,11 @@
             "date": 1726493532680,
             "name": "logs\\pedidoproducto-2024-09-16.log",
             "hash": "a6c5a38d2417aeb2ef3de91e90c494c617c56a466b22f21333c040134005754c"
+        },
+        {
+            "date": 1726553782942,
+            "name": "logs\\pedidoproducto-2024-09-17.log",
+            "hash": "9df9ea4025bedc6c74ce6d7af3f6a764598f1cb4c4b6a47a8c4ffcab33c5899f"
         }
     ],
     "hashType": "sha256"

@@ -8,27 +8,33 @@ const WriteTable = ({ titles, data, moduleName }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const rowsPerPage = 5;
 
+    // Filtrar los datos basados en el término de búsqueda
+    const filteredData = data.filter(row =>
+        row.some(cell => cell.toString().toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+
+    // Calcular el índice de las filas a mostrar en la página actual
+    const indexOfLastRow = currentPage * rowsPerPage;
+    const indexOfFirstRow = indexOfLastRow - rowsPerPage;
+    const currentRows = filteredData.slice(indexOfFirstRow, indexOfLastRow);
+
     const exportToPDF = () => {
-        const filteredTitles = titles.slice(0, -1); // Filtrar los títulos
-        const filteredDataToExport = filteredData.map(row => row.slice(0, -1)); // Filtrar los datos
-    
+        const filteredTitles = titles.slice(0, -1);
+        const filteredDataToExport = filteredData.map(row => row.slice(0, -1));
+
         const doc = new jsPDF();
-    
-        // Añadir el título centrado en la parte superior
-        doc.setFontSize(20); // Tamaño de fuente para el título
+        doc.setFontSize(20);
         const pageWidth = doc.internal.pageSize.getWidth();
         const titleWidth = doc.getTextWidth(moduleName);
         doc.text(moduleName, (pageWidth - titleWidth) / 2, 20);
-    
-        // Añadir la primera tabla (puedes ajustar el startY si es necesario)
+
         doc.autoTable({
-            startY: 30, // Asegúrate de que esta posición esté debajo del título
+            startY: 30,
             head: [filteredTitles],
             body: filteredDataToExport,
         });
-    
-        // Guardar el documento
-        doc.save(`${moduleName}.pdf`); // Usar nombre del módulo
+
+        doc.save(`${moduleName}.pdf`);
     };
 
     const exportToExcel = () => {
@@ -38,14 +44,14 @@ const WriteTable = ({ titles, data, moduleName }) => {
         const ws = XLSX.utils.aoa_to_sheet([[moduleName], filteredTitles, ...filteredDataToExport]);
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-        XLSX.writeFile(wb, `${moduleName}.xlsx`); // Usar nombre del módulo
+        XLSX.writeFile(wb, `${moduleName}.xlsx`);
     };
 
     const exportToSQL = () => {
         const filteredTitles = titles.slice(0, -1);
         const filteredDataToExport = filteredData.map(row => row.slice(0, -1));
 
-        let sql = `-- ${moduleName}\n\n`; // Añadir nombre del módulo como comentario
+        let sql = `-- ${moduleName}\n\n`;
         sql += 'CREATE TABLE table_name (\n';
         sql += filteredTitles.map(title => `  \`${title}\` VARCHAR(255)`).join(',\n');
         sql += '\n);\n\n';
@@ -58,44 +64,44 @@ const WriteTable = ({ titles, data, moduleName }) => {
         const blob = new Blob([sql], { type: 'text/sql' });
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
-        link.download = `${moduleName}.sql`; // Usar nombre del módulo
+        link.download = `${moduleName}.sql`;
         link.click();
     };
 
-    const handlePageChange = (pageNumber) => {
-        setCurrentPage(pageNumber);
+    // Control de la búsqueda
+    const handleSearch = event => {
+        setSearchTerm(event.target.value);
+        setCurrentPage(1); // Reiniciar la paginación al buscar
     };
 
-    const handleSearchChange = (e) => {
-        setSearchTerm(e.target.value);
-    };
+    // Control de la paginación
+    const paginate = pageNumber => setCurrentPage(pageNumber);
 
-    const filteredData = data.filter(row =>
-        row.some(cell => typeof cell === 'string' && cell.toLowerCase().includes(searchTerm.toLowerCase()))
-    );
-
-    const indexOfLastRow = currentPage * rowsPerPage;
-    const indexOfFirstRow = indexOfLastRow - rowsPerPage;
-    const currentRows = filteredData.slice(indexOfFirstRow, indexOfLastRow);
-
+    // Número total de páginas
     const totalPages = Math.ceil(filteredData.length / rowsPerPage);
 
     return (
         <div>
-            <div className="d-flex justify-content-between">
+            {/* Botones de exportación */}
+            <div className="d-flex justify-content-between mb-3">
                 <button className="btn btn-outline-primary" onClick={exportToPDF}>Exportar a PDF</button>
                 <button className="btn btn-outline-success" onClick={exportToExcel}>Exportar a Excel</button>
                 <button className="btn btn-outline-danger" onClick={exportToSQL}>Exportar a SQL</button>
             </div>
 
-            <div className="mt-3">
+            {/* Campo de búsqueda */}
+            <div className="mb-3">
                 <input
                     type="text"
+                    className="form-control"
                     placeholder="Buscar..."
                     value={searchTerm}
-                    onChange={handleSearchChange}
-                    className="form-control mb-3"
+                    onChange={handleSearch}
                 />
+            </div>
+
+            {/* Tabla de datos */}
+            <div className="table-responsive">
                 <table className="table table-striped">
                     <thead>
                         <tr>
@@ -105,34 +111,37 @@ const WriteTable = ({ titles, data, moduleName }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {currentRows.map((row, index) => (
-                            <tr key={index}>
-                                {row.map((cell, cellIndex) => (
-                                    <td key={cellIndex}>{cell}</td>
-                                ))}
+                        {currentRows.length > 0 ? (
+                            currentRows.map((row, rowIndex) => (
+                                <tr key={rowIndex}>
+                                    {row.map((cell, cellIndex) => (
+                                        <td key={cellIndex}>{cell}</td>
+                                    ))}
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan={titles.length} className="text-center">
+                                    No hay registros para mostrar
+                                </td>
                             </tr>
-                        ))}
+                        )}
                     </tbody>
                 </table>
-
-                <div className="d-flex justify-content-between">
-                    <button
-                        className="btn btn-primary"
-                        onClick={() => handlePageChange(currentPage - 1)}
-                        disabled={currentPage === 1}
-                    >
-                        Anterior
-                    </button>
-                    <span>Página {currentPage} de {totalPages}</span>
-                    <button
-                        className="btn btn-primary"
-                        onClick={() => handlePageChange(currentPage + 1)}
-                        disabled={currentPage === totalPages}
-                    >
-                        Siguiente
-                    </button>
-                </div>
             </div>
+
+            {/* Controles de paginación */}
+            <nav>
+                <ul className="pagination justify-content-center">
+                    {[...Array(totalPages)].map((_, pageIndex) => (
+                        <li key={pageIndex} className={`page-item ${pageIndex + 1 === currentPage ? 'active' : ''}`}>
+                            <button className="page-link" onClick={() => paginate(pageIndex + 1)}>
+                                {pageIndex + 1}
+                            </button>
+                        </li>
+                    ))}
+                </ul>
+            </nav>
         </div>
     );
 };

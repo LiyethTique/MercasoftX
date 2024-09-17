@@ -19,6 +19,11 @@
             "date": 1726493532647,
             "name": "logs\\carrito-2024-09-16.log",
             "hash": "7541efddfbf795b7852ab0dcdde9b14badc8ae3214e0005276e3bfd023ae7bb9"
+        },
+        {
+            "date": 1726553782913,
+            "name": "logs\\carrito-2024-09-17.log",
+            "hash": "d22fad38169ca752ff9f0d35c5f62c3523f55f736a237ee9c045ec7d051ffed7"
         }
     ],
     "hashType": "sha256"

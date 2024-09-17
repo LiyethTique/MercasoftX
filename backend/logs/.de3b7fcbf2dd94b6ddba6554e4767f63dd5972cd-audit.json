@@ -19,6 +19,11 @@
             "date": 1726493532686,
             "name": "logs\\producto-2024-09-16.log",
             "hash": "20a658c3443b612536baffe4cb5e63ba301dfaa930a4ef3fe2e564335c1afc24"
+        },
+        {
+            "date": 1726553782946,
+            "name": "logs\\producto-2024-09-17.log",
+            "hash": "968821954673c66b9c06fdaf11635e7ea2420d410ccdca4c0575e126040c8fb9"
         }
     ],
     "hashType": "sha256"

@@ -134,7 +134,7 @@ const CrudCliente = () => {
         <div className="d-flex justify-content-between mb-3">
           <button className="btn btn-success d-flex align-items-center" onClick={handleShowForm}>
             <img 
-              src="/plus.svg" 
+              src="/plus-circle (1).svg" 
               alt="Agregar Cliente" 
               style={{ width: '24px', height: '24px', marginRight: '8px' }}
             />
@@ -142,14 +142,14 @@ const CrudCliente = () => {
           </button>
         </div>
 
-        <WriteTable 
+        <WriteTable
           titles={titles}
           data={data}
         />
 
         <ModalForm 
-          isOpen={isModalOpen} 
-          onClose={() => setIsModalOpen(false)} 
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
           title={buttonForm === 'Actualizar' ? 'Actualizar Cliente' : 'Agregar Cliente'}
           onSubmit={() => {
             const form = document.querySelector('form');

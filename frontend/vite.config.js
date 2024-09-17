@@ -8,15 +8,6 @@ export default defineConfig(({ mode }) => {
     define: {
       'process.env': env
     },
-    plugins: [react()],
-    server: {
-      proxy: {
-        '/api': {
-          target: 'http://localhost:3002', // Cambia esto al puerto de tu servidor backend
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api/, ''),
-        },
-      },
-    },
-  };
-});
+    plugins: [react()]
+  }; // Agregué el paréntesis de cierre faltante aquí
+})

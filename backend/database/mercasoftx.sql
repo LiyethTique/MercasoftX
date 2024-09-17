@@ -115,12 +115,9 @@ CREATE TABLE `cliente` (
   `Nom_Cliente` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `Cor_Cliente` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `Tel_Cliente` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `Id_Carrito` int DEFAULT NULL,
   `createdAT` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updatedAT` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`Id_Cliente`),
-  KEY `Id_Carrito_idx` (`Id_Carrito`),
-  CONSTRAINT `Id_Carrito` FOREIGN KEY (`Id_Carrito`) REFERENCES `carrito` (`Id_Carrito`)
+  PRIMARY KEY (`Id_Cliente`)
 ) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -130,7 +127,7 @@ CREATE TABLE `cliente` (
 
 LOCK TABLES `cliente` WRITE;
 /*!40000 ALTER TABLE `cliente` DISABLE KEYS */;
-INSERT INTO `cliente` VALUES (1,'Fabian','fabian@example.com','5551234567',2,'2024-08-13 05:00:00','2024-09-15 15:10:18'),(2,'Sofia','mmontealegre@example.com','5551234568',6,'2024-08-13 05:00:00','2024-08-22 04:20:40'),(4,'Maria Montealegre','mmontealegre@example.com','5551234568',9,'2024-08-13 05:00:00','2024-09-15 15:09:55'),(6,'Maria Montealegre','mmontealegre@example.com','5551234568',10,'2024-08-13 05:00:00','2024-08-22 03:41:52'),(7,'Maria','mmontealegre@example.com','555123456',10,'2024-08-13 05:00:00','2024-09-15 15:10:10'),(9,'Maria2','mmontealegre@example.com','5551234568',1,'2024-08-13 05:00:00','2024-08-22 04:18:45'),(10,'Fiona','mmontealegre@example.com','5551234568',4,'2024-08-13 05:00:00','2024-08-22 04:21:13'),(11,'Fiona','mmontealegre@example.com','5551234568',4,'2024-08-22 04:21:39','2024-08-22 04:21:39'),(14,'asd','ads@gmail.com','1231',1,'2024-09-15 13:43:06','2024-09-15 13:46:09');
+INSERT INTO `cliente` VALUES (1,'Fabian','fabian@example.com','5551234567','2024-08-13 05:00:00','2024-09-15 15:10:18'),(2,'Sofia','mmontealegre@example.com','5551234568','2024-08-13 05:00:00','2024-08-22 04:20:40'),(4,'Maria Montealegre','mmontealegre@example.com','5551234568','2024-08-13 05:00:00','2024-09-15 15:09:55'),(6,'Maria Montealegre','mmontealegre@example.com','5551234568','2024-08-13 05:00:00','2024-08-22 03:41:52'),(7,'Maria','mmontealegre@example.com','555123456','2024-08-13 05:00:00','2024-09-15 15:10:10'),(9,'Maria2','mmontealegre@example.com','5551234568','2024-08-13 05:00:00','2024-08-22 04:18:45'),(10,'Fiona','mmontealegre@example.com','5551234568','2024-08-13 05:00:00','2024-08-22 04:21:13'),(11,'Fiona','mmontealegre@example.com','5551234568','2024-08-22 04:21:39','2024-08-22 04:21:39'),(14,'asd','ads@gmail.com','1231','2024-09-15 13:43:06','2024-09-15 13:46:09');
 /*!40000 ALTER TABLE `cliente` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -369,12 +366,12 @@ DROP TABLE IF EXISTS `usuario`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `usuario` (
   `Id_Usuario` int NOT NULL AUTO_INCREMENT,
-  `Nom_Usuario` varchar(100) DEFAULT NULL,
   `Con_Usuario` varchar(100) DEFAULT NULL,
   `Password_Usuario` varchar(255) DEFAULT NULL,
   `createdAT` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updatedAT` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`Id_Usuario`)
+  PRIMARY KEY (`Id_Usuario`),
+  UNIQUE KEY `Con_Usuario_UNIQUE` (`Con_Usuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -425,4 +422,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-09-15 10:16:36
+-- Dump completed on 2024-09-16 19:16:49

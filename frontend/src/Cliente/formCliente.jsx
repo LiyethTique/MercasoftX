@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Swal from 'sweetalert2';
 
 const FormCliente = ({ buttonForm, cliente, URI, updateTextButton, setIsFormVisible, onSubmit }) => {
   const [formData, setFormData] = useState({
@@ -8,7 +9,7 @@ const FormCliente = ({ buttonForm, cliente, URI, updateTextButton, setIsFormVisi
     Id_Carrito: ''
   });
 
-  const [isModified, setIsModified] = useState(false); // Nueva variable para verificar si se ha hecho algún cambio
+  const [isModified, setIsModified] = useState(false);
 
   useEffect(() => {
     if (cliente) {
@@ -18,18 +19,34 @@ const FormCliente = ({ buttonForm, cliente, URI, updateTextButton, setIsFormVisi
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    setIsModified(true); // Activar modificación cuando algún campo cambie
+    setIsModified(true);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isModified) { // Solo permitir el envío si se ha hecho algún cambio
-      onSubmit(formData);
+    
+    // Validar que el número de teléfono tenga exactamente 10 dígitos y empiece con '3'
+    if (!/^(3\d{9})$/.test(formData.Tel_Cliente)) {
+      Swal.fire({
+        icon: 'info',
+        title: 'Número de Teléfono Inválido',
+        text: 'El número de teléfono debe tener exactamente 10 dígitos y comenzar con 3.',
+      });
+      return;
     }
-  };
 
-  const handleCancel = () => {
-    setIsFormVisible(false); // Cancelar y cerrar el formulario
+    // Validar que se hayan hecho cambios en el formulario
+    if (!isModified) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Sin Cambios',
+        text: 'Debe realizar al menos un cambio en el formulario para actualizar el registro.',
+      });
+      return;
+    }
+
+    // Si pasa las validaciones, llamar a onSubmit
+    onSubmit(formData);
   };
 
   return (
@@ -61,12 +78,17 @@ const FormCliente = ({ buttonForm, cliente, URI, updateTextButton, setIsFormVisi
       <div className="mb-3">
         <label htmlFor="Tel_Cliente" className="form-label">Teléfono Cliente</label>
         <input
-          type="number"
+          type="text" // Cambiado a text para permitir la validación personalizada
           className="form-control"
           id="Tel_Cliente"
           name="Tel_Cliente"
           value={formData.Tel_Cliente}
-          onChange={handleChange}
+          onChange={(e) => {
+            const value = e.target.value;
+            if (/^\d{0,10}$/.test(value)) {
+              handleChange(e);
+            }
+          }}
           required
         />
       </div>
@@ -82,11 +104,8 @@ const FormCliente = ({ buttonForm, cliente, URI, updateTextButton, setIsFormVisi
         />
       </div>
 
-      {/* Contenedor para los botones */}
-      <div className="d-flex justify-content-between">
-        <button type="button" className="btn btn-secondary" onClick={handleCancel}>
-          Cancelar
-        </button>
+      {/* Botón de enviar o actualizar alineado a la izquierda */}
+      <div className="d-flex justify-content-start">
         <button type="submit" className="btn btn-primary" disabled={!isModified}>
           {buttonForm}
         </button>

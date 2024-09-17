@@ -1,0 +1,25 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "logs\\.2a6e3b89556559d8fe3a86475a0c525e4e000924-audit.json",
+    "files": [
+        {
+            "date": 1726143764371,
+            "name": "logs\\pedidoproducto-2024-09-12.log",
+            "hash": "6e086551724201a6b226bfd6a011994071acaad2958b0258d231c6b27e5fb009"
+        },
+        {
+            "date": 1726258312727,
+            "name": "logs\\pedidoproducto-2024-09-13.log",
+            "hash": "51ba829984226f209dd6f8c53c21a07f6fedb2fe19f7139144986faeb3ce344a"
+        },
+        {
+            "date": 1726493532680,
+            "name": "logs\\pedidoproducto-2024-09-16.log",
+            "hash": "a6c5a38d2417aeb2ef3de91e90c494c617c56a466b22f21333c040134005754c"
+        }
+    ],
+    "hashType": "sha256"
+}

@@ -1,0 +1,13 @@
+/* Home.css */
+.animated-logo {
+    transition: transform 0.3s ease-in-out; /* Suave transición de 0.3s */
+  }
+  
+.animated-logo:hover {
+    transform: scale(1.1); /* Escala la imagen al 110% cuando se pasa el mouse */
+  }
+
+  .animated-logo {
+    border: 5px solid red; /* Solo para probar si el CSS está aplicado */
+  }
+  

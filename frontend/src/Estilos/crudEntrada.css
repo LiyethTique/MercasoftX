@@ -1,0 +1,44 @@
+/* Estilos generales para el CRUD de Entradas */
+.crud-entrada-container {
+    padding: 20px;
+    margin: 0 auto;
+    max-width: 1200px;
+    font-family: Arial, sans-serif;
+}
+
+/* Encabezado */
+.crud-entrada-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.crud-entrada-header h1 {
+    color: #333;
+}
+
+/* Mensaje de no resultados */
+.no-results {
+    text-align: center;
+    color: #888;
+    font-size: 16px;
+}
+
+/* Botones de acción */
+.action-button {
+    padding: 8px 12px;
+    font-size: 14px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+.edit-button {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.delete-button {
+    background-color: #f44336;
+    color: white;
+}

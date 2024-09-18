@@ -95,28 +95,31 @@ const CrudCategoria = () => {
     categoria.Id_Categoria,
     categoria.Nom_Categoria,
     <div key={categoria.Id_Categoria}>
-      <button 
-        className="btn btn-warning me-2" 
+      <a
+      href="#!"
+
+        className="btn-custom me-2" 
         onClick={() => getCategoria(categoria.Id_Categoria)}
         title="Editar"
       >
         <img 
           src="/pencil-square.svg" 
           alt="Editar" 
-          style={{ width: '24px', height: '24px' }}
+          style={{ width: '13px', height: '13px' }}
         />
-      </button>
-      <button 
-        className="btn btn-danger" 
+      </a>
+      <a
+      href="#!"
+        className="btn-custom" 
         onClick={() => deleteCategoria(categoria.Id_Categoria)}
         title="Borrar"
       >
         <img 
           src="/archive.svg" 
           alt="Borrar" 
-          style={{ width: '24px', height: '24px' }}
+          
         />
-      </button>
+      </a>
     </div>
   ]);
 
@@ -130,14 +133,17 @@ const CrudCategoria = () => {
 
         {/* Botón para abrir el modal */}
         <div className="d-flex justify-content-between mb-3">
-          <button className="btn btn-success d-flex align-items-center" onClick={handleShowForm}>   
+          <a
+           href="#!"
+           className="btn btn-success d-flex align-items-center" 
+           onClick={handleShowForm}>   
             <img
               src="/plus-circle (1).svg"
               alt="Add Icon"
               style={{ width: '20px', height: '20px', marginRight: '8px', filter: 'invert(100%)' }}
             />
-            Registrar Categoría
-          </button>
+            Registrar
+          </a>
         </div>
 
         {/* Tabla de datos */}
@@ -152,6 +158,9 @@ const CrudCategoria = () => {
           <FormCategoria 
             buttonForm={buttonForm}
             categoria={categoria}
+            URI={URI}
+            updateTextButton={setButtonForm}
+            setIsFormVisible={setIsModalOpen}
             onSubmit={handleSubmitCategoria}
           />
         </ModalForm>

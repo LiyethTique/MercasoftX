@@ -23,6 +23,8 @@ import carritoproductoRoutes from './routes/carritoproductoRoutes.js'
 import Venta from './models/ventaModel.js'
 import Pedido from './models/pedidoModel.js'
 import Cliente from './models/clienteModel.js'
+import carrito from './models/carritoModel.js';
+import Producto from './models/productoModel.js';
 
 
 
@@ -81,4 +83,9 @@ Pedido.hasMany(Venta, { as: 'ventas', foreignKey: 'Id_Pedido' });
 Cliente.hasMany(Pedido, { as: 'pedidos', foreignKey: 'Id_Cliente' });
 Pedido.belongsTo(Cliente, { as: 'cliente', foreignKey: 'Id_Cliente' });
 
-export {Venta, Pedido, Cliente }
+// En tu archivo de configuración de modelos
+carrito.belongsTo(Producto, { as: 'producto', foreignKey: 'Id_Producto' });
+carrito.belongsTo(Cliente, { as: 'cliente', foreignKey: 'Id_Cliente' });
+
+
+export {Venta, Pedido, Cliente, carrito, Producto }

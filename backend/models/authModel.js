@@ -29,9 +29,6 @@ const UserModel = db.define('usuario', {
 });
 
 // Hash de la contraseña antes de guardar el usuario en la base de datos
-UserModel.beforeCreate(async (user) => {
-  const salt = await bcrypt.genSalt(10);
-  user.Password_Usuario = await bcrypt.hash(user.Password_Usuario, salt);
-});
+
 
 export default UserModel;

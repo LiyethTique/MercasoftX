@@ -4,8 +4,7 @@ import {
     deleteCarrito,
     getAllCarrito,
     getCarrito,
-    updateCarrito,
-    getQueryCarrito
+    updateCarrito
 } from "../controllers/carritoController.js";
 import winston from "winston";
 import DailyRotateFile from "winston-daily-rotate-file";
@@ -38,7 +37,6 @@ router.get('/:id', getCarrito);
 router.post('/', createCarrito);
 router.put('/:id', updateCarrito);
 router.delete('/:id', deleteCarrito);
-router.get('/query/:Id_Cliente', getQueryCarrito);
 
 router.use(logError);
 

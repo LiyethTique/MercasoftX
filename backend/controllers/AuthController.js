@@ -12,9 +12,16 @@ export const generateToken = (user) => {
 
 // Registro de usuario
 // Registro de usuario
+// Registro de usuario
 export const registerUser = async (req, res) => {
   const { Cor_Usuario, Password_Usuario } = req.body;
   try {
+    // Verificar si el correo ya está registrado
+    const existingUser = await UserModel.findOne({ where: { Cor_Usuario } });
+    if (existingUser) {
+      return res.status(400).json({ error: 'Correo electrónico ya registrado' });
+    }
+
     // Hash de la contraseña
     const hashedPassword = await bcrypt.hash(Password_Usuario, 10);
 
@@ -59,7 +66,7 @@ export const loginUser = async (req, res) => {
 
     // Generar el token
     const token = generateToken(user);
-    res.json({ message: 'Login exitoso', token });
+    res.json({  token });
   } catch (error) {
     console.log('Error en el proceso de login:', error);
     res.status(500).json({ error: 'Error en el proceso de login' });

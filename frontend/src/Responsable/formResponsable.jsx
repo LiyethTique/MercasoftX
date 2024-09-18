@@ -102,16 +102,7 @@ const FormResponsable = ({ buttonForm, responsable, onSubmit, onClose }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!hasChanges()) {
-      Swal.fire({
-        icon: 'warning',
-        title: '¡Atención!',
-        text: '¡Se debe modificar al menos un campo !',
-        imageWidth: 100,
-        imageHeight: 100
-      });
-      return;
-    }
+    
 
     const formErrors = validateForm();
     if (Object.keys(formErrors).length > 0) {

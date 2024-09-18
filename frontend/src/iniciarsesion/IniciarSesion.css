@@ -17,7 +17,7 @@
   padding: 20px;
   max-width: 400px; /* Ancho máximo del formulario */
   width: 100%;
-  text-align: height;
+  text-align: center;
 }
 
 /* Etiquetas del formulario */
@@ -61,7 +61,7 @@
   position: absolute;
   right: 10px;
   top: 50%;
-  transform: translateY(-80%);
+  transform: translateY(-50%);
   background: none;
   border: none;
   cursor: pointer;
@@ -81,6 +81,10 @@
   transition: background-color 0.3s, transform 0.3s;
 }
 
+.login-button:hover {
+  background-color: #0056b3; /* Color de fondo al pasar el cursor */
+  transform: scale(1.02); /* Efecto de escala al pasar el cursor */
+}
 
 /* Estilo para el enlace de registro */
 .register-link {

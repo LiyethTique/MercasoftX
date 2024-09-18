@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import FormVenta from './formVenta'; // Adaptamos el nombre
+import FormVenta from './formVenta'; // Asegúrate de que el nombre del archivo sea correcto
 import Sidebar from '../Sidebar/Sidebar';
 import Swal from 'sweetalert2';
 import WriteTable from '../Tabla/Data-Table';
 import ModalForm from '../Model/Model';
 
-const URI = process.env.REACT_APP_SERVER_BACK  + '/venta/'; // Ruta de ventas
+
+const URI = process.env.REACT_APP_SERVER_BACK + '/venta/';
 
 const CrudVenta = () => {
   const [ventaList, setVentaList] = useState([]);
@@ -90,35 +91,36 @@ const CrudVenta = () => {
     setIsModalOpen(true);
   };
 
-  const titles = ['Codigo de Venta', 'Fecha de la Venta', 'Valor de la Venta', 'Valor del Pedido', 'Acciones'];
+  const titles = ['ID Venta', 'Fecha de Venta', 'Valor de Venta', 'ID Pedido', 'Acciones'];
   const data = ventaList.map(venta => [
     venta.Id_Venta,
     venta.Fec_Venta,
     venta.Val_Venta,
-    venta.pedido ? venta.pedido.Val_Pedido : 'Sin pedido',
+    venta.Id_Pedido,
     <div key={venta.Id_Venta}>
-      <button 
-                className="btn btn-warning me-2" 
-                onClick={() => getVenta(venta.Id_Venta)}
-                title="Editar"
-            >
-                <img 
-                    src="/pencil-square.svg" 
-                    alt="Editar" 
-                    style={{ width: '24px', height: '24px' }}
-                />
-            </button>
-            <button 
-                className="btn btn-danger" 
-                onClick={() => deleteVenta(venta.Id_Venta)}
-                title="Borrar"
-            >
-                <img 
-                    src="/archive.svg" 
-                    alt="Borrar" 
-                    style={{ width: '24px', height: '24px' }}
-                />
-            </button>
+      <a 
+        href="#!"
+        className="btn-custom me-2"
+        onClick={() => getVenta(venta.Id_Venta)}
+        title="Editar"
+      >
+        <img 
+          src="/pencil-square.svg" 
+          alt="Editar"
+          style={{ width: '13px', height: '13px' }}  
+        />
+      </a>
+      <a 
+        href="#!"
+        className="btn-custom"
+        onClick={() => deleteVenta(venta.Id_Venta)}
+        title="Borrar"
+      >
+        <img 
+          src="/trash3.svg" 
+          alt="Borrar" 
+        />
+      </a>
     </div>
   ]);
 
@@ -130,22 +132,23 @@ const CrudVenta = () => {
           <h1>Gestionar Ventas</h1>
         </center>
         
-        {/* Botón para abrir el modal */}
         <div className="d-flex justify-content-between mb-3">
-          <button className="btn btn-success d-flex align-items-center" onClick={handleShowForm}>   
-             <img
-             src="/plus-circle (1).svg"
-             alt="Add Icon"
-             style={{ width: '20px', height: '20px', marginRight: '8px', filter: 'invert(100%)' }}
-           />
-            Registrar Venta
-          </button>
+          <a 
+            href="#!"
+            className="btn btn-success d-flex align-items-center"
+            onClick={handleShowForm}
+          >   
+            <img
+              src="/plus-circle (1).svg"
+              alt="Add Icon"
+              style={{ width: '20px', height: '20px', marginRight: '8px', filter: 'invert(100%)' }}
+            />
+            Registrar
+          </a>
         </div>
 
-        {/* Tabla de datos */}
         <WriteTable titles={titles} data={data} />
 
-        {/* Modal Reutilizable */}
         <ModalForm
           isOpen={isModalOpen}
           onClose={() => { setIsModalOpen(false); setVenta(null); setButtonForm('Enviar'); }}

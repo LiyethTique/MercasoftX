@@ -1,3 +1,5 @@
+/* register.css */
+
 /* Contenedor del formulario */
 .register-container {
   display: flex;
@@ -13,11 +15,11 @@
 .register-form {
   background: #ffffff; /* Fondo blanco para el formulario */
   border-radius: 12px; /* Bordes redondeados */
-
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
   padding: 20px;
   max-width: 400px; /* Ancho máximo del formulario */
   width: 100%;
-  text-align: height;
+  text-align: center;
 }
 
 /* Etiquetas del formulario */
@@ -33,12 +35,17 @@
   width: 100%;
   padding: 12px;
   border-radius: 8px; /* Bordes redondeados */
+  border: 1px solid #ddd;
   margin-bottom: 16px;
   font-size: 16px;
   transition: border-color 0.3s, box-shadow 0.3s;
 }
 
-
+.register-form input:focus {
+  border-color: #007bff; /* Color del borde al enfocar */
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.25); /* Sombra al enfocar */
+  outline: none;
+}
 
 /* Botón de registro */
 .register-button {
@@ -52,14 +59,19 @@
   transition: background-color 0.3s, transform 0.3s;
 }
 
+.register-button:hover {
+  background-color: #0056b3; /* Color de fondo al pasar el cursor */
+  transform: scale(1.02); /* Efecto de escala al pasar el cursor */
+}
+
 /* Estilo para el enlace de inicio de sesión */
 .login-link {
   color: #ff8c00; /* Color del enlace anaranjado brillante */
   text-decoration: none; /* Elimina la subrayado por defecto */
   font-weight: bold;
   position: relative; /* Necesario para el pseudo-elemento */
-  transition: color 0.3s ease, background-color 0.3s ease, transform 0.5s ease;
-  padding: 10px 0; /* Espacio para el efecto de fondo */
+  transition: color 0.3s ease, background-color 0.3s ease, transform 0.3s ease;
+  padding: 4px 0; /* Espacio para el efecto de fondo */
 }
 
 /* Animación del fondo del enlace */
@@ -85,9 +97,4 @@
 
 .login-link:hover::before {
   transform: scaleX(1); /* Anima la línea al 100% al pasar el cursor */
-}
-
-/* Estilo más específico para el margen del prompt de inicio de sesión */
-.register-form .login-prompt {
-  margin-top: -10px; /* Ajusta el valor según lo que necesites */
 }

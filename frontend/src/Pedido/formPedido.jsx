@@ -1,45 +1,80 @@
 import React, { useState, useEffect } from 'react';
+import Swal from 'sweetalert2';
 import axios from 'axios';
 
-const FormPedido = ({ buttonForm, pedido, onSubmit }) => {
+const FormPedido = ({ buttonForm, pedido, URI, updateTextButton, setIsFormVisible, onSubmit }) => {
   const [formData, setFormData] = useState({
     Fec_Pedido: '',
     Id_Cliente: '',
     Est_Pedido: '',
     Val_Pedido: ''
   });
-  const [clientes, setClientes] = useState([]);
+
+  const [isModified, setIsModified] = useState(false);
 
   useEffect(() => {
     if (pedido) {
-      setFormData(pedido);
+      setFormData({
+        Fec_Pedido: pedido.Fec_Pedido || '',
+        Id_Cliente: pedido.Id_Cliente || '',
+        Est_Pedido: pedido.Est_Pedido || '',
+        Val_Pedido: pedido.Val_Pedido || ''
+      });
     }
-    // Fetch clientes on component mount
-    fetchClientes();
   }, [pedido]);
-
-  const fetchClientes = async () => {
-    try {
-      const response = await axios.get(process.env.REACT_APP_SERVER_BACK + '/cliente/');
-      setClientes(response.data);
-    } catch (error) {
-      console.error("Error fetching clientes:", error);
-    }
-  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    setIsModified(true); // Marca el formulario como modificado
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSubmit(formData);
+
+    // Validar que se hayan hecho cambios en el formulario
+    if (!isModified) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Sin Cambios',
+        text: 'Debe realizar al menos un cambio en el formulario para actualizar el registro.',
+      });
+      return;
+    }
+
+    try {
+      if (buttonForm === 'Actualizar') {
+        await axios.put(`${URI}/${pedido.Id_Pedido}`, formData);
+        updateTextButton('Enviar');
+      } else {
+        await axios.post(URI, formData);
+      }
+
+      // Si pasa las validaciones, llamar a onSubmit
+      onSubmit(formData); 
+      clearForm();
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Error al procesar el pedido.',
+      });
+    }
+  };
+
+  const clearForm = () => {
+    setFormData({
+      Fec_Pedido: '',
+      Id_Cliente: '',
+      Est_Pedido: '',
+      Val_Pedido: ''
+    });
+    setIsModified(false); // Resetea el estado de modificado
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <div className="mb-3">
-        <label htmlFor="Fec_Pedido" className="form-label">Fecha Pedido</label>
+        <label htmlFor="Fec_Pedido" className="form-label">Fecha del Pedido</label>
         <input
           type="date"
           className="form-control"
@@ -51,25 +86,19 @@ const FormPedido = ({ buttonForm, pedido, onSubmit }) => {
         />
       </div>
       <div className="mb-3">
-        <label htmlFor="Id_Cliente" className="form-label">Cliente</label>
-        <select
+        <label htmlFor="Id_Cliente" className="form-label">ID del Cliente</label>
+        <input
+          type="number"
           className="form-control"
           id="Id_Cliente"
           name="Id_Cliente"
           value={formData.Id_Cliente}
           onChange={handleChange}
           required
-        >
-          <option value="">Seleccione un cliente</option>
-          {clientes && clientes.map(cliente => (
-            <option key={cliente.Id_Cliente} value={cliente.Id_Cliente}>
-              {cliente.Nom_Cliente}
-            </option>
-          ))}
-        </select>
+        />
       </div>
       <div className="mb-3">
-        <label htmlFor="Est_Pedido" className="form-label">Estado Pedido</label>
+        <label htmlFor="Est_Pedido" className="form-label">Estado del Pedido</label>
         <input
           type="text"
           className="form-control"
@@ -81,21 +110,24 @@ const FormPedido = ({ buttonForm, pedido, onSubmit }) => {
         />
       </div>
       <div className="mb-3">
-        <label htmlFor="Val_Pedido" className="form-label">Valor Pedido</label>
+        <label htmlFor="Val_Pedido" className="form-label">Valor del Pedido</label>
         <input
           type="number"
-          step="0.01"
           className="form-control"
           id="Val_Pedido"
           name="Val_Pedido"
           value={formData.Val_Pedido}
+          step="0.01"
           onChange={handleChange}
           required
         />
       </div>
-      <button type="submit" className="btn btn-primary">
-        {buttonForm}
-      </button>
+
+      <div className="d-flex justify-content-start">
+        <button type="submit" className="btn btn-primary" disabled={!isModified}>
+          {buttonForm}
+        </button>
+      </div>
     </form>
   );
 };

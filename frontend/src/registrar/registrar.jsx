@@ -1,43 +1,91 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom'; // Asegúrate de importar Link
+import { useNavigate } from 'react-router-dom';
+import './registrar.css'; // Asegúrate de tener el CSS correspondiente
 import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Importa los íconos
-import './registrar.css';
 import NavPub from '../NavPub/NavPub';
 
-const Register = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+const URI = `${process.env.REACT_APP_SERVER_BACK}/auth/register`; // Usa la variable de entorno correcta
 
-  const handleRegister = async (event) => {
+const RegisterForm = () => {
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
+
+  const [showPassword, setShowPassword] = useState(false); // Controla la visibilidad de la contraseña
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false); // Controla la visibilidad de la confirmación
+
+  const [errors, setErrors] = useState({
+    email: '',
+    password: '',
+    confirmPassword: '',
+    general: '',
+  });
+
+  const navigate = useNavigate();
+
+  const isValidEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.email) {
+      newErrors.email = 'El correo es requerido.';
+    } else if (!isValidEmail(formData.email)) {
+      newErrors.email = 'Por favor, ingresa un correo electrónico válido.';
+    }
+
+    if (!formData.password) {
+      newErrors.password = 'La contraseña es requerida.';
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = 'Las contraseñas no coinciden.';
+    }
+
+    return newErrors;
+  };
+
+  // Maneja el cambio en los campos y elimina espacios en las contraseñas
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    // Eliminar espacios en las contraseñas
+    if (name === 'password' || name === 'confirmPassword') {
+      setFormData({ ...formData, [name]: value.replace(/\s/g, '') });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
+
+    // Limpiar errores al modificar el campo
+    setErrors({ ...errors, [name]: '', general: '' });
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    setError('');
-    setSuccess('');
 
-    if (password !== confirmPassword) {
-      setError('Las contraseñas no coinciden.');
+    const formErrors = validateForm();
+    if (Object.keys(formErrors).length > 0) {
+      setErrors({ ...errors, ...formErrors });
       return;
     }
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_SERVER_BACK}/auth/register`, {
-        email,
-        password,
+      const response = await axios.post(URI, {
+        Cor_Usuario: formData.email,
+        Password_Usuario: formData.password,
       });
 
-      if (response.data.success) {
-        setSuccess('Registro exitoso. Ahora puedes iniciar sesión.');
-      } else {
-        setError('Hubo un problema con el registro.');
+      if (response.data.message) {
+        navigate('/login'); // Redirige al inicio de sesión después del registro
       }
     } catch (error) {
       console.error('Error en el registro:', error.response ? error.response.data : error.message);
-      setError('Hubo un problema con el registro.');
+      setErrors({ ...errors, general: 'Hubo un problema con el registro. Inténtalo más tarde.' });
     }
   };
 
@@ -45,76 +93,73 @@ const Register = () => {
     <>
       <NavPub />
       <div className="register-container">
-        <form className="register-form" onSubmit={handleRegister}>
+        <form className="register-form" onSubmit={handleSubmit}>
           <center>
-            <h2>Registrar Usuario</h2>
-            <img rel="icon" type="image/svg+xml" src="/Logo-Icono.svg" width="150px" alt="Logo" />
+            <h2>Registrarse</h2>
+            <img src="/Logo-Icono.svg" width="150px" alt="Logo" />
           </center>
-          <label htmlFor="email">Correo Electrónico</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Ingrese su correo"
-            required
-          />
 
-          <label htmlFor="password">Contraseña</label>
-          <div className="password-container">
+          <div className="mb-3">
+            {errors.email && <div className="error-message">{errors.email}</div>}
             <input
-              type={showPassword ? 'text' : 'password'}
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="Ingrese su correo"
+              className={`form-control ${errors.email ? 'input-error' : ''}`}
+              required
+            />
+          </div>
+
+          <div className="mb-3 password-container">
+            {errors.password && <div className="error-message">{errors.password}</div>}
+            <input
+              type={showPassword ? 'text' : 'password'} // Cambia entre 'password' y 'text'
               id="password"
               name="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={formData.password}
+              onChange={handleChange}
               placeholder="Ingrese su contraseña"
+              className={`form-control ${errors.password ? 'input-error' : ''}`}
               required
             />
-            <button
-              type="button"
-              className="password-toggle"
-              onClick={() => setShowPassword(!showPassword)}
-            >
+            <span onClick={() => setShowPassword(!showPassword)} className="password-toggle">
               {showPassword ? <FaEyeSlash /> : <FaEye />}
-            </button>
+            </span>
           </div>
 
-          <label htmlFor="confirmPassword">Confirmar Contraseña</label>
-          <div className="password-container">
+          <div className="mb-3 password-container">
+            {errors.confirmPassword && <div className="error-message">{errors.confirmPassword}</div>}
             <input
-              type={showConfirmPassword ? 'text' : 'password'}
+              type={showConfirmPassword ? 'text' : 'password'} // Cambia entre 'password' y 'text'
               id="confirmPassword"
               name="confirmPassword"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              value={formData.confirmPassword}
+              onChange={handleChange}
               placeholder="Confirme su contraseña"
+              className={`form-control ${errors.confirmPassword ? 'input-error' : ''}`}
               required
             />
-            <button
-              type="button"
-              className="password-toggle"
-              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-            >
+            <span onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="password-toggle">
               {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
-            </button>
+            </span>
           </div>
 
-          {error && <p style={{ color: 'red' }}>{error}</p>}
-          {success && <p style={{ color: 'green' }}>{success}</p>}
+          {errors.general && <p className="error-message general-error">{errors.general}</p>}
 
-          <center>
-            <button type="submit" className="register-button">Registrar</button>
-            <br />
-            <p className="login-prompt" style={{ marginTop: '20px' }}>
-              ¿Ya tienes una cuenta? <Link to="/login" className="login-link">Iniciar Sesión</Link>
+          <button type="submit" className="register-button">Registrar</button>
+
+          <div className="mt-3 text-center">
+            <p className="login-prompt">
+              ¿Ya tienes una cuenta? <a href="/login" className="login-link">Iniciar Sesión</a>
             </p>
-          </center>
+          </div>
         </form>
       </div>
     </>
   );
 };
 
-export default Register;
+export default RegisterForm;

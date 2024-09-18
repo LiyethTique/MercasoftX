@@ -11,9 +11,6 @@ function NavPri() {
                     </button>
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li className="nav-item">
-                                <a className="nav-link text-white" href="/carritoproducto/">Carritoproducto</a>
-                            </li>
                             <li className="nav-item">
                                 <a className="nav-link active text-white" aria-current="page" href="/carrito/">Carrito</a>
                             </li>

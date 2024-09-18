@@ -1,4 +1,4 @@
-import { Sequelize, Op } from "sequelize";
+import { Sequelize } from "sequelize";
 import ClientesModel from "../models/clienteModel.js";
 
 export const getAllClientes = async (req, res) => {
@@ -24,11 +24,9 @@ export const getCliente = async (req, res) => {
 };
 
 export const createCliente = async (req, res) => {
+    const { Nom_Cliente, Cor_Cliente, Tel_Cliente } = req.body;
 
-    const { Nom_Cliente, Cor_Cliente, Tel_Cliente, Id_Carrito } = req.body;
-
-    if (!Nom_Cliente || !Cor_Cliente || !Tel_Cliente || !Id_Carrito) {
-        logger.warn('Todos los campos son obligatorios');
+    if (!Nom_Cliente || !Cor_Cliente || !Tel_Cliente) {
         return res.status(400).json({ message: 'Todos los campos son obligatorios' });
     }
 
@@ -41,13 +39,11 @@ export const createCliente = async (req, res) => {
 };
 
 export const updateCliente = async (req, res) => {
+    const { Nom_Cliente, Cor_Cliente, Tel_Cliente } = req.body;
 
-    const { Nom_Cliente, Cor_Cliente, Tel_Cliente, Id_Carrito } = req.body;
-
-    if (!Nom_Cliente || !Cor_Cliente || !Tel_Cliente || !Id_Carrito) {
-        logger.warn('Todos los campos son obligatorios');
+    if (!Nom_Cliente || !Cor_Cliente || !Tel_Cliente) {
         return res.status(400).json({ message: 'Todos los campos son obligatorios' });
-    }    
+    }
 
     try {
         const respuesta = await ClientesModel.update(req.body, {
@@ -80,13 +76,15 @@ export const deleteCliente = async (req, res) => {
 
 export const getQueryCliente = async (req, res) => {
     try {
+        const { Nom_Cliente } = req.params;
         const clientes = await ClientesModel.findAll({
             where: {
                 Nom_Cliente: {
-                    [Sequelize.Op.like]: `%${req.params.Nom_Cliente}%`
+                    [Sequelize.Op.like]: `%${Nom_Cliente}%`
                 }
             }
         });
+
         if (clientes.length > 0) {
             res.status(200).json(clientes);
         } else {

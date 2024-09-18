@@ -1,142 +1,175 @@
-import axios from 'axios'
-import { useState, useEffect } from 'react'
-import FormTraslado from './formTraslado'
-import FormQueryTraslado from './formQueryTraslado'
-import Sidebar from '../Sidebar/Sidebar'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import Swal from 'sweetalert2';
+import FormTraslado from './formTraslado';  // Form component for Traslados
+import Sidebar from '../Sidebar/Sidebar';
+import WriteTable from '../Tabla/Data-Table';  // Assuming you have a Data-Table component
+import ModalForm from '../Model/Model';  // Assuming a Modal component is available
+// import './crudTraslados.css';
 
-import Swal from 'sweetalert2'
-
-const URI = process.env.SERVER_BACK + '/traslado/'
+const URI = process.env.REACT_APP_SERVER_BACK + '/traslado/';
 
 const CrudTraslado = () => {
+  const [trasladoList, setTrasladoList] = useState([]);
+  const [buttonForm, setButtonForm] = useState('Enviar');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [traslado, setTraslado] = useState(null);
 
-    useEffect(() => {
-        const fetchTraslados = async () => {
+  useEffect(() => {
+    getAllTraslado();
+  }, []);
 
-            await axios.get(URI).then((resp) => {
-                if (resp.status == 200) {
-                    setTrasladoList(resp.data);
-                    console.log(resp.data)
-                }
-            }).catch((err) => {
-                alert(err.response.data.message)
-            })
+  const getAllTraslado = async () => {
+    try {
+      const response = await axios.get(URI);
+      if (Array.isArray(response.data)) {
+        setTrasladoList(response.data);
+      } else {
+        console.error("Unexpected response format:", response.data);
+        setTrasladoList([]);
+      }
+    } catch (error) {
+      console.error("Error fetching traslados:", error);
+      Swal.fire("Error", error.response?.data?.message || "Error al obtener los traslados", "error");
+    }
+  };
 
+  const getTraslado = async (Id_Traslado) => {
+    setButtonForm('Actualizar');
+    try {
+      const response = await axios.get(`${URI}${Id_Traslado}`);
+      setTraslado(response.data);
+      setIsModalOpen(true);
+    } catch (error) {
+      Swal.fire("Error", error.response?.data?.message || "Error al obtener el traslado", "error");
+    }
+  };
 
-        };
+  const handleSubmitTraslado = async (data) => {
+    try {
+      if (buttonForm === 'Actualizar') {
+        await axios.put(`${URI}${traslado.Id_Traslado}`, data);
+        Swal.fire("Actualizado!", "El traslado ha sido actualizado.", "success");
+      } else {
+        await axios.post(URI, data);
+        Swal.fire("Creado!", "El traslado ha sido creado.", "success");
+      }
+      getAllTraslado();
+      setIsModalOpen(false);
+      setButtonForm('Enviar');
+      setTraslado(null);
+    } catch (error) {
+      Swal.fire("Error", error.response?.data?.message || "Error al guardar el traslado", "error");
+    }
+  };
 
-        fetchTraslados();
-    }, []);
-    const [trasladoList, setTrasladoList] = useState([]);
-
-    const [buttonForm, setButtonForm] = useState('Enviar')
-
-    const [traslado, setTraslado] = useState({
-        Id_Traslado: '',
-        Fec_Traslado: '',
-        Des_Traslado: '',
-        Id_Producto: '',
-        Can_Producto: '',
-        Val_Unitario: '',
-        Val_Traslado: '',
-        Id_Responsable: ''
-    })
-
-    useEffect(() => {
-        getAllTraslado()
-    }, [])
-
-    const getAllTraslado = async () => {
+  const deleteTraslado = async (Id_Traslado) => {
+    Swal.fire({
+      title: "¿Estás seguro?",
+      text: "¡No podrás revertir esto!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, borrar!"
+    }).then(async (result) => {
+      if (result.isConfirmed) {
         try {
-            const respuesta = await axios.get(URI)
-            setTrasladoList(respuesta.data)
+          await axios.delete(`${URI}${Id_Traslado}`);
+          Swal.fire("¡Borrado!", "El traslado ha sido borrado.", "success");
+          getAllTraslado();
         } catch (error) {
-            alert(error.response.data.message)
+          Swal.fire("Error", error.response?.data?.message || "Error al eliminar el traslado", "error");
         }
+      }
+    });
+  };
 
-    }
+  const handleShowForm = () => {
+    setButtonForm('Enviar');
+    setTraslado(null);
+    setIsModalOpen(true);
+  };
 
-    const getTraslado = async (Id_Traslado) => {
+  const titles = ['ID Traslado', 'Fecha Traslado', 'Descripción', 'ID Producto', 'Cantidad', 'Valor Unitario', 'Valor Total', 'ID Responsable', 'Acciones'];
+  const data = trasladoList.map(traslado => [
+    traslado.Id_Traslado,
+    traslado.Fec_Traslado,
+    traslado.Des_Traslado,
+    traslado.Id_Producto,
+    traslado.Can_Producto,
+    traslado.Val_Unitario,
+    traslado.Val_Traslado,
+    traslado.Id_Responsable,
+    <div key={traslado.Id_Traslado}>
+      <a 
+        href="#!"
+        className="btn-custom me-2"
+        onClick={() => getTraslado(traslado.Id_Traslado)}
+        title="Editar"
+      >
+        <img 
+          src="/pencil-square.svg" 
+          alt="Editar"
+          style={{ width: '13px', height: '13px' }}  
+        />
+      </a>
+      <a 
+        href="#!"
+        className="btn-custom"
+        onClick={() => deleteTraslado(traslado.Id_Traslado)}
+        title="Borrar"
+      >
+        <img 
+          src="/trash3.svg" 
+          alt="Borrar" 
+        />
+      </a>
+    </div>
+  ]);
 
-        setButtonForm('Actualizar')
-        console.log('Id_Traslado' + Id_Traslado)
-        const respuesta = await axios.get(URI + Id_Traslado)
+  return (
+    <>
+      <Sidebar />
+      <div className="container mt-4">
+        <center>
+          <h1>Gestionar Traslados</h1>
+        </center>
+        
+        <div className="d-flex justify-content-between mb-3">
+          <a 
+            href="#!"
+            className="btn btn-success d-flex align-items-center"
+            onClick={handleShowForm}
+          >   
+            <img
+              src="/plus-circle.svg"
+              alt="Add Icon"
+              style={{ width: '20px', height: '20px', marginRight: '8px', filter: 'invert(100%)' }}
+            />
+            Registrar
+          </a>
+        </div>
 
+        <WriteTable titles={titles} data={data} />
 
-        console.log(respuesta.data)
+        <ModalForm
+          isOpen={isModalOpen}
+          onClose={() => { setIsModalOpen(false); setTraslado(null); setButtonForm('Enviar'); }}
+          title={buttonForm === 'Actualizar' ? "Actualizar Traslado" : "Agregar Traslado"}
+        >
+          <FormTraslado 
+            buttonForm={buttonForm}
+            traslado={traslado}
+            URI={URI}
+            updateTextButton={setButtonForm}
+            setIsFormVisible={setIsModalOpen}
+            onSubmit={handleSubmitTraslado}
+          />
+        </ModalForm>
+      </div>
+    </>
+  );
+};
 
-        setTraslado({
-            ...respuesta.data
-        })
-    }
-    const updateTextButton = (texto) => {
-        setButtonForm(texto)
-    }
-
-    const deleteTraslado = (Id_Traslado) => {
-        Swal.fire({
-            title: "Estas seguro?",
-            text: "No podras revertir esto!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Si, borrar!"
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                await axios.delete(URI + Id_Traslado)
-                Swal.fire({
-                    title: "Borrado!",
-                    text: "El registro ha sido borrado.",
-                    icon: "success"
-                });
-            }
-        });
-    }
-    return (
-        <>
-            <Sidebar />
-            <div>
-                <h2>Lista de Traslados</h2>
-                <table className="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>ID Traslado</th>
-                            <th>Fecha Traslado</th>
-                            <th>Descripción Traslado</th>
-                            <th>ID Producto</th>
-                            <th>Cantidad Producto</th>
-                            <th>Valor Unitario</th>
-                            <th>Valor Traslado</th>
-                            <th>ID Responsable</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {trasladoList.map(traslado => (
-                            <tr key={traslado.Id_Traslado}>
-                                <td>{traslado.Id_Traslado}</td>
-                                <td>{new Date(traslado.Traslado).toLocaleDateString()}</td>
-                                <td>{traslado.Des_Traslado}</td>
-                                <td>{traslado.Id_Producto}</td>
-                                <td>{traslado.Can_Producto}</td>
-                                <td>{traslado.Val_Unitario}</td>
-                                <td>{traslado.Val_Traslado}</td>
-                                <td>{traslado.Id_Responsable}</td>
-                                <td>
-                                    <button className="btn btn-warning" onClick={() => getTraslado(traslado.Id_Traslado)}>Editar</button>
-                                    <button className="btn btn-warning" onClick={() => deleteTraslado(traslado.Id_Traslado)}>Borrar</button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-                <hr />
-                <FormTraslado buttonForm={buttonForm} traslado={traslado} URI={URI} updateTextButton={updateTextButton} />
-                <hr />
-                <FormQueryTraslado URI={URI} getTraslado={getTraslado} deleteTraslado={deleteTraslado} buttonForm={buttonForm} />
-            </div >
-        </>
-    )
-}
-
-export default CrudTraslado
+export default CrudTraslado;

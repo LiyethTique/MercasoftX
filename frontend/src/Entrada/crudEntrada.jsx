@@ -1,123 +1,159 @@
-import axios from 'axios'
-import { useState, useEffect } from 'react'
-import FormEntrada from './formEntrada'
-import FormQueryEntrada from './formQueryEntrada'
-import Sidebar from '../Sidebar/Sidebar'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import FormEntrada from './formEntrada';
+import Sidebar from '../Sidebar/Sidebar';
+import Swal from 'sweetalert2';
+import WriteTable from '../Tabla/Data-Table';
+import ModalForm from '../Model/Model.jsx';
 
-import Swal from 'sweetalert2'
-
-const URI = process.env.SERVER_BACK + '/entrada/'
-// console.log(URI)
+const URI = (process.env.SERVER_BACK || 'http://localhost:3002') + '/entrada/';
 
 const CrudEntrada = () => {
+  const [entradaList, setEntradaList] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [buttonForm, setButtonForm] = useState('Enviar');
+  const [entrada, setEntrada] = useState(null);
+  const moduleName = "Gestionar Entradas"; // Nombre del módulo
 
-    const [entradaList, setEntradaList] = useState([])
+  useEffect(() => {
+    getAllEntradas();
+  }, []);
 
-    const [buttonForm, setButtonForm] = useState('Enviar')
-
-    const [entrada, setEntrada] = useState({
-        Id_Entrada: '',
-        Fec_Entrada: '',
-        Hor_Entrada: '',
-        Id_Unidad: '',
-        Id_Producto: '',
-        Id_Responsable: '',
-        Can_Entrada: '',
-        Fec_Vencimiento: ''
-    })
-
-    useEffect(() => {
-        getAllEntradas()
-    }, [entradaList]);
-
-    const getAllEntradas = async () => {
-        try {
-            const respuesta = await axios.get(URI)
-            if (respuesta.status == 200) {
-                setEntradaList(respuesta.data)
-            }
-            console.log(respuesta)
-        } catch (error) {
-            alert(error.response.data.message)
-        }
+  const getAllEntradas = async () => {
+    try {
+      const respuesta = await axios.get(URI);
+      if (Array.isArray(respuesta.data)) {
+        setEntradaList(respuesta.data);
+      } else {
+        console.error("Unexpected response format:", respuesta.data);
+        setEntradaList([]);
+      }
+    } catch (error) {
+      console.error("Error fetching entradas:", error);
+      Swal.fire("Error", error.response?.data?.message || "Error al obtener las Entradas", "error");
     }
+  };
 
-    const getEntrada = async (Id_Entrada) => {
-        setButtonForm('Enviar')
-        const respuesta = await axios.get(URI + Id_Entrada)
-        console.log(respuesta)
-        if (respuesta.status == 201) {
-            setButtonForm('Actualizar')
-            setEntrada({
-                ...respuesta.data
-            })
-        }
+  const handleShowForm = () => {
+    setEntrada(null); // Limpiar la entrada actual para un nuevo formulario
+    setButtonForm('Enviar'); // Cambiar el botón a 'Enviar' para nuevas entradas
+    setIsModalOpen(true); // Mostrar el modal
+  };
+
+  const handleSubmitEntrada = async (entradaData) => {
+    try {
+      if (buttonForm === 'Actualizar') {
+        // Actualizar entrada existente
+        await axios.put(`${URI}${entradaData.Id_Entrada}`, entradaData);
+        Swal.fire("Éxito", "Entrada actualizada correctamente", "success");
+      } else {
+        // Crear nueva entrada
+        await axios.post(URI, entradaData);
+        Swal.fire("Éxito", "Entrada creada correctamente", "success");
+      }
+      setIsModalOpen(false); // Cerrar el modal
+      getAllEntradas(); // Refrescar la lista de entradas
+    } catch (error) {
+      console.error("Error al enviar la entrada:", error);
+      Swal.fire("Error", error.response?.data?.message || "Error al enviar la entrada", "error");
     }
+  };
 
-    const updateTextButton = (texto) => {
-        setButtonForm(texto)
+  // Definir la función getEntrada
+  const getEntrada = async (id) => {
+    try {
+      const response = await axios.get(`${URI}${id}`);
+      setEntrada(response.data); // Guardar los datos de la entrada para editar
+      setButtonForm('Actualizar'); // Cambiar el texto del botón a 'Actualizar'
+      setIsModalOpen(true); // Abrir el modal para editar
+    } catch (error) {
+      console.error("Error al obtener la entrada:", error);
+      Swal.fire("Error", "Error al obtener la entrada para editar", "error");
     }
+  };
 
-    const deleteEntrada = (Id_Entrada) => {
-        Swal.fire({
-            title: "Estás seguro?",
-            text: "No podrás revertir esto!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Si, borrar!"
-          }).then(async(result) => {
-            if (result.isConfirmed) {
-                await axios.delete(URI + Id_Entrada)
-              Swal.fire({
-                title: "Borrado!",
-                text: "El registro ha sido borrado.",
-                icon: "success"
-              });
-            }
-          });
+  const deleteEntrada = async (id) => {
+    // Mostrar la alerta de confirmación
+    const result = await Swal.fire({
+      title: '¿Estás seguro?',
+      text: "Si eliminas esta entrada, se borrará de la base de datos por completo.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    });
+  
+    // Si el usuario confirma la eliminación
+    if (result.isConfirmed) {
+      try {
+        await axios.delete(`${URI}${id}`);
+        Swal.fire('Eliminada', 'La entrada ha sido eliminada correctamente.', 'success');
+        getAllEntradas(); // Refrescar la lista de entradas
+      } catch (error) {
+        console.error("Error al eliminar la entrada:", error);
+        Swal.fire("Error", "Error al eliminar la entrada", "error");
+      }
+    } else {
+      // Si el usuario cancela, mostrar un mensaje de cancelación
+      Swal.fire('Cancelado', 'La entrada no fue eliminada', 'info');
     }
+  };  
 
-    return (
-        <>
-        <Sidebar />
-            <table>
-                <thead>
-                    <tr>
-                        <th>Fecha de la entrada</th>
-                        <th>Hora de la entrada</th>
-                        <th>Nombre de la unidad</th>
-                        <th>Nombre del producto</th>
-                        <th>Nombre de la persona encargada de hacer la entrega</th>
-                        <th>Cantidad de productos</th>
-                        <th>Fecha de vencimiento</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {entradaList.map((entrada) => {
-                        <tr key={entrada.Id_Emtrada}>
-                            <td>{entrada.Fec_Entrada}</td>
-                            <td>{entrada.Hor_Entrada}</td>
-                            <td>{entrada.Id_Unidad}</td>
-                            <td>{entrada.Id_Producto}</td>
-                            <td>{entrada.Id_Responsable}</td>
-                            <td>{entrada.Can_Entrada}</td>
-                            <td>{entrada.Fec_Vencimiento}</td>
-                            <td>
-                                <button onClick={() => getEntrada(entrada.Id_Entrada)}>Editar</button>
-                                <button onClick={() => deleteEntrada(entrada.Id_Entrada)}>Borrar</button>
-                            </td>
-                        </tr>
-                    })}
-                </tbody>
-            </table>
-            <hr />
-            <FormEntrada buttonForm={buttonForm} entrada={entrada} URI={URI} updateTextButton={updateTextButton} />
-            <hr />
-            <FormQueryEntrada URI={URI} getEntrada={getEntrada} deleteEntrada={deleteEntrada} buttonForm={buttonForm} />
-        </>
-    )
-}
+  const titles = ['ID', 'Fecha', 'Hora', 'Unidad', 'Producto', 'Responsable', 'Cantidad', 'Vencimiento', 'Acciones'];
+  const data = entradaList.map(entrada => [
+    entrada.Id_Entrada,
+    entrada.Fec_Entrada,
+    entrada.Hor_Entrada,
+    entrada.Id_Unidad,
+    entrada.Id_Producto,
+    entrada.Id_Responsable,
+    entrada.Can_Entrada,
+    entrada.Fec_Vencimiento,
+    <div key={entrada.Id_Entrada}>
+      <button className="btn btn-warning me-2" onClick={() => getEntrada(entrada.Id_Entrada)} title="Editar">
+        <img src="/pencil-square.svg" alt="Editar" style={{ width: '24px', height: '24px' }} />
+      </button>
+      <button className="btn btn-danger" onClick={() => deleteEntrada(entrada.Id_Entrada)} title="Borrar">
+        <img src="/archive.svg" alt="Borrar" style={{ width: '24px', height: '24px' }} />
+      </button>
+    </div>
+  ]);
 
-export default CrudEntrada
+  return (
+    <>
+      <Sidebar />
+      <div className="container mt-4">
+        <center><h1>{moduleName}</h1></center>
+        <div className="d-flex justify-content-between mb-3">
+          <button className="btn btn-success d-flex align-items-center" onClick={handleShowForm}>
+          <img src="/plus-circle (1).svg" alt="Agregar Entrada" style={{ width: '20px', height: '20px', marginRight: '8px', filter: 'invert(100%)' }} />
+            Registrar
+          </button>
+        </div>
+        <WriteTable titles={titles} data={data} moduleName={moduleName} />
+        <ModalForm
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          title={buttonForm === 'Actualizar' ? 'Actualizar Entrada' : 'Agregar Entrada'}
+          onSubmit={() => {
+            const form = document.querySelector('form');
+            if (form) form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+          }}
+        >
+          <FormEntrada
+            buttonForm={buttonForm}
+            entrada={entrada}
+            URI={URI}
+            updateTextButton={setButtonForm}
+            setIsFormVisible={setIsModalOpen}
+            onSubmit={handleSubmitEntrada}
+          />
+        </ModalForm>
+      </div>
+    </>
+  );
+};
+
+export default CrudEntrada;

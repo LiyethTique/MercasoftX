@@ -19,11 +19,8 @@ const ClienteModel = db.define('cliente', {
     Tel_Cliente: {
         type: DataTypes.STRING(15),
         allowNull: true // Ajusta según sea necesario
-    },
-    Id_Carrito: {
-        type: DataTypes.INTEGER,
-        allowNull: true // Ajusta según sea necesario
     }
+  
 }, {
     freezeTableName: true,
     tableName: 'cliente'

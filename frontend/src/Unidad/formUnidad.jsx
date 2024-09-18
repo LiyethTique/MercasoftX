@@ -34,9 +34,11 @@ const FormUnidad = ({ buttonForm, unidad, onSubmit }) => {
           required
         />
       </div>
-      <button type="submit" className="btn btn-primary">
-        {buttonForm}
-      </button>
+      <div className="text-center">
+        <button type="submit" className="btn btn-primary">
+          {buttonForm}
+        </button>
+      </div>
     </form>
   );
 };

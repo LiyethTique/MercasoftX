@@ -5,7 +5,7 @@ import FormTraslado from './formTraslado';  // Form component for Traslados
 import Sidebar from '../Sidebar/Sidebar';
 import WriteTable from '../Tabla/Data-Table';  // Assuming you have a Data-Table component
 import ModalForm from '../Model/Model';  // Assuming a Modal component is available
-// import './crudTraslados.css';
+import './crudTraslados.css';
 
 const URI = process.env.REACT_APP_SERVER_BACK + '/traslado/';
 
@@ -14,16 +14,27 @@ const CrudTraslado = () => {
   const [buttonForm, setButtonForm] = useState('Enviar');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [traslado, setTraslado] = useState(null);
+  const [originalTraslado, setOriginalTraslado] = useState(null);  // New state to hold the original traslado
+  const [showMessage, setShowMessage] = useState(false);  // New state to show the message
 
   useEffect(() => {
     getAllTraslado();
   }, []);
 
+  // Verify URI value
+  console.log('URI:', URI);
+
   const getAllTraslado = async () => {
     try {
       const response = await axios.get(URI);
       if (Array.isArray(response.data)) {
-        setTrasladoList(response.data);
+        if (response.data.length === 0) {
+          setTrasladoList([]);
+          setShowMessage(true);  // Show message if no traslados are found
+          setTimeout(() => setShowMessage(false), 3000);  // Hide message after 3 seconds
+        } else {
+          setTrasladoList(response.data);
+        }
       } else {
         console.error("Unexpected response format:", response.data);
         setTrasladoList([]);
@@ -35,9 +46,12 @@ const CrudTraslado = () => {
   };
 
   const getTraslado = async (Id_Traslado) => {
+    // Log the ID before making the request
+    console.log("Id_Traslado:", Id_Traslado);
     setButtonForm('Actualizar');
     try {
       const response = await axios.get(`${URI}${Id_Traslado}`);
+      setOriginalTraslado(response.data);  // Set the original traslado
       setTraslado(response.data);
       setIsModalOpen(true);
     } catch (error) {
@@ -46,6 +60,18 @@ const CrudTraslado = () => {
   };
 
   const handleSubmitTraslado = async (data) => {
+    if (buttonForm === 'Actualizar') {
+      // Check if there are any changes
+      if (JSON.stringify(data) === JSON.stringify(originalTraslado)) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Atención.',
+          text: 'Por favor, realice al menos una modificación antes de actualizar.',
+        });
+        return;
+      }
+    }
+
     try {
       if (buttonForm === 'Actualizar') {
         await axios.put(`${URI}${traslado.Id_Traslado}`, data);
@@ -58,12 +84,14 @@ const CrudTraslado = () => {
       setIsModalOpen(false);
       setButtonForm('Enviar');
       setTraslado(null);
+      setOriginalTraslado(null);  // Clear the original traslado
     } catch (error) {
       Swal.fire("Error", error.response?.data?.message || "Error al guardar el traslado", "error");
     }
   };
 
   const deleteTraslado = async (Id_Traslado) => {
+    console.log("Deleting traslado with ID:", Id_Traslado);
     Swal.fire({
       title: "¿Estás seguro?",
       text: "¡No podrás revertir esto!",
@@ -77,7 +105,7 @@ const CrudTraslado = () => {
         try {
           await axios.delete(`${URI}${Id_Traslado}`);
           Swal.fire("¡Borrado!", "El traslado ha sido borrado.", "success");
-          getAllTraslado();
+          getAllTraslado();  // Refresh the list after deletion
         } catch (error) {
           Swal.fire("Error", error.response?.data?.message || "Error al eliminar el traslado", "error");
         }
@@ -88,19 +116,20 @@ const CrudTraslado = () => {
   const handleShowForm = () => {
     setButtonForm('Enviar');
     setTraslado(null);
+    setOriginalTraslado(null);  // Clear the original traslado when opening the form
     setIsModalOpen(true);
   };
 
-  const titles = ['ID Traslado', 'Fecha Traslado', 'Descripción', 'ID Producto', 'Cantidad', 'Valor Unitario', 'Valor Total', 'ID Responsable', 'Acciones'];
+  const titles = ['Codigo Traslado', 'Fecha Traslado', 'Descripción', 'Producto', 'Cantidad', 'Valor Unitario', 'Valor Total', 'Responsable', 'Acciones'];
   const data = trasladoList.map(traslado => [
     traslado.Id_Traslado,
     traslado.Fec_Traslado,
     traslado.Des_Traslado,
-    traslado.Id_Producto,
+    traslado.Id_Producto ? traslado.producto?.Nom_Producto || 'Sin Producto' : 'Sin Producto',
     traslado.Can_Producto,
     traslado.Val_Unitario,
     traslado.Val_Traslado,
-    traslado.Id_Responsable,
+    traslado.Id_Responsable ? traslado.responsable?.Nom_Responsable || 'Sin Responsable' : 'Sin Responsable',
     <div key={traslado.Id_Traslado}>
       <a 
         href="#!"
@@ -135,7 +164,13 @@ const CrudTraslado = () => {
         <center>
           <h1>Gestionar Traslados</h1>
         </center>
-        
+
+        {showMessage && (
+          <div className="alert alert-warning text-center" role="alert">
+            No hay Traslados Registrados en la Base de Datos
+          </div>
+        )}
+
         <div className="d-flex justify-content-between mb-3">
           <a 
             href="#!"
@@ -155,7 +190,7 @@ const CrudTraslado = () => {
 
         <ModalForm
           isOpen={isModalOpen}
-          onClose={() => { setIsModalOpen(false); setTraslado(null); setButtonForm('Enviar'); }}
+          onClose={() => { setIsModalOpen(false); setTraslado(null); setButtonForm('Enviar'); setOriginalTraslado(null); }}
           title={buttonForm === 'Actualizar' ? "Actualizar Traslado" : "Agregar Traslado"}
         >
           <FormTraslado 

@@ -8,15 +8,14 @@
     padding: 0.3rem 0.6rem; /* Padding ajustado para un botón más grande */
     border-radius: 0.25rem; /* Borde redondeado un poco más grande */
     text-decoration: none; /* Quita el subrayado de los enlaces */
-    color: #fff; /* Color del texto */
-    border: 1px solid #d9ff00; /* Color del borde, ajusta según el diseño */
-    background-color: #a6ff00; /* Color de fondo */
+    color: inherit; /* Hereda el color del texto del botón */
+    border: none; /* Sin borde */
+    background-color: transparent; /* Elimina el color de fondo */
     transition: background-color 0.3s, border-color 0.3s; /* Transición para efectos de hover */
 }
 
 .btn-custom:hover {
-    background-color: #0056b3; /* Color de fondo en hover */
-    border-color: #004085; /* Color del borde en hover */
+    background-color: rgba(0, 0, 0, 0.1); /* Color de fondo en hover (opcional) */
 }
 
 /* Estilo para los íconos dentro del botón */
@@ -24,9 +23,28 @@
     width: 16px; /* Tamaño del ícono ajustado */
     height: 16px; /* Tamaño del ícono ajustado */
     margin-right: 0.5rem; /* Espacio entre el ícono y el texto */
+    background-color: transparent; /* Elimina el fondo del icono */
 }
 
-/* Tabla de traslados */
+/* Estilo específico para los botones de editar y borrar */
+.btn-edit {
+    color: #ffc107; /* Color para el botón de editar */
+}
+
+.btn-edit img {
+    filter: hue-rotate(30deg) brightness(1.2); /* Ajusta el color del ícono de editar a naranja */
+
+}
+
+.btn-delete {
+    color: #dc3545; /* Color para el botón de borrar */
+}
+
+.btn-delete img {
+    filter: hue-rotate(0deg) brightness(1.2); /* Ajusta el color del ícono de borrar a rojo */
+}
+
+/* Resto de estilos de la tabla y del formulario (sin cambios) */
 .table-traslados {
     width: 100%; /* Ancho completo de la tabla */
     border-collapse: collapse; /* Elimina espacios entre celdas */
@@ -51,17 +69,25 @@
     font-size: 0.875rem; /* Tamaño del texto en las celdas */
 }
 
-/* Estilo para los botones de editar y borrar */
-.btn-edit, .btn-delete {
-    border: none; /* Sin borde */
-    background: none; /* Sin fondo */
-    cursor: pointer; /* Cambia el cursor a mano */
+.form-traslado-container {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
 }
 
-.btn-edit {
-    color: #ffc107; /* Color para el botón de editar */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
 }
 
-.btn-delete {
-    color: #dc3545; /* Color para el botón de borrar */
+@media (max-width: 768px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.form-responsable {
+    grid-column: span 2; /* Hacer que ocupe el ancho completo de la grid */
+    text-align: center;  /* Centrar el contenido */
 }

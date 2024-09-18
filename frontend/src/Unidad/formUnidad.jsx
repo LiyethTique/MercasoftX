@@ -4,6 +4,7 @@ const FormUnidad = ({ buttonForm, unidad, onSubmit }) => {
   const [formData, setFormData] = useState({
     Nom_Unidad: ''
   });
+  const [isSubmitting, setIsSubmitting] = useState(false); // Estado para deshabilitar el botón
 
   useEffect(() => {
     if (unidad) {
@@ -15,9 +16,15 @@ const FormUnidad = ({ buttonForm, unidad, onSubmit }) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSubmit(formData);
+    if (isSubmitting) return; // Si ya está en proceso de envío, no permitir más envíos
+    setIsSubmitting(true); // Deshabilitar el botón
+    try {
+      await onSubmit(formData); // Asumir que onSubmit es una función asíncrona
+    } finally {
+      setIsSubmitting(false); // Rehabilitar el botón después del envío
+    }
   };
 
   return (
@@ -34,11 +41,9 @@ const FormUnidad = ({ buttonForm, unidad, onSubmit }) => {
           required
         />
       </div>
-      <div className="text-center">
-        <button type="submit" className="btn btn-primary">
-          {buttonForm}
-        </button>
-      </div>
+      <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
+        {isSubmitting ? 'Enviando...' : buttonForm}
+      </button>
     </form>
   );
 };

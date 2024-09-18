@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'; 
 import axios from 'axios';
 import FormUnidad from '../Unidad/formUnidad';
 import Sidebar from '../Sidebar/Sidebar';
 import Swal from 'sweetalert2';
 import WriteTable from '../Tabla/Data-Table'; 
 import ModalForm from '../Model/Model';
-import './crudUnidad.css';
+
 
 const URI = process.env.REACT_APP_SERVER_BACK + '/unidad/';
 
@@ -77,7 +77,16 @@ const CrudUnidad = () => {
         try {
           await axios.delete(`${URI}${Id_Unidad}`);
           Swal.fire("¡Borrado!", "El registro ha sido borrado.", "success");
-          getAllUnidades();
+
+          // Actualizar la lista de unidades sin el registro eliminado
+          const updatedUnidades = unidadList.filter(unidad => unidad.Id_Unidad !== Id_Unidad);
+          setUnidadList(updatedUnidades);
+
+          // Verificar si no quedan unidades y mostrar un mensaje informativo en lugar de un error
+          if (updatedUnidades.length === 0) {
+            Swal.fire("Información", "No quedan más unidades disponibles.", "info");
+          }
+
         } catch (error) {
           Swal.fire("Error", error.response?.data?.message || "Error al eliminar la Unidad", "error");
         }

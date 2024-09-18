@@ -171,7 +171,7 @@ const WriteTable = ({ titles, data, fileName = 'Gestionar_Responsable' }) => {
                     ) : (
                         <tr>
                             <td colSpan={titles.length} className="text-center">
-                                No hay registros para mostrar.
+                             
                             </td>
                         </tr>
                     )}

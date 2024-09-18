@@ -25,6 +25,8 @@ import Pedido from './models/pedidoModel.js'
 import Cliente from './models/clienteModel.js'
 import carrito from './models/carritoModel.js';
 import Producto from './models/productoModel.js';
+import Responsable from './models/responsableModel.js';
+import Traslado from './models/trasladoModel.js';
 
 
 
@@ -87,5 +89,10 @@ Pedido.belongsTo(Cliente, { as: 'cliente', foreignKey: 'Id_Cliente' });
 carrito.belongsTo(Producto, { as: 'producto', foreignKey: 'Id_Producto' });
 carrito.belongsTo(Cliente, { as: 'cliente', foreignKey: 'Id_Cliente' });
 
+Traslado.belongsTo(Producto, { as: 'producto', foreignKey: 'Id_Producto' });
+Producto.hasMany(Traslado, { as: 'traslados', foreignKey: 'Id_Producto' });
 
-export {Venta, Pedido, Cliente, carrito, Producto }
+Traslado.belongsTo(Responsable, { as: 'responsable', foreignKey: 'Id_Responsable' });
+Responsable.hasMany(Traslado, { as: 'traslados', foreignKey: 'Id_Responsable' });
+
+export {Venta, Pedido, Cliente, carrito, Producto, Traslado, Responsable }

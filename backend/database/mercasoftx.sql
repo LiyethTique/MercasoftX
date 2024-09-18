@@ -90,7 +90,7 @@ CREATE TABLE `categoria` (
   `createdAT` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updatedAT` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`Id_Categoria`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -99,7 +99,7 @@ CREATE TABLE `categoria` (
 
 LOCK TABLES `categoria` WRITE;
 /*!40000 ALTER TABLE `categoria` DISABLE KEYS */;
-INSERT INTO `categoria` VALUES (1,'Lacteos','2024-08-13 05:00:00','2024-08-13 05:00:00'),(2,'Carnicos','2024-08-13 05:00:00','2024-08-13 05:00:00'),(3,'Vegetales','2024-08-22 03:14:27','2024-08-22 03:14:27'),(4,'Vegetales','2024-08-22 03:21:04','2024-08-22 03:21:04'),(5,'pochaina','2024-08-22 03:24:06','2024-08-22 03:24:06');
+INSERT INTO `categoria` VALUES (1,'Lacteos','2024-08-13 05:00:00','2024-08-13 05:00:00'),(2,'Carnicos','2024-08-13 05:00:00','2024-08-13 05:00:00'),(3,'Panificación','2024-09-17 14:17:42','2024-09-17 14:17:42'),(4,'Fruhor','2024-09-17 14:17:42','2024-09-17 14:17:42'),(5,'Poscosecha','2024-09-17 14:17:42','2024-09-17 14:17:42'),(6,'Laboratirio De Calidad','2024-09-17 14:23:44','2024-09-17 14:23:44'),(7,'Laboratorio De Cafe','2024-09-17 14:23:44','2024-09-17 14:23:44'),(8,'Planta De Aguas','2024-09-17 14:23:44','2024-09-17 14:23:44'),(9,'Chocalateria','2024-09-17 14:23:44','2024-09-17 14:23:44'),(10,'Porcinos','2024-09-17 14:24:02','2024-09-17 14:24:02'),(11,'Caprinos','2024-09-17 14:26:11','2024-09-17 14:26:11'),(12,'Cunicultura','2024-09-17 14:26:32','2024-09-17 14:26:32'),(13,'Avicultura','2024-09-17 14:27:46','2024-09-17 14:27:46'),(14,'Ganaderia','2024-09-17 14:28:56','2024-09-17 14:28:56'),(15,'Ovinos','2024-09-17 14:29:16','2024-09-17 14:29:16'),(16,'Psicicultura','2024-09-17 14:31:52','2024-09-17 14:31:52'),(17,'Apicultura','2024-09-17 14:33:11','2024-09-17 14:33:11'),(18,'Planta De Concentrados','2024-09-17 14:35:19','2024-09-17 14:35:19'),(19,'Laboratorio Reproduccion Bovina','2024-09-17 14:35:55','2024-09-17 14:35:55'),(20,'Lote 1','2024-09-17 14:37:28','2024-09-17 14:37:28'),(21,'Lote 1','2024-09-17 18:56:25','2024-09-17 18:56:25'),(22,'Lote 1','2024-09-17 18:56:36','2024-09-17 18:56:36'),(23,'Lote 2','2024-09-17 18:59:33','2024-09-17 18:59:33'),(24,'Lote 2','2024-09-17 18:59:35','2024-09-17 18:59:35'),(25,'Lote 3','2024-09-17 18:59:35','2024-09-17 18:59:35'),(26,'Lote 4','2024-09-17 18:59:35','2024-09-17 18:59:35'),(27,'Lote 5','2024-09-17 18:59:35','2024-09-17 18:59:35'),(28,'Lote 6','2024-09-17 18:59:35','2024-09-17 18:59:35'),(29,'Lote 7','2024-09-17 18:59:35','2024-09-17 18:59:35'),(30,'Lote 8','2024-09-17 18:59:35','2024-09-17 18:59:35'),(31,'Lote 9','2024-09-17 18:59:35','2024-09-17 18:59:35'),(32,'Lote 20','2024-09-17 18:59:35','2024-09-17 18:59:35'),(34,'Bioinsumos','2024-09-17 19:24:29','2024-09-17 19:24:29'),(35,'Vvero','2024-09-17 19:25:03','2024-09-17 19:25:03'),(36,'Zonas Verdes','2024-09-17 19:26:35','2024-09-17 19:26:35'),(37,'Laboratorio Ambiental','2024-09-17 19:27:28','2024-09-17 19:27:28'),(38,'Gestion De Centro','2024-09-17 19:28:22','2024-09-17 19:28:22'),(39,'Laboratorio Biotecnologia Vegetal','2024-09-17 19:41:44','2024-09-17 19:41:44'),(40,'Mecanizacion Agricola','2024-09-17 20:09:15','2024-09-17 20:09:15'),(41,'Parque De Riego','2024-09-17 20:09:41','2024-09-17 20:09:41'),(42,'Invernadero','2024-09-17 20:11:18','2024-09-17 20:11:18'),(43,'Agricultura De Precision','2024-09-17 23:23:51','2024-09-17 23:23:51'),(44,'Laboratorio De Suelos','2024-09-17 23:24:26','2024-09-17 23:24:26'),(45,'Mercasena 1','2024-09-17 23:25:03','2024-09-17 23:25:03'),(46,'Mercasena 2','2024-09-17 23:25:19','2024-09-17 23:25:19'),(47,'Oficina','2024-09-17 23:26:03','2024-09-17 23:26:03');
 /*!40000 ALTER TABLE `categoria` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -156,7 +156,7 @@ CREATE TABLE `entrada` (
   CONSTRAINT `Id_Producto` FOREIGN KEY (`Id_Producto`) REFERENCES `producto` (`Id_Producto`),
   CONSTRAINT `Id_Responsable` FOREIGN KEY (`Id_Responsable`) REFERENCES `responsable` (`Id_Responsable`),
   CONSTRAINT `Id_Unidad` FOREIGN KEY (`Id_Unidad`) REFERENCES `unidad` (`Id_Unidad`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -422,4 +422,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-09-16 19:16:49
+-- Dump completed on 2024-09-17 18:27:58

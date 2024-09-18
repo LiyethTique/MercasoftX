@@ -133,7 +133,7 @@ const CrudCategoria = () => {
             <img
               src="/plus-circle (1).svg" // Reemplaza con la ruta de tu icono de agregar
               alt="Add Icon"
-              style={{ width: '20px', height: '20px', marginRight: '8px', filter: 'invert(100%)' }} filter: 'invert(100%)' }} // Color blanco
+              style={{ width: '20px', height: '20px', marginRight: '8px', filter: 'invert(100%)' }} // Color blanco
             />
             Registrar
           </button>

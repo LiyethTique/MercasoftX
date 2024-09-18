@@ -47,3 +47,14 @@
 2024-09-17T05:52:31.330Z [info]: Todos los pedidos recuperados
 2024-09-17T05:52:31.338Z [info]: Todos los pedidos recuperados
 2024-09-17T05:52:32.245Z [info]: Todos los pedidos recuperados
+2024-09-17T13:34:49.729Z [info]: Todos los pedidos recuperados
+2024-09-17T13:34:49.757Z [info]: Todos los pedidos recuperados
+2024-09-17T13:38:09.661Z [info]: Todas las entradas recuperadas
+2024-09-17T13:38:09.682Z [info]: Todas las entradas recuperadas
+2024-09-17T13:38:33.787Z [warn]: Todos los campos son obligatorios
+2024-09-17T13:38:53.784Z [error]: Error al crear la entrada: Cannot add or update a child row: a foreign key constraint fails (`mercasoftx`.`entrada`, CONSTRAINT `Id_Producto` FOREIGN KEY (`Id_Producto`) REFERENCES `producto` (`Id_Producto`))
+2024-09-17T13:39:01.788Z [info]: Todas las entradas recuperadas
+2024-09-17T13:39:01.838Z [info]: Todas las entradas recuperadas
+2024-09-17T13:39:34.677Z [error]: Error al crear la entrada: Cannot add or update a child row: a foreign key constraint fails (`mercasoftx`.`entrada`, CONSTRAINT `Id_Producto` FOREIGN KEY (`Id_Producto`) REFERENCES `producto` (`Id_Producto`))
+2024-09-17T13:46:06.950Z [info]: Todas las entradas recuperadas
+2024-09-17T13:46:06.980Z [info]: Todas las entradas recuperadas

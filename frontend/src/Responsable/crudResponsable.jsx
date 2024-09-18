@@ -140,7 +140,7 @@ const CrudResponsable = () => {
              <img
              src="/plus-circle (1).svg"
              alt="Add Icon"
-             style={{ width: '20px', height: '20px', marginRight: '8px', filter: 'invert(100%)' }} filter: 'invert(100%)' }}
+             style={{ width: '20px', height: '20px', marginRight: '8px', filter: 'invert(100%)' }} // Color blanco
            />
             Registrar
           </button>

@@ -94,33 +94,35 @@ const CrudCategoria = () => {
   const data = categoriaList.map(categoria => [
     categoria.Id_Categoria,
     categoria.Nom_Categoria,
-    <div key={categoria.Id_Categoria}>
-      <a
+    <div className='botones-img' key={categoria.Id_Categoria} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+    <a 
       href="#!"
+      className="btn-custom me-2"
+      onClick={() => getCategoria(categoria.Id_Categoria)}
+      title="Editar"
+      style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+    >
+      <img 
+        src="/pencil-square.svg" 
+        alt="Editar"
+        style={{ width: '20px', height: '20px' }}  
+      />
+    </a>
+    <a 
+      href="#!"
+      className="btn-custom"
+      onClick={() => deleteCategoria(categoria.Id_Categoria)}
+      title="Borrar"
+      style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+    >
+      <img 
+        src="/trash3.svg" 
+        alt="Borrar" 
+        style={{ width: '20px', height: '20px' }}  
+      />
+    </a>
+</div>
 
-        className="btn-custom me-2" 
-        onClick={() => getCategoria(categoria.Id_Categoria)}
-        title="Editar"
-      >
-        <img 
-          src="/pencil-square.svg" 
-          alt="Editar" 
-          style={{ width: '13px', height: '13px' }}
-        />
-      </a>
-      <a
-      href="#!"
-        className="btn-custom" 
-        onClick={() => deleteCategoria(categoria.Id_Categoria)}
-        title="Borrar"
-      >
-        <img 
-          src="/archive.svg" 
-          alt="Borrar" 
-          
-        />
-      </a>
-    </div>
   ]);
 
   return (

@@ -2,7 +2,6 @@ import Venta from "../models/ventaModel.js";
 import Pedido from "../models/pedidoModel.js";
 
 // Mostrar todos los registros
-// Mostrar todos los registros
 export const getAllVenta = async (req, res) => {
     try {
         const ventas = await Venta.findAll({
@@ -44,7 +43,6 @@ export const getVenta = async (req, res) => {
 
 // Crear una Venta
 export const createVenta = async (req, res) => {
-
     const { Fec_Venta, Val_Venta, Id_Pedido } = req.body;
 
     if (!Fec_Venta || !Val_Venta || !Id_Pedido) {
@@ -53,14 +51,13 @@ export const createVenta = async (req, res) => {
     }
 
     try {
-
         const nuevaVenta = await Venta.create(req.body);
         if (nuevaVenta.Id_Venta) {
             res.status(201).json({ message: '¡Registro Creado Exitosamente!', venta: nuevaVenta });
-            return
+            return;
         }
-        console.log(nuevaVenta)
-        res.status(400).json({ message: '¡Ocurrio un error con la creacion!', venta: nuevaVenta });
+        console.log(nuevaVenta);
+        res.status(400).json({ message: '¡Ocurrió un error con la creación!', venta: nuevaVenta });
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -68,7 +65,6 @@ export const createVenta = async (req, res) => {
 
 // Actualizar un registro 
 export const updateVenta = async (req, res) => {
-
     const { Fec_Venta, Val_Venta, Id_Pedido } = req.body;
 
     if (!Fec_Venta || !Val_Venta || !Id_Pedido) {
@@ -90,14 +86,13 @@ export const updateVenta = async (req, res) => {
     }
 }
 
-
 // Borrar un registro
 export const deleteVenta = async (req, res) => {
     try {
         const deleted = await Venta.destroy({
-            where: { id: req.params.id }
+            where: { Id_Venta: req.params.id } // Corrige el nombre de la columna aquí
         });
-        if (deletedVenta) {
+        if (deleted) {
             res.status(200).json({ message: '¡Registro Borrado Exitosamente!' });
         } else {
             res.status(404).json({ message: 'Venta no encontrada' });

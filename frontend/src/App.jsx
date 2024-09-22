@@ -16,6 +16,7 @@ import TeamPresentation from './contact/equipo.jsx';
 import ContactPage from './contact/imageCarrousel.jsx';
 import Login from './iniciarsesion/IniciarSesion.jsx';
 import Auth from './registrar/registrar.jsx';
+import UsuarioAdmin from './UsuarioAdmin/crudUsuario.jsx'
 
 // Función para verificar si el usuario está autenticado
 const isAuthenticated = () => {
@@ -131,7 +132,17 @@ function App() {
             </ProtectedRoute>
           } 
         />
+
+         {/* Ruta para el administrador de usuarios */}
+      <Route 
+          path="/users" 
+          element={
+            <UsuarioAdmin/>
+          } 
+        />
       </Routes>
+
+     
     </>
   );
 }

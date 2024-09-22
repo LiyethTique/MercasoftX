@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 import WriteTable from '../Tabla/Data-Table';
 import ModalForm from '../Model/Model';
 
-const URI = (process.env.SERVER_BACK || 'http://localhost:3002') + '/pedido/';
+const URI = process.env.REACT_APP_SERVER_BACK + '/pedido/';
 
 const CrudPedido = () => {
   const [pedidoList, setPedidoList] = useState([]);

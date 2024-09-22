@@ -1,0 +1,55 @@
+/* Elimina el fondo y da un aspecto limpio y moderno */
+form {
+    background: none; /* No fondo */
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 400px;
+    margin: 0 auto;
+    box-shadow: none; /* No sombras */
+  }
+  
+  /* Estilos para las etiquetas de los inputs */
+  .form-label {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+    font-size: 14px;
+  }
+  
+  /* Moderniza los campos de texto */
+  .form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: transparent; /* Fondo transparente */
+    transition: all 0.3s ease;
+  }
+  
+  /* Estilo cuando el campo está en focus */
+  .form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+    background-color: transparent; /* Mantiene el fondo transparente en focus */
+  }
+  
+  /* Botón de envío con estilo moderno */
+  button[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  /* Efecto hover del botón */
+  button[type="submit"]:hover {
+    background-color: #0056b3;
+    box-shadow: 0 4px 8px rgba(0, 91, 187, 0.4);
+  }
+  

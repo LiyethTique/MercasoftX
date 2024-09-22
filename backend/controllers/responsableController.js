@@ -47,9 +47,9 @@ export const getResponsable = async (req, res) => {
 
 export const createResponsable = async (req, res) => {
 
-    const { Nom_Responsable, Cor_Responsable, Tel_Responsable, Tip_Responsable, Tip_Genero } = req.body;
+    const { Nom_Responsable, Tel_Responsable, Tip_Responsable, Tip_Genero } = req.body;
 
-    if (!Nom_Responsable || !Cor_Responsable || !Tel_Responsable || !Tip_Responsable || !Tip_Genero) {
+    if (!Nom_Responsable || !Tel_Responsable || !Tip_Responsable || !Tip_Genero) {
         logger.warn('Todos los campos son obligatorios');
         return res.status(400).json({ message: 'Todos los campos son obligatorios' });
     }
@@ -65,9 +65,9 @@ export const createResponsable = async (req, res) => {
 
 export const updateResponsable = async (req, res) => {
 
-    const { Nom_Responsable, Cor_Responsable, Tel_Responsable, Tip_Responsable, Tip_Genero } = req.body;
+    const { Nom_Responsable, Tel_Responsable, Tip_Responsable, Tip_Genero } = req.body;
 
-    if (!Nom_Responsable || !Cor_Responsable || !Tel_Responsable || !Tip_Responsable || !Tip_Genero) {
+    if (!Nom_Responsable || !Tel_Responsable || !Tip_Responsable || !Tip_Genero) {
         logger.warn('Todos los campos son obligatorios');
         return res.status(400).json({ message: 'Todos los campos son obligatorios' });
     }
@@ -89,36 +89,29 @@ export const updateResponsable = async (req, res) => {
 };
 
 export const deleteResponsable = async (req, res) => {
+    const { id } = req.params; // Captura el ID desde los parámetros
+    if (!id) {
+        return res.status(400).json({ message: 'ID de responsable es requerido.' });
+    }
+
     try {
+        // Verifica si el responsable existe antes de intentar eliminarlo
+        const responsable = await Responsable.findByPk(id);
+        if (!responsable) {
+            return res.status(404).json({ message: 'Responsable no encontrado' });
+        }
+
         const deleted = await Responsable.destroy({
-            where: { Id_Responsable: req.params.id }
+            where: { Id_Responsable: id }
         });
+
         if (deleted) {
             res.status(200).json({ message: 'Responsable eliminado exitosamente' });
         } else {
-            res.status(404).json({ message: 'Responsable no encontrado' });
+            res.status(500).json({ message: 'Error al eliminar el responsable' });
         }
     } catch (error) {
         logger.error(error.message);
         res.status(500).json({ message: 'Error al eliminar el responsable' });
-    }
-};
-
-export const getQueryResponsable = async (req, res) => {
-    try {
-        const responsables = await ResponsablesModel.findAll({
-            where: {
-                Nom_Responsable: {
-                    [Sequelize.Op.like]: `%${req.params.Nom_Responsable}%`
-                }
-            }
-        });
-        if (responsables.length > 0) {
-            res.status(200).json(responsables);
-        } else {
-            res.status(404).json({ message: "No se encontraron registros para el nombre especificado" });
-        }
-    } catch (error) {
-        res.status(500).json({ message: error.message });
     }
 };

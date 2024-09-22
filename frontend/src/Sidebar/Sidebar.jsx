@@ -81,13 +81,12 @@ function Sidebar() {
                     {renderNavItem('/cliente/', 'customer.svg', 'Cliente', selectedOption, handleOptionSelect)}
                     {renderNavItem('/entrada/', 'transfer.svg', 'Entrada', selectedOption, handleOptionSelect)}
                     {renderNavItem('/pedido/', 'orders.svg', 'Pedido', selectedOption, handleOptionSelect)}
-                    {/* {renderNavItem('/pedidoproducto/', 'orderproduct.svg', 'PedidoProducto', selectedOption, handleOptionSelect)} */}
                     {renderNavItem('/producto/', 'product.svg', 'Producto', selectedOption, handleOptionSelect)}
                     {renderNavItem('/responsable/', 'responsible.svg', 'Responsable', selectedOption, handleOptionSelect)}
                     {renderNavItem('/traslado/', 'entrance.svg', 'Traslado', selectedOption, handleOptionSelect)}
                     {renderNavItem('/unidad/', 'unit.svg', 'Unidad', selectedOption, handleOptionSelect)}
                     {renderNavItem('/venta/', 'sale.svg', 'Venta', selectedOption, handleOptionSelect)}
-                  
+                    {renderNavItem('/users/', 'user.svg', 'Usuarios', selectedOption, handleOptionSelect)} {/* Nuevo enlace para Usuarios */}
                 </ul>
                 <hr />
 

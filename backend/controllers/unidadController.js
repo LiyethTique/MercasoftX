@@ -23,7 +23,7 @@ export const getAllUnidades = async (req, res) => {
         if(unidades.length > 0) {
             res.status(200).json(unidades);
         } else {
-            res.status(400).json({ message: 'No existen unidades' });
+            res.status(200).json([]);
         }
     } catch (error) {
         logger.error(error.message);

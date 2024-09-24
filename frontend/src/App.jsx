@@ -1,7 +1,6 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Carrito from './Carrito/crudCarrito.jsx';
-import Categoria from './Categoria/crudCategoria.jsx';
 import Cliente from './Cliente/crudCliente.jsx';
 import Entrada from './Entrada/crudEntrada.jsx';
 import Pedido from './Pedido/crudPedido.jsx';
@@ -10,13 +9,13 @@ import Producto from './Producto/crudProducto.jsx';
 import Responsable from './Responsable/crudResponsable.jsx';
 import Traslado from './Traslado/crudTraslado.jsx';
 import Unidad from './Unidad/crudUnidad.jsx';
+import Area from './Area/crudArea.jsx';
 import Venta from './Venta/crudVenta.jsx';
-import Imagen from './raiz/Imagen.jsx';
+import Home from './Home/Home.jsx';
 import TeamPresentation from './contact/equipo.jsx';
 import ContactPage from './contact/imageCarrousel.jsx';
 import Login from './iniciarsesion/IniciarSesion.jsx';
 import Auth from './registrar/registrar.jsx';
-import UsuarioAdmin from './UsuarioAdmin/crudUsuario.jsx'
 
 // Función para verificar si el usuario está autenticado
 const isAuthenticated = () => {
@@ -37,9 +36,11 @@ function App() {
     <>
       <Routes>
         {/* Rutas públicas */}
-        <Route path="/" element={<Imagen />} />
+        <Route path="/" element={<Home />} />
         <Route path="/team-presentation" element={<TeamPresentation />} />
         <Route path="/contacto" element={<ContactPage />} />
+        <Route path="/carrito" element={<Carrito />} />
+        <Route path="/producto" element={<Producto />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Auth />} />
 
@@ -52,14 +53,7 @@ function App() {
             </ProtectedRoute>
           } 
         />
-        <Route 
-          path="/categoria" 
-          element={
-            <ProtectedRoute>
-              <Categoria />
-            </ProtectedRoute>
-          } 
-        />
+        
         <Route 
           path="/cliente" 
           element={
@@ -132,17 +126,15 @@ function App() {
             </ProtectedRoute>
           } 
         />
-
-         {/* Ruta para el administrador de usuarios */}
-      <Route 
-          path="/users" 
+         <Route 
+          path="/area" 
           element={
-            <UsuarioAdmin/>
+            <ProtectedRoute>
+              <Area />
+            </ProtectedRoute>
           } 
         />
       </Routes>
-
-     
     </>
   );
 }

@@ -24,7 +24,7 @@ export const getAllProducto = async (req, res) => {
             res.status(200).json(productos);
             return
         }
-        res.status(400).json({ message: 'No existen Productos'})
+        res.status(200).json({ message: ''})
     } catch (error) {
         logger.error(error.message);
         res.status(500).json({ message: 'Error al obtener productos' });

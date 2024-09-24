@@ -1,0 +1,93 @@
+/* crudTraslados.css */
+
+/* Botón personalizado para acciones */
+.btn-custom {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.75rem; /* Tamaño del texto un poco más grande para mejorar la legibilidad */
+    padding: 0.3rem 0.6rem; /* Padding ajustado para un botón más grande */
+    border-radius: 0.25rem; /* Borde redondeado un poco más grande */
+    text-decoration: none; /* Quita el subrayado de los enlaces */
+    color: inherit; /* Hereda el color del texto del botón */
+    border: none; /* Sin borde */
+    background-color: transparent; /* Elimina el color de fondo */
+    transition: background-color 0.3s, border-color 0.3s; /* Transición para efectos de hover */
+}
+
+.btn-custom:hover {
+    background-color: rgba(0, 0, 0, 0.1); /* Color de fondo en hover (opcional) */
+}
+
+/* Estilo para los íconos dentro del botón */
+.btn-custom img {
+    width: 16px; /* Tamaño del ícono ajustado */
+    height: 16px; /* Tamaño del ícono ajustado */
+    margin-right: 0.5rem; /* Espacio entre el ícono y el texto */
+    background-color: transparent; /* Elimina el fondo del icono */
+}
+
+/* Estilo específico para los botones de editar y borrar */
+.btn-edit {
+    color: #ffc107; /* Color para el botón de editar */
+}
+
+.btn-edit img {
+    filter: hue-rotate(30deg) brightness(1.2); /* Ajusta el color del ícono de editar a naranja */
+
+}
+
+.btn-delete {
+    color: #dc3545; /* Color para el botón de borrar */
+}
+
+.btn-delete img {
+    filter: hue-rotate(0deg) brightness(1.2); /* Ajusta el color del ícono de borrar a rojo */
+}
+
+/* Resto de estilos de la tabla y del formulario (sin cambios) */
+.table-traslados {
+    width: 100%; /* Ancho completo de la tabla */
+    border-collapse: collapse; /* Elimina espacios entre celdas */
+}
+
+.table-traslados th, .table-traslados td {
+    padding: 0.75rem; /* Espacio interior de las celdas */
+    text-align: left; /* Alineación del texto a la izquierda */
+    border-bottom: 1px solid #dee2e6; /* Borde inferior de las celdas */
+}
+
+.table-traslados th {
+    background-color: #f8f9fa; /* Color de fondo para los encabezados */
+    font-weight: bold; /* Negrita en los encabezados */
+}
+
+.table-traslados tr:nth-child(even) {
+    background-color: #f2f2f2; /* Color de fondo alternativo para las filas */
+}
+
+.table-traslados td {
+    font-size: 0.875rem; /* Tamaño del texto en las celdas */
+}
+
+.form-traslado-container {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+@media (max-width: 768px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.form-responsable {
+    grid-column: span 2; /* Hacer que ocupe el ancho completo de la grid */
+    text-align: center;  /* Centrar el contenido */
+}

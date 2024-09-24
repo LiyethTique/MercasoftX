@@ -11,7 +11,6 @@ const Responsable = db.define('responsable', {
         type: DataTypes.STRING(100),
         allowNull: false
     },
-    
     Tel_Responsable: {
         type: DataTypes.STRING(15),
         allowNull: false

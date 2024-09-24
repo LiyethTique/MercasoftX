@@ -21,6 +21,10 @@ const NavPub = () => {
                         <FontAwesomeIcon icon={faShoppingCart} className="me-2" />
                         Carrito
                     </Link>
+                    <Link className="navbar-brand" to="/producto" style={{ color: '#fff', fontWeight: 'bold' }}>
+                        <FontAwesomeIcon icon={faEnvelope} className="me-2" /> {/* Ajustar icono según necesidad */}
+                        Producto
+                    </Link>
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon" style={{ backgroundColor: '#fff' }}></span>
                     </button>
@@ -35,7 +39,7 @@ const NavPub = () => {
                                         fontWeight: 'bold',
                                         textDecoration: 'none'
                                     }}
-                                    onMouseOver={(e) => e.currentTarget.style.color = '#fff'}
+                                    onMouseOver={(e) => e.currentTarget.style.color = '#ddd'} // Cambiar color al pasar el ratón
                                     onMouseOut={(e) => e.currentTarget.style.color = '#fff'}
                                 >
                                     <FontAwesomeIcon icon={faSignInAlt} className="me-2" />

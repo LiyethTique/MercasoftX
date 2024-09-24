@@ -91,41 +91,37 @@ const CrudVenta = () => {
     setIsModalOpen(true);
   };
 
-  const titles = ['Codigo Venta', 'Fecha de Venta', 'Valor de Venta', 'Valor del Pedido', 'Acciones'];
+  const titles = ['ID Venta', 'Fecha de Venta', 'Valor de Venta', 'ID Pedido', 'Acciones'];
   const data = ventaList.map(venta => [
     venta.Id_Venta,
     venta.Fec_Venta,
     venta.Val_Venta,
-    venta.Id_Pedido ? venta.pedido?.Val_Pedido || 'Sin Pedido' : 'Sin Pedido',
-    <div className='botones-img' key={venta.Id_Venta} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-    <a 
-      href="#!"
-      className="btn-custom me-2"
-      onClick={() => getVenta(venta.Id_Venta)}
-      title="Editar"
-      style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-    >
-      <img 
-        src="/pencil-square.svg" 
-        alt="Editar"
-        style={{ width: '20px', height: '20px' }}  
-      />
-    </a>
-    <a 
-      href="#!"
-      className="btn-custom"
-      onClick={() => deleteVenta(venta.Id_Venta)}
-      title="Borrar"
-      style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-    >
-      <img 
-        src="/trash3.svg" 
-        alt="Borrar" 
-        style={{ width: '20px', height: '20px' }}  
-      />
-    </a>
-  </div>
-  
+    venta.Id_Pedido,
+    <div key={venta.Id_Venta}>
+      <a 
+        href="#!"
+        className="btn-custom me-2"
+        onClick={() => getVenta(venta.Id_Venta)}
+        title="Editar"
+      >
+        <img 
+          src="/pencil-square.svg" 
+          alt="Editar"
+          style={{ width: '13px', height: '13px' }}  
+        />
+      </a>
+      <a 
+        href="#!"
+        className="btn-custom"
+        onClick={() => deleteVenta(venta.Id_Venta)}
+        title="Borrar"
+      >
+        <img 
+          src="/trash3.svg" 
+          alt="Borrar" 
+        />
+      </a>
+    </div>
   ]);
 
   return (
@@ -137,28 +133,19 @@ const CrudVenta = () => {
         </center>
         
         <div className="d-flex justify-content-between mb-3">
-  <a 
-    href="#!"
-    className="btn d-flex align-items-center"
-    onClick={handleShowForm}
-    style={{
-      backgroundColor: '#ffb74d', // Color naranja suave
-      borderColor: '#ffb74d', // Color del borde
-      color: 'white', // Color del texto
-      padding: '10px 20px', // Espaciado interno del botón
-      textDecoration: 'none', // Eliminar subrayado
-      borderRadius: '5px' // Opcional: bordes redondeados
-    }}
-  >   
-    <img
-      src="/plus-circle (1).svg"
-      alt="Add Icon"
-      style={{ width: '20px', height: '20px', marginRight: '8px', filter: 'invert(100%)' }}
-    />
-    Registrar
-  </a>
-</div>
-
+          <a 
+            href="#!"
+            className="btn btn-success d-flex align-items-center"
+            onClick={handleShowForm}
+          >   
+            <img
+              src="/plus-circle (1).svg"
+              alt="Add Icon"
+              style={{ width: '20px', height: '20px', marginRight: '8px', filter: 'invert(100%)' }}
+            />
+            Registrar
+          </a>
+        </div>
 
         <WriteTable titles={titles} data={data} />
 

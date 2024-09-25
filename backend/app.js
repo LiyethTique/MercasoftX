@@ -7,7 +7,6 @@ import userRoutes from './routes/userRoutes.js'; // Rutas de usuarios
 
 // Se importan todas rutas
 import carritoRoutes from './routes/carritoRoutes.js';
-import catagoriaRoutes from './routes/categoriaRoutes.js';
 import clienteRoutes from './routes/clienteRoutes.js';
 import entradasRoutes from './routes/entradaRoutes.js';
 import pedidoRoutes from './routes/pedidoRouter.js';
@@ -45,7 +44,6 @@ app.use('/users', userRoutes); // Ruta para gestionar usuarios
 
 // Aplicar el middleware `verifyToken` globalmente a todas las rutas protegidas
 app.use('/carrito', carritoRoutes);
-app.use('/categoria', catagoriaRoutes);
 app.use('/cliente', clienteRoutes);
 app.use('/entrada', entradasRoutes);
 app.use('/pedido', pedidoRoutes);

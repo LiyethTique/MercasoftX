@@ -9,13 +9,14 @@ import Producto from './Producto/crudProducto.jsx';
 import Responsable from './Responsable/crudResponsable.jsx';
 import Traslado from './Traslado/crudTraslado.jsx';
 import Unidad from './Unidad/crudUnidad.jsx';
-import Area from './Area/crudArea.jsx';
 import Venta from './Venta/crudVenta.jsx';
-import Home from './Home/Home.jsx';
 import TeamPresentation from './contact/equipo.jsx';
 import ContactPage from './contact/imageCarrousel.jsx';
 import Login from './iniciarsesion/IniciarSesion.jsx';
 import Auth from './registrar/registrar.jsx';
+import UsuarioAdmin from './UsuarioAdmin/crudUsuario.jsx'
+import Home from './Home/Home.jsx';
+
 
 // Función para verificar si el usuario está autenticado
 const isAuthenticated = () => {
@@ -36,11 +37,9 @@ function App() {
     <>
       <Routes>
         {/* Rutas públicas */}
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Home/>} />
         <Route path="/team-presentation" element={<TeamPresentation />} />
         <Route path="/contacto" element={<ContactPage />} />
-        <Route path="/carrito" element={<Carrito />} />
-        <Route path="/producto" element={<Producto />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Auth />} />
 
@@ -53,7 +52,6 @@ function App() {
             </ProtectedRoute>
           } 
         />
-        
         <Route 
           path="/cliente" 
           element={
@@ -126,15 +124,17 @@ function App() {
             </ProtectedRoute>
           } 
         />
-         <Route 
-          path="/area" 
+
+         {/* Ruta para el administrador de usuarios */}
+      <Route 
+          path="/users" 
           element={
-            <ProtectedRoute>
-              <Area />
-            </ProtectedRoute>
+            <UsuarioAdmin/>
           } 
         />
       </Routes>
+
+     
     </>
   );
 }

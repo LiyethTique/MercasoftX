@@ -1,0 +1,47 @@
+.alert {
+
+    margin: 20px 0;
+    padding: 15px;
+    border-radius: 4px;
+    background-color: #f8d7da;
+    color: #721c24;
+  }  
+
+    alertaBDVacia.css */
+.alerta-bd-vacia {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%; /* Ocupa el ancho completo del contenedor padre */
+  padding: 10px; /* Ajusta el espaciado interno si es necesario */
+  background-color: #f8d7da; /* Color de fondo para alerta */
+  color: #721c24; /* Color del texto */
+  border: 1px solid #f5c6cb; /* Borde de la alerta */
+  border-radius: 4px; /* Bordes redondeados */
+  text-align: center; /* Centra el texto */
+  margin: 10px 0; /* Espaciado vertical */
+}
+
+   margin: 20px 0;
+    padding: 15px;
+    border-radius: 4px;
+    background-color: seashell;
+    color: #721c24;
+    text-align: center;
+  }  
+/* alertaBDVacia.css */
+.alerta-bd-vacia {
+  position: fixed; /* Fija la alerta en la pantalla */
+  top: 50%; /* Centro vertical */
+  left: 50%; /* Centro horizontal */
+  transform: translate(-50%, -50%); /* Ajusta la posición para centrar correctamente */
+  width: 80%; /* Ajusta el ancho si es necesario */
+  max-width: 600px; /* Ajusta el ancho máximo si es necesario */
+  padding: 20px; /* Espaciado interno */
+  background-color: #f8d7da; /* Color de fondo para alerta */
+  color: #721c24; /* Color del texto */
+  border: 1px solid #f5c6cb; /* Borde de la alerta */
+  border-radius: 4px; /* Bordes redondeados */
+  text-align: center; /* Centra el texto */
+  z-index: 1000; /* Asegura que la alerta esté por encima de otros elementos */
+}

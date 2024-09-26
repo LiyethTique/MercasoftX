@@ -1,105 +1,209 @@
-import { useState } from "react";
-import { useEffect } from "react";
+import React, { useState, useEffect } from 'react';
+import { Button } from 'react-bootstrap';
+import Swal from 'sweetalert2';
 
-const FormEntrada = ({ buttonForm, entrada, updateTextButton }) => {
+const FormEntrada = ({ buttonForm, entrada, onSubmit, onClose }) => {
+  const [formData, setFormData] = useState({
+    Fec_Entrada: '',
+    Hor_Entrada: '',
+    Id_Unidad: '',
+    Id_Producto: '',
+    Id_Responsable: '',
+    Can_Entrada: '',
+    Fec_Vencimiento: '',
+  });
 
-    const [Fec_Entrada, setFec_Entrada] = useState('')
-    const [Hor_Entrada, setHor_Entrada] = useState('')
-    const [Id_Unidad, setId_Unidad] = useState('')
-    const [Id_Producto, setId_Producto] = useState('')
-    const [Id_Responsable, setId_Responsable] = useState('')
-    const [Can_Entrada, setCan_Entrada] = useState('')
-    const [Fec_Vencimiento, setFec_Vencimiento] = useState('')
+  const [initialData, setInitialData] = useState({
+    Fec_Entrada: '',
+    Hor_Entrada: '',
+    Id_Unidad: '',
+    Id_Producto: '',
+    Id_Responsable: '',
+    Can_Entrada: '',
+    Fec_Vencimiento: '',
+  });
 
-    const sendForm = (e) => {
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-        e.preventDafult()
-
-        if (buttonForm == 'Actualizar') {
-            console.log('actualizando ando...')
-
-            const respuesta = axios.put(URI + entrada.Id_Entrada, {
-                Fec_Entrada: Fec_Entrada,
-                Hor_Entrada: Hor_Entrada,
-                Id_Unidad: Id_Unidad,
-                Id_Producto: Id_Producto,
-                Id_Responsable: Id_Responsable,
-                Can_Entrada: Can_Entrada,
-                Fec_Vencimiento: Fec_Vencimiento
-            })
-            if (respuesta.status == 201){
-                updateTextButton('Enviar')
-                clearForm()  
-            }
-        } else if (buttonForm == 'Enviar') { 
-            console.log('guardando ando...') 
-
-            const respuesta = axios.post(URI, {
-                Fec_Entrada: Fec_Entrada,
-                Hor_Entrada: Hor_Entrada,
-                Id_Unidad: Id_Unidad,
-                Id_Producto: Id_Producto,
-                Id_Responsable: Id_Responsable,
-                Can_Entrada: Can_Entrada,
-                Fec_Vencimiento: Fec_Vencimiento
-            })
-            if (respuesta.status == 201){
-            clearForm()  
-            }
-        }
-
-        const clearForm = () => {
-            setFec_Entrada('')
-            setHor_Entrada('')
-            setId_Unidad('')
-            setId_Producto('')
-            setId_Responsable('')
-            setCan_Entrada('')
-            setFec_Vencimiento('')
-        }
-
-        const setData = () => {
-            setFec_Entrada(entrada.Fec_Entrada)
-            setHor_Entrada(entrada.Hor_Entrada)
-            setId_Unidad(entrada.Id_Unidad)
-            setId_Producto(entrada.Id_Producto)
-            setId_Responsable(entrada.Id_Responsable)
-            setCan_Entrada(entrada.Can_Entrada)
-            setFec_Vencimiento(entrada.Fec_Vencimiento)
-        }
-
-        useEffect(() => {
-            setData()
-        }), [entrada]
+  useEffect(() => {
+    if (entrada) {
+      setFormData(entrada);
+      setInitialData(entrada);
     }
-    return (
-        <>
-            <form id="entradaForm" action="" onSubmit={sendForm}>
-                <label htmlFor="Fec_Entrada">Fecha de la entrada</label>
-                <input type="text" id="Fec_Entrada" value={Fec_Entrada} onChange={(e) => setFec_Entrada(e.target.value)} />
-                <br />
-                <label htmlFor="Hor_Entrada">Hora de la entrada</label>
-                <input type="text" id="Hor_Entrada" value={Hor_Entrada} onChange={(e) => setHor_Entrada(e.target.value)} />
-                <br />
-                <label htmlFor="Id_Unidad">Nombre de la unidad</label>
-                <input type="text" id="Id_Unidad" value={Id_Unidad} onChange={(e) => setId_Unidad(e.target.value)} />
-                <br />
-                <label htmlFor="Id_Producto">Nombre del producto</label>
-                <input type="text" id="Id_Producto" value={Id_Producto} onChange={(e) => setId_Producto(e.target.value)}/>
-                <br />
-                <label htmlFor="Id_Responsable">Responsable del producto</label>
-                <input type="text" id="Id_Responsable" value={Id_Responsable} onChange={(e) => setId_Responsable(e.target.value)} />
-                <br />
-                <label htmlFor="Can_Entrada">Cantidad que entra del producto</label>
-                <input type="text" id="Can_Entrada" value={Can_Entrada} onChange={(e) => setCan_Entrada(e.target.value)}/>
-                <br />
-                <label htmlFor="Fec_Vencimiento">Fecha de vencimiento</label>
-                <input type="text" id="Fec_Vencimiento" value={Fec_Vencimiento} onChange={(e) => setFec_Vencimiento(e.target.value)}/>
+  }, [entrada]);
 
-                <input type="text" id="boton" value={buttonForm} className="btn btn-success" />
-            </form>
-        </>
-    )
-}
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    if (errors[name]) {
+      setErrors({ ...errors, [name]: '' });
+    }
+  };
 
-export default FormEntrada
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.Fec_Entrada) newErrors.Fec_Entrada = 'La fecha de entrada es requerida.';
+    if (!formData.Hor_Entrada) newErrors.Hor_Entrada = 'La hora de entrada es requerida.';
+    if (!formData.Id_Unidad) newErrors.Id_Unidad = 'La unidad es requerida.';
+    if (!formData.Id_Producto) newErrors.Id_Producto = 'El producto es requerido.';
+    if (!formData.Id_Responsable) newErrors.Id_Responsable = 'El responsable es requerido.';
+    if (!formData.Fec_Vencimiento) newErrors.Fec_Vencimiento = 'La fecha de vencimiento es requerida.';
+    if (formData.Id_Unidad <= 0) newErrors.Id_Unidad = 'La unidad debe ser mayor a 0.';
+    if (formData.Id_Producto <= 0) newErrors.Id_Producto = 'El producto debe ser mayor a 0.';
+    if (formData.Id_Responsable <= 0) newErrors.Id_Responsable = 'El responsable debe ser mayor a 0.';
+    if (formData.Can_Entrada <= 0) newErrors.Can_Entrada = 'La cantidad de entrada debe ser mayor a 0.';
+    return newErrors;
+  };
+
+  const hasChanges = () => {
+    return Object.keys(formData).some((key) => formData[key] !== initialData[key]);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (isSubmitting) return;
+
+    const formErrors = validateForm();
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
+      return;
+    }
+
+    if (!hasChanges()) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Sin Cambios',
+        text: 'Debe realizar al menos un cambio en el formulario.',
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      await onSubmit(formData);
+      Swal.fire({
+        icon: 'success',
+        title: 'Entrada registrada exitosamente',
+      });
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error al registrar la entrada',
+        text: 'Ocurrió un error al enviar los datos',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleClose = () => {
+    if (onClose) {
+      onClose();
+    }
+  };
+
+  return (
+    <div style={{ padding: '20px', maxWidth: '500px', margin: '0 auto' }}>
+      <div className="mb-3">
+        <label htmlFor="Fec_Entrada" className="form-label">Fecha de Entrada</label>
+        <input
+          type="date"
+          className={`form-control ${errors.Fec_Entrada ? 'is-invalid' : ''}`}
+          id="Fec_Entrada"
+          name="Fec_Entrada"
+          value={formData.Fec_Entrada}
+          onChange={handleChange}
+        />
+        {errors.Fec_Entrada && <div className="invalid-feedback">{errors.Fec_Entrada}</div>}
+      </div>
+
+      <div className="mb-3">
+        <label htmlFor="Hor_Entrada" className="form-label">Hora de Entrada</label>
+        <input
+          type="time"
+          className={`form-control ${errors.Hor_Entrada ? 'is-invalid' : ''}`}
+          id="Hor_Entrada"
+          name="Hor_Entrada"
+          value={formData.Hor_Entrada}
+          onChange={handleChange}
+        />
+        {errors.Hor_Entrada && <div className="invalid-feedback">{errors.Hor_Entrada}</div>}
+      </div>
+
+      <div className="mb-3">
+        <label htmlFor="Id_Unidad" className="form-label">Nombre de la Unidad</label>
+        <input
+          type="number"
+          className={`form-control ${errors.Id_Unidad ? 'is-invalid' : ''}`}
+          id="Id_Unidad"
+          name="Id_Unidad"
+          value={formData.Id_Unidad}
+          onChange={handleChange}
+        />
+        {errors.Id_Unidad && <div className="invalid-feedback">{errors.Id_Unidad}</div>}
+      </div>
+
+      <div className="mb-3">
+        <label htmlFor="Id_Producto" className="form-label">Nombre del Producto</label>
+        <input
+          type="number"
+          className={`form-control ${errors.Id_Producto ? 'is-invalid' : ''}`}
+          id="Id_Producto"
+          name="Id_Producto"
+          value={formData.Id_Producto}
+          onChange={handleChange}
+        />
+        {errors.Id_Producto && <div className="invalid-feedback">{errors.Id_Producto}</div>}
+      </div>
+
+      <div className="mb-3">
+        <label htmlFor="Id_Responsable" className="form-label">Nombre del Responsable</label>
+        <input
+          type="number"
+          className={`form-control ${errors.Id_Responsable ? 'is-invalid' : ''}`}
+          id="Id_Responsable"
+          name="Id_Responsable"
+          value={formData.Id_Responsable}
+          onChange={handleChange}
+        />
+        {errors.Id_Responsable && <div className="invalid-feedback">{errors.Id_Responsable}</div>}
+      </div>
+
+      <div className="mb-3">
+        <label htmlFor="Can_Entrada" className="form-label">Cantidad Entrada</label>
+        <input
+          type="number"
+          className={`form-control ${errors.Can_Entrada ? 'is-invalid' : ''}`}
+          id="Can_Entrada"
+          name="Can_Entrada"
+          value={formData.Can_Entrada}
+          onChange={handleChange}
+        />
+        {errors.Can_Entrada && <div className="invalid-feedback">{errors.Can_Entrada}</div>}
+      </div>
+
+      <div className="mb-3">
+        <label htmlFor="Fec_Vencimiento" className="form-label">Fecha de Vencimiento</label>
+        <input
+          type="date"
+          className={`form-control ${errors.Fec_Vencimiento ? 'is-invalid' : ''}`}
+          id="Fec_Vencimiento"
+          name="Fec_Vencimiento"
+          value={formData.Fec_Vencimiento}
+          onChange={handleChange}
+        />
+        {errors.Fec_Vencimiento && <div className="invalid-feedback">{errors.Fec_Vencimiento}</div>}
+      </div>
+
+      <div className="text-center">
+        <Button variant="primary" onClick={handleSubmit} disabled={isSubmitting}>
+          {isSubmitting ? 'Enviando...' : buttonForm}
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+export default FormEntrada;

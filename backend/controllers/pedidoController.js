@@ -1,10 +1,18 @@
 import PedidoModel from "../models/pedidoModel.js";
+import Cliente from "../models/clienteModel.js"
 import logger from "../logs/logger.js";
 
 // Mostrar todos los registros
 export const getAllPedido = async (req, res, next) => {
     try {
-        const pedidos = await PedidoModel.findAll();
+        const pedidos = await PedidoModel.findAll({
+            include: [
+                {
+                    model: Cliente,
+                    as: 'cliente',
+                }
+            ]
+        });
         logger.info('Todos los pedidos recuperados');
         if(pedidos.length > 0){
             res.status(200).json(pedidos);
@@ -21,7 +29,14 @@ export const getAllPedido = async (req, res, next) => {
 // Mostrar un registro
 export const getPedido = async (req, res, next) => {
     try {
-        const pedido = await PedidoModel.findByPk(req.params.id);
+        const pedido = await PedidoModel.findByPk(req.params.id, {
+            include: [
+                {
+                    model: Cliente,
+                    as: 'cliente',
+                }
+            ]
+        });
         if (pedido) {
             logger.info(`Pedido recuperado: ${pedido.Id_Pedido}`);
             res.status(200).json(pedido);
@@ -101,21 +116,3 @@ export const deletePedido = async (req, res, next) => {
     }
 };
 
-export const getQueryPedido = async (req, res) => {
-    try {
-        const pedidos = await PedidosModel.findAll({
-            where: {
-                Fec_Pedido: {
-                    [Sequelize.Op.like]: `%${req.params.Fec_Pedido}%`
-                }
-            }
-        });
-        if (pedidos.length > 0) {
-            res.status(200).json(pedidos);
-        } else {
-            res.status(404).json({ message: "No se encontraron registros para la fecha especificada" });
-        }
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};

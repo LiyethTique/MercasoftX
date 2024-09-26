@@ -1,99 +1,181 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
-import Swal from 'sweetalert2';
-import { Link } from 'react-router-dom';
-import '../css/iniciarSesion.css';
+import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2'; // Importa SweetAlert2
+import './IniciarSesion.css';
 import NavPub from '../NavPub/NavPub';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
-const Login = ({ setAuthenticated }) => {
-  const [formData, setFormData] = useState({ email: '', password: '' });
+const URI = process.env.REACT_APP_SERVER_BACK + '/auth/login';
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+const LoginForm = () => {
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+  });
+
+  const [errors, setErrors] = useState({
+    email: '',
+    password: '',
+    general: '',
+  });
+
+  const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+
+  const isValidEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
   };
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    const { email, password } = formData;
+  const validateForm = () => {
+    const newErrors = {};
 
-    if (!email || !password) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Todos los campos son obligatorios',
-      });
+    if (!formData.email) {
+      newErrors.email = 'El correo es requerido.';
+    } else if (!isValidEmail(formData.email)) {
+      newErrors.email = 'Por favor, ingresa un correo electrónico válido.';
+    }
+
+    if (!formData.password) {
+      newErrors.password = 'La contraseña es requerida.';
+    }
+
+    return newErrors;
+  };
+
+  const handlePasswordChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value.replace(/\s/g, '') });
+    setErrors({ ...errors, [name]: '' });
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    setErrors({ ...errors, [name]: '', general: '' });
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    // Validación del formulario
+    const formErrors = validateForm();
+    if (Object.keys(formErrors).length > 0) {
+      setErrors({ ...errors, ...formErrors });
       return;
     }
 
     try {
-      const response = await axios.post((process.env.REACT_APP_SERVER_BACK || 'http://localhost:3002') + '/auth/login', { email, password });
+      // Mostrar alerta personalizada en el centro de la pantalla con spinner
+      Swal.fire({
+        html: `
+          <img src="/cargando.gif" alt="Cargando..." style="width: 100px; height: 100px; margin-bottom: 20px;">
+          <p>Iniciando sesión...</p>
+        `,
+        customClass: {
+          container: 'custom-container', // Agregar clase personalizada
+          popup: 'custom-popup', // Agregar clase personalizada
+        },
+        showConfirmButton: false,
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        timer: 2000, // Duración de 2 segundos
+        timerProgressBar: true,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
 
-      if (response.data.success) {
-        Swal.fire({
-          icon: 'success',
-          title: 'Inicio de sesión exitoso',
-        });
-        setAuthenticated(true);
-      } else {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: response.data.message || 'Credenciales incorrectas',
-        });
+      // Esperar 2 segundos antes de hacer la solicitud
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      // Enviar solicitud de inicio de sesión
+      const response = await axios.post(URI, {
+        Cor_Usuario: formData.email,
+        Password_Usuario: formData.password,
+      });
+
+      // Cerrar la alerta de carga
+      Swal.close();
+
+      if (response.data.token) {
+        localStorage.setItem('token', response.data.token);
+        navigate('/Cliente');
       }
     } catch (error) {
-      console.error(error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Error de servidor',
-        text: error.response?.data?.message || 'Error al intentar conectarse con el servidor',
-      });
+      // Cerrar la alerta de carga en caso de error
+      Swal.close();
+
+      if (error.response && error.response.status === 404) {
+        setErrors({ ...errors, general: 'El correo ingresado no está registrado.' });
+      } else if (error.response && error.response.status === 401) {
+        setErrors({ ...errors, general: 'La contraseña es incorrecta.' });
+      } else {
+        setErrors({ ...errors, general: 'Hubo un problema con el inicio de sesión. Inténtalo más tarde.' });
+      }
     }
   };
 
   return (
     <>
-      <NavPub/>  {/* Barra de navegación en la parte superior */}
-      
+      <NavPub />
       <div className="login-container">
-       
-        <form className="login-form" onSubmit={handleLogin}>
+        <form className="login-form" onSubmit={handleSubmit}>
           <center>
-        <h2>Iniciar Sesión</h2>
-        <img rel="icon" type="image/svg+xml" src="/Logo-Icono.svg" width="100px" alt="Logo" />
-        </center>
-          <label htmlFor="email">Correo Electrónico</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleInputChange}
-            placeholder="Ingrese su correo"
-          />
+            <h2>Iniciar Sesión</h2>
+            <img src="/Logo-Icono.svg" width="150px" alt="Logo" />
+          </center>
 
-          <label htmlFor="password">Contraseña</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleInputChange}
-            placeholder="Ingrese su contraseña"
-          />
+          <div className="mb-3">
+            {errors.email && <div className="error-message">{errors.email}</div>}
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="Ingrese su correo"
+              className={`form-control ${errors.email ? 'input-error' : ''}`}
+              required
+            />
+          </div>
+
+          <div className="mb-3">
+            {errors.password && <div className="error-message">{errors.password}</div>}
+            <div className="password-container">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handlePasswordChange}
+                placeholder="Ingrese su contraseña"
+                className={`form-control ${errors.password ? 'input-error' : ''}`}
+                required
+              />
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
+            </div>
+          </div>
+
+          {errors.general && <p className="error-message general-error">{errors.general}</p>}
 
           <button type="submit" className="login-button">Iniciar Sesión</button>
+
+          <div className="mt-3 text-center">
+            <a href="/recuperar-contrasena" className="forgot-password-link">¿Olvidaste tu contraseña?</a>
+          </div>
+      
         </form>
-        <p className="register-prompt">
-          ¿No tienes una cuenta? <Link to="/register">Regístrate aquí</Link>
-        </p>
       </div>
     </>
   );
 };
 
-export default Login;
+export default LoginForm;

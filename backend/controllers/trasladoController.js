@@ -1,124 +1,120 @@
 import Traslado from "../models/trasladoModel.js";
-import winston from "winston";
-import DailyRotateFile from "winston-daily-rotate-file";
+import Producto from "../models/productoModel.js";
+import Responsable from "../models/responsableModel.js"; // Si tienes un modelo para Responsable
 
-const logger = winston.createLogger({
-    level: "error",
-    format: winston.format.combine(
-        winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
-        winston.format.printf(info => `${info.timestamp}: ${info.level}: ${info.message}`)
-    ),
-    transports: [
-        new DailyRotateFile({
-            filename: 'logs/traslado-%DATE%.log',
-            datePattern: 'YYYY-MM-DD',
-            maxFiles: '14d'
-        })
-    ]
-});
-
+// Mostrar todos los registros
+// Mostrar todos los registros
 export const getAllTraslados = async (req, res) => {
     try {
-        const traslados = await Traslado.findAll();
+        const traslados = await Traslado.findAll({
+            include: [
+                {
+                    model: Producto,
+                    as: 'producto'  // Alias, si usas uno diferente, cámbialo aquí
+                },
+                {
+                    model: Responsable,
+                    as: 'responsable' // Alias, si usas uno diferente, cámbialo aquí
+                }
+            ]
+        });
+
+        console.log(traslados);
+
         if (traslados.length > 0) {
             res.status(200).json(traslados);
-            return
+        } else {
+            // Cambiamos el estado a 200 ya que la solicitud fue exitosa, pero no hay registros.
+            res.status(200).json([]);
         }
-        res.status(400).json({ message: 'No existen traslados' });
     } catch (error) {
-        logger.error(error.message);
-        res.status(500).json({ message: 'Error al obtener traslados' });
+        console.log(error);
+        res.status(500).json({ message: error.message });
     }
 };
 
+
+// Mostrar un registro
 export const getTraslado = async (req, res) => {
     try {
-        const traslado = await Traslado.findByPk(req.params.id);
+        const traslado = await Traslado.findByPk(req.params.id, {
+            include: [
+                {
+                    model: Producto,
+                    as: 'producto'  // Alias, si usas uno diferente, cámbialo aquí
+                },
+                {
+                    model: Responsable,
+                    as: 'responsable' // Alias, si usas uno diferente, cámbialo aquí
+                }
+            ]
+        });
         if (traslado) {
             res.status(200).json(traslado);
         } else {
             res.status(404).json({ message: 'Traslado no encontrado' });
         }
     } catch (error) {
-        logger.error(error.message);
-        res.status(500).json({ message: 'Error al obtener el traslado' });
+        res.status(500).json({ message: error.message });
     }
-};
+}
 
+// Crear un Traslado
 export const createTraslado = async (req, res) => {
-
     const { Fec_Traslado, Des_Traslado, Id_Producto, Can_Producto, Val_Unitario, Val_Traslado, Id_Responsable } = req.body;
 
     if (!Fec_Traslado || !Des_Traslado || !Id_Producto || !Can_Producto || !Val_Unitario || !Val_Traslado || !Id_Responsable) {
-        logger.warn('Todos los campos son obligatorios');
+        console.warn('Todos los campos son obligatorios');
         return res.status(400).json({ message: 'Todos los campos son obligatorios' });
     }
 
     try {
-        const traslado = await Traslado.create(req.body);
-        res.status(201).json({ message: 'Traslado creado exitosamente', traslado });
+        const nuevoTraslado = await Traslado.create(req.body);
+        if (nuevoTraslado.Id_Traslado) {
+            res.status(201).json({ message: '¡Registro Creado Exitosamente!', traslado: nuevoTraslado });
+        } else {
+            res.status(400).json({ message: '¡Ocurrió un error con la creación!', traslado: nuevoTraslado });
+        }
     } catch (error) {
-        logger.error(error.message);
-        res.status(500).json({ message: 'Error al crear el traslado' });
+        res.status(400).json({ message: error.message });
     }
-};
+}
 
+// Actualizar un registro 
 export const updateTraslado = async (req, res) => {
-
     const { Fec_Traslado, Des_Traslado, Id_Producto, Can_Producto, Val_Unitario, Val_Traslado, Id_Responsable } = req.body;
 
     if (!Fec_Traslado || !Des_Traslado || !Id_Producto || !Can_Producto || !Val_Unitario || !Val_Traslado || !Id_Responsable) {
-        logger.warn('Todos los campos son obligatorios');
+        console.warn('Todos los campos son obligatorios');
         return res.status(400).json({ message: 'Todos los campos son obligatorios' });
     }
     
     try {
-        const [updated] = await Traslado.update(req.body, {
+        const [affectedRows] = await Traslado.update(req.body, {
             where: { Id_Traslado: req.params.id }
         });
-        if (updated) {
-            const updatedTraslado = await Traslado.findByPk(req.params.id);
-            res.status(200).json({ message: 'Traslado actualizado exitosamente', updatedTraslado });
+        if (affectedRows > 0) {
+            res.status(200).json({ message: '¡Registro Actualizado Exitosamente!' });
         } else {
             res.status(404).json({ message: 'Traslado no encontrado' });
         }
     } catch (error) {
-        logger.error(error.message);
-        res.status(500).json({ message: 'Error al actualizar el traslado' });
+        res.status(500).json({ message: error.message });
     }
-};
+}
 
+// Borrar un registro
 export const deleteTraslado = async (req, res) => {
     try {
         const deleted = await Traslado.destroy({
             where: { Id_Traslado: req.params.id }
         });
         if (deleted) {
-            res.status(200).json({ message: 'Traslado eliminado exitosamente' });
+            res.status(200).json({ message: '¡Registro Borrado Exitosamente!' });
         } else {
             res.status(404).json({ message: 'Traslado no encontrado' });
         }
     } catch (error) {
-        logger.error(error.message);
-        res.status(500).json({ message: 'Error al eliminar el traslado' });
-    }
-};
-
-export const getQueryTraslado = async (req, res) => {
-    try {
-        const traslados = await TrasladosModel.findAll({
-            where: {
-                Fec_Traslado: {
-                    [Sequelize.Op.like]: `%${req.params.Fec_Traslado}%`
-                }
-            }
-        });
-        if (traslados.length > 0) {
-            res.status(200).json(traslados);
-        } else {
-            res.status(404).json({ message: "No se encontraron registros para la fecha especificada" });
-        }
-    } catch (error) {
         res.status(500).json({ message: error.message });
     }
-};
+}

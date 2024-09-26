@@ -1,10 +1,11 @@
 import express from "express";
-import { createProducto, deleteProducto, getAllProducto, getProducto, updateProducto, getQueryProducto } from "../controllers/productoController.js";
+import { uploadImage, deleteProducto, getAllProducto, getProducto, updateProducto, upload } from "../controllers/productoController.js";
 import winston from "winston";
 import DailyRotateFile from "winston-daily-rotate-file";
 
 const router = express.Router();
 
+// Configuración de logger con Winston
 const logger = winston.createLogger({
     level: "error",
     format: winston.format.combine(
@@ -20,16 +21,20 @@ const logger = winston.createLogger({
     ]
 });
 
+// Middleware para registrar errores
 const logError = (err, req, res, next) => {
     logger.error(err.message);
     res.status(500).json({ error: 'Internal Server Error' });
 };
 
-router.get('/', getAllProducto);
-router.get('/:id', getProducto);
-router.post('/', createProducto);
-router.put('/:id', updateProducto);
-router.delete('/:id', deleteProducto);
-router.get('/Nom_Responsable/:Nom_Responsable', getQueryProducto);
+// Rutas
+router.post('/', upload.single('Ima_Producto'), uploadImage);  // Subir imagen y crear producto
+router.get('/', getAllProducto);  // Obtener todos los productos
+router.get('/:id', getProducto);  // Obtener un producto por su ID
+router.put('/:id', upload.single('Ima_Producto'), updateProducto);  // Actualizar un producto
+router.delete('/:id', deleteProducto);  // Eliminar un producto
+
+// Middleware para manejar errores en la ruta
+router.use(logError);
 
 export default router;

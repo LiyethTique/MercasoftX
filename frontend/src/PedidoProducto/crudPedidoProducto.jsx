@@ -6,7 +6,7 @@ import Sidebar from '../Sidebar/Sidebar'
 
 import Swal from 'sweetalert2'
 
-const URI = process.env.SERVER_BACK + '/pedidoproducto/' // Ajusta la URI
+const URI = process.env.REACT_APP_SERVER_BACK + '/pedidoproducto/' // Ajusta la URI
 
 const CrudPedidoProducto = () => {
 

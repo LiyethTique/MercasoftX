@@ -1,118 +1,124 @@
-import CarritoModel from "../models/carritoModel.js";
-import logger from "../logs/logger.js";
+import Carrito from "../models/carritoModel.js";
+import Producto from "../models/productoModel.js";
+import Cliente from "../models/clienteModel.js";
 
-// Mostrar todos los registros
-export const getAllCarrito = async (req, res, next) => {
+// Mostrar todos los carritos
+export const getAllCarrito = async (req, res) => {
     try {
-        const carritos = await CarritoModel.findAll();
-        logger.info('Todos los carritos recuperados');
-        res.status(200).json(carritos);
+        const carritos = await Carrito.findAll({
+            include: [
+                { 
+                    model: Producto,
+                    as: 'producto'  // Alias para la relación con Producto
+                },
+                {
+                    model: Cliente,
+                    as: 'cliente'  // Alias para la relación con Cliente
+                }
+            ]
+        });
+        if (carritos.length > 0) {
+            res.status(200).json(carritos);
+        } else {
+            res.status(400).json({ message: "No existen carritos" });
+        }
     } catch (error) {
-        logger.error(`Error al  recuperar todos los carritos: ${error.message}`);
-        next(error);
+        console.log(error);
+        res.status(500).json({ message: error.message });
     }
-};
+}
 
-// Mostrar un registro
-export const getCarrito = async (req, res, next) => {
+// Mostrar un carrito por ID
+export const getCarrito = async (req, res) => {
     try {
-        const carrito = await CarritoModel.findByPk(req.params.id);
+        const carrito = await Carrito.findByPk(req.params.id, {
+            include: [
+                { 
+                    model: Producto,
+                    as: 'producto'
+                },
+                {
+                    model: Cliente,
+                    as: 'cliente'
+                }
+            ]
+        });
         if (carrito) {
-            logger.info(`Carrito recuperado: ${carrito.Id_Carrito}`);
             res.status(200).json(carrito);
         } else {
-            logger.warn(`Carrito no encontrado con id: ${req.params.id}`);
             res.status(404).json({ message: 'Carrito no encontrado' });
         }
     } catch (error) {
-        logger.error(`Error al recuperar el carrito: ${error.message}`);
-        next(error);
+        res.status(500).json({ message: error.message });
     }
-};
+}
 
-// Crear un carrito
-export const createCarrito = async (req, res, next) => {
+// Crear un nuevo carrito
+// Crear un nuevo carrito
+// Crear un nuevo carrito
+export const createCarrito = async (req, res) => {
+    const { Id_Producto, Can_Producto, Id_Cliente } = req.body;
 
-    const { Can_Producto } = req.body;
-
-    if (!Can_Producto) {
-        logger.warn('El campo Can_Producto es obligatorio');
-        return res.status(400).json({ message: 'El campo Can_Producto es obligatorio' });
+    if (!Id_Producto) {
+        return res.status(400).json({ message: 'El campo Id_Producto es obligatorio' });
     }
-
 
     try {
-        const nuevoCarrito = await CarritoModel.create(req.body);
-        logger.info(`Carrito creado: ${nuevoCarrito.Id_Carrito}`);
+        const producto = await Producto.findByPk(Id_Producto);
+        if (!producto) {
+            return res.status(404).json({ message: 'Producto no encontrado' });
+        }
+
+        // Crear el carrito, haciendo que Id_Cliente sea opcional
+        const nuevoCarrito = await Carrito.create({
+            Id_Producto,
+            Can_Producto: Can_Producto || null,  // Valor predeterminado
+            Id_Cliente: Id_Cliente || null   // Valor opcional
+        });
+        
         res.status(201).json({ message: '¡Carrito creado exitosamente!', carrito: nuevoCarrito });
     } catch (error) {
-        logger.error(`Error al crear el carrito: ${error.message}`);
-        next(error);
+        console.error('Error al crear el carrito:', error);
+        res.status(500).json({ message: error.message });
     }
 };
 
-// Actualizar un registro
-export const updateCarrito = async (req, res, next) => {
 
-    const { Can_Producto } = req.body;
+// Actualizar un carrito existente
+export const updateCarrito = async (req, res) => {
+    const { Id_Producto, Can_Producto, Id_Cliente } = req.body;
 
-    if (!Can_Producto) {
-        logger.warn('El campo Can_Producto es obligatorio');
-        return res.status(400).json({ message: 'El campo Can_Producto es obligatorio' });
+    if (!Id_Producto || !Can_Producto || !Id_Cliente) {
+        console.warn('Todos los campos son obligatorios');
+        return res.status(400).json({ message: 'Todos los campos son obligatorios' });
     }
-
+    
     try {
-        const [updated] = await CarritoModel.update(req.body, {
+        const [affectedRows] = await Carrito.update(req.body, {
             where: { Id_Carrito: req.params.id }
         });
-        if (updated) {
-            logger.info(`Carrito actualizado: ${req.params.id}`);
+        if (affectedRows > 0) {
             res.status(200).json({ message: '¡Carrito actualizado exitosamente!' });
         } else {
-            logger.warn(`Carrito no encontrado con id: ${req.params.id}`);
             res.status(404).json({ message: 'Carrito no encontrado' });
         }
     } catch (error) {
-        logger.error(`Error al actualizar el carrito: ${error.message}`);
-        next(error);
+        res.status(500).json({ message: error.message });
     }
-};
+}
 
-// Borrar un registro
-export const deleteCarrito = async (req, res, next) => {
+// Borrar un carrito
+export const deleteCarrito = async (req, res) => {
     try {
-        const deleted = await CarritoModel.destroy({
+        const deleted = await Carrito.destroy({
             where: { Id_Carrito: req.params.id }
         });
         if (deleted) {
-            logger.info(`Carrito borrado: ${req.params.id}`);
             res.status(200).json({ message: '¡Carrito borrado exitosamente!' });
         } else {
-            logger.warn(`Carrito no encontrado con id: ${req.params.id}`);
             res.status(404).json({ message: 'Carrito no encontrado' });
         }
     } catch (error) {
-        logger.error(`Error al borrar el carrito: ${error.message}`);
-        next(error);
-    }
-};
-
-
-export const getQueryCarrito = async (req, res) => {
-    try {
-        const carrito = await CarritosModel.findAll({
-            where: {
-                Id_Carrito: {
-                    [Sequelize.Op.like]: `%${req.params.Id_carrito}%`
-                }
-            }
-        })
-        if(carrito.length > 0){
-            res.status(200).json(carrito)
-        } else {
-            res.status(404).json({ message: "No se encontraron registros para la Id especificada" })
-        }
-    } catch (error) {
-        res.status(500).json({ message: error.message })
+        res.status(500).json({ message: error.message });
     }
 }

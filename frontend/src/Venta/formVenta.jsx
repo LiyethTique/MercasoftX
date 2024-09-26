@@ -1,155 +1,122 @@
-import axios from 'axios';
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Button } from 'react-bootstrap';
+import Swal from 'sweetalert2';
 
-const FormVenta = ({ buttonForm, venta, URI, updateTextButton, setIsFormVisible }) => {
-    const [Fec_Venta, setFecha] = useState('');
-    const [Val_Venta, setValor] = useState('');
-    const [Id_Pedido, setId_Pedido] = useState('');
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [error, setError] = useState(null);
+const FormVenta = ({ buttonForm, venta, onSubmit, onClose }) => {
+  const [formData, setFormData] = useState({
+    Fec_Venta: '',
+    Val_Venta: '',
+    Id_Pedido: ''
+  });
 
-    const modalCloseButtonRef = useRef(null); // Ref para el botón de cierre del modal
+  const [initialData, setInitialData] = useState({
+    Fec_Venta: '',
+    Val_Venta: '',
+    Id_Pedido: ''
+  });
 
-    const sendForm = async (e) => {
-        e.preventDefault();
-        setIsSubmitting(true);
-        setError(null);
+  const [errors, setErrors] = useState({
+    Fec_Venta: '',
+    Val_Venta: '',
+    Id_Pedido: ''
+  });
 
-        const data = {
-            Fec_Venta,
-            Val_Venta: parseFloat(Val_Venta),
-            Id_Pedido
-        };
+  useEffect(() => {
+    if (venta) {
+      setFormData(venta);
+      setInitialData(venta); // Guardar los datos iniciales
+    }
+  }, [venta]);
 
-        if (!URI) {
-            setError("La URL de la API no está definida.");
-            setIsSubmitting(false);
-            return;
-        }
+  const validateForm = () => {
+    const newErrors = {};
 
-        const url = buttonForm === 'Actualizar'
-            ? `${URI}/${venta.Id_Venta}`.replace(/\/+$/, '')
-            : URI;
+    if (!formData.Fec_Venta) newErrors.Fec_Venta = 'La fecha es requerida.';
+    if (!formData.Val_Venta) newErrors.Val_Venta = 'El valor es requerido.';
+    if (!formData.Id_Pedido) newErrors.Id_Pedido = 'El ID del pedido es requerido.';
 
-        const method = buttonForm === 'Actualizar' ? axios.put : axios.post;
+    if (formData.Val_Venta && isNaN(parseFloat(formData.Val_Venta))) {
+      newErrors.Val_Venta = 'El valor debe ser un número.';
+    }
 
-        try {
-            console.log('Datos enviados:', data);
-            console.log('URL de la solicitud:', url);
-            
-            const response = await method(url, data, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
+    return newErrors;
+  };
 
-            if (response.status >= 200 && response.status < 300) {
-                updateTextButton('Enviar');
-                clearForm();
-                if (typeof setIsFormVisible === 'function') {
-                    setIsFormVisible(false);
-                }
+  const hasChanges = () => {
+    return Object.keys(formData).some(key => formData[key] !== initialData[key]);
+  };
 
-                // Cerrar modal usando ref
-                if (modalCloseButtonRef.current) {
-                    modalCloseButtonRef.current.click();
-                } else {
-                    console.error("No se encontró el botón para cerrar el modal.");
-                }
-            } else {
-                setError(response.data?.message || "Error al procesar la solicitud");
-            }
-        } catch (error) {
-            console.error("Error en la solicitud:", error.message || 'Error desconocido');
-            setError(error.response?.data?.message || "Error al procesar la solicitud");
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
+  const handleChange = (e) => {
+    const { name, value } = e.target;
 
-    const clearForm = () => {
-        setFecha('');
-        setValor('');
-        setId_Pedido('');
-    };
+    setFormData({ ...formData, [name]: value });
+  };
 
-    const setData = () => {
-        if (venta) {
-            setFecha(venta.Fec_Venta || '');
-            setValor(venta.Val_Venta || '');
-            setId_Pedido(venta.Id_Pedido || '');
-        }
-    };
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-    useEffect(() => {
-        setData();
-    }, [venta]);
+    const formErrors = validateForm();
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
+      return;
+    }
 
-    return (
-        <form id="ventaForm" onSubmit={sendForm} className="table table-striped">
-            {error && <div className="alert alert-danger">{error}</div>}
-            <div className="mb-3">
-                <label htmlFor="fechaVenta" className="form-label">Fecha Venta</label>
-                <input 
-                    type="date" 
-                    id="fechaVenta" 
-                    className="form-control" 
-                    value={Fec_Venta} 
-                    required 
-                    onChange={(e) => setFecha(e.target.value)} 
-                />
-            </div>
+    onSubmit(formData);
+  };
 
-            <div className="mb-3">
-                <label htmlFor="valorVenta" className="form-label">Valor Venta</label>
-                <input 
-                    type="number" 
-                    id="valorVenta" 
-                    className="form-control" 
-                    value={Val_Venta} 
-                    required 
-                    onChange={(e) => setValor(e.target.value)} 
-                />
-            </div>
+  const handleClose = () => {
+    if (onClose) {
+      onClose(); // Llama a la función de cierre pasada por props
+    }
+  };
 
-            <div className="mb-3">
-                <label htmlFor="codigoPedido" className="form-label">Código del pedido</label>
-                <input 
-                    type="number" 
-                    id="codigoPedido" 
-                    className="form-control" 
-                    value={Id_Pedido} 
-                    required 
-                    onChange={(e) => setId_Pedido(e.target.value)} 
-                />
-            </div>
-
-            <button 
-                type="submit" 
-                className="btn btn-primary" 
-                disabled={isSubmitting}
-            >
-                {isSubmitting ? 'Enviando...' : buttonForm}
-            </button>
-            <button 
-                type="button" 
-                className="btn btn-secondary ms-2" 
-                onClick={() => {
-                    clearForm();
-                    if (typeof setIsFormVisible === 'function') {
-                        setIsFormVisible(false);
-                    }
-                    // Usar ref para cerrar el modal
-                    if (modalCloseButtonRef.current) {
-                        modalCloseButtonRef.current.click();
-                    }
-                }}
-                ref={modalCloseButtonRef} // Asignar ref al botón de cierre
-            >
-                Cerrar
-            </button>
-        </form>
-    );
+  return (
+    <div style={{ padding: '20px', maxWidth: '500px', margin: '0 auto' }}>
+      <div className="mb-3">
+        <label htmlFor="Fec_Venta" className="form-label">Fecha de Venta</label>
+        <input
+          type="date"
+          className={`form-control ${errors.Fec_Venta ? 'is-invalid' : ''}`}
+          id="Fec_Venta"
+          name="Fec_Venta"
+          value={formData.Fec_Venta}
+          onChange={handleChange}
+        />
+        {errors.Fec_Venta && <div className="invalid-feedback">{errors.Fec_Venta}</div>}
+      </div>
+      <div className="mb-3">
+        <label htmlFor="Val_Venta" className="form-label">Valor de Venta</label>
+        <input
+          type="number"
+          step="0.01"
+          className={`form-control ${errors.Val_Venta ? 'is-invalid' : ''}`}
+          id="Val_Venta"
+          name="Val_Venta"
+          value={formData.Val_Venta}
+          onChange={handleChange}
+        />
+        {errors.Val_Venta && <div className="invalid-feedback">{errors.Val_Venta}</div>}
+      </div>
+      <div className="mb-3">
+        <label htmlFor="Id_Pedido" className="form-label">ID del Pedido</label>
+        <input
+          type="text"
+          className={`form-control ${errors.Id_Pedido ? 'is-invalid' : ''}`}
+          id="Id_Pedido"
+          name="Id_Pedido"
+          value={formData.Id_Pedido}
+          onChange={handleChange}
+        />
+        {errors.Id_Pedido && <div className="invalid-feedback">{errors.Id_Pedido}</div>}
+      </div>
+      <div className="mb-3 text-center">
+        <Button variant="primary" onClick={handleSubmit}>
+          {buttonForm}
+        </Button>
+      </div>
+      
+    </div>
+  );
 };
 
 export default FormVenta;

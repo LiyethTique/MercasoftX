@@ -1,7 +1,7 @@
 import React from 'react';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
 
-const ModalForm = ({ isOpen, onClose, title, children, onSubmit, buttonText }) => {
+const ModalForm = ({ isOpen, onClose, title, children }) => {
   return (
     <Modal
       show={isOpen}
@@ -16,12 +16,6 @@ const ModalForm = ({ isOpen, onClose, title, children, onSubmit, buttonText }) =
       <Modal.Body>
         {children}
       </Modal.Body>
-        {onSubmit && (
-          <Button variant="primary" onClick={onSubmit}>
-            {buttonText || 'Guardar'}
-          </Button>
-        )}
-      
     </Modal>
   );
 };

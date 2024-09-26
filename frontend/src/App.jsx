@@ -1,7 +1,7 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Carrito from './Carrito/crudCarrito.jsx';
-import Categoria from './Categoria/crudCategoria.jsx';
+// import area from './area/area.jsx';
 import Cliente from './Cliente/crudCliente.jsx';
 import Entrada from './Entrada/crudEntrada.jsx';
 import Pedido from './Pedido/crudPedido.jsx';
@@ -11,11 +11,11 @@ import Responsable from './Responsable/crudResponsable.jsx';
 import Traslado from './Traslado/crudTraslado.jsx';
 import Unidad from './Unidad/crudUnidad.jsx';
 import Venta from './Venta/crudVenta.jsx';
-import Imagen from './raiz/Imagen.jsx';
 import TeamPresentation from './contact/equipo.jsx';
 import ContactPage from './contact/imageCarrousel.jsx';
 import Login from './iniciarsesion/IniciarSesion.jsx';
 import Auth from './registrar/registrar.jsx';
+import CatalogPage from './components/catalogPage/catalogPage.jsx';
 
 // Función para verificar si el usuario está autenticado
 const isAuthenticated = () => {
@@ -35,8 +35,7 @@ function App() {
   return (
     <>
       <Routes>
-        {/* Rutas públicas */}
-        <Route path="/" element={<Imagen />} />
+        <Route path="/" element={<CatalogPage />} />
         <Route path="/team-presentation" element={<TeamPresentation />} />
         <Route path="/contacto" element={<ContactPage />} />
         <Route path="/login" element={<Login />} />
@@ -51,14 +50,14 @@ function App() {
             </ProtectedRoute>
           } 
         />
-        <Route 
-          path="/categoria" 
+        {/* <Route 
+          path="/area" 
           element={
             <ProtectedRoute>
-              <Categoria />
+              <area />
             </ProtectedRoute>
           } 
-        />
+        /> */}
         <Route 
           path="/cliente" 
           element={

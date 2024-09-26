@@ -4,15 +4,15 @@ const FormProducto = ({ buttonForm, producto, onSubmit }) => {
   const [formData, setFormData] = useState({
     Nom_Producto: '',
     Car_Producto: '',
-    Pre_Promedio: '',
     Exi_Producto: '',
     Ima_Producto: '',
     Fec_Vencimiento: '',
-    Id_Categoria: '',
-    Pre_Anterior: '',
+    Id_Unidad: '',
     Uni_DeMedida: '',
     Pre_Producto: ''
   });
+  const [imageFile, setImageFile] = useState(null);
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     if (producto) {
@@ -20,13 +20,38 @@ const FormProducto = ({ buttonForm, producto, onSubmit }) => {
     }
   }, [producto]);
 
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.Nom_Producto.trim()) newErrors.Nom_Producto = 'El nombre del producto es obligatorio.';
+    if (!formData.Car_Producto.trim()) newErrors.Car_Producto = 'La descripción es obligatoria.';
+    if (!formData.Exi_Producto || formData.Exi_Producto <= 0) newErrors.Exi_Producto = 'Las existencias deben ser mayor a 0.';
+    if (!formData.Fec_Vencimiento) newErrors.Fec_Vencimiento = 'La fecha de vencimiento es obligatoria.';
+    if (!formData.Id_Unidad || formData.Id_Unidad <= 0) newErrors.Id_Unidad = 'El ID de unidad debe ser mayor a 0.';
+    if (!formData.Uni_DeMedida.trim()) newErrors.Uni_DeMedida = 'La unidad de medida es obligatoria.';
+    if (!formData.Pre_Producto || formData.Pre_Producto <= 0) newErrors.Pre_Producto = 'El precio del producto debe ser mayor a 0.';
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (e.target.name === 'Ima_Producto') {
+      setImageFile(e.target.files[0]);
+    } else {
+      setFormData({ ...formData, [e.target.name]: e.target.value });
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData);
+    if (validateForm()) {
+      const updatedData = { ...formData };
+      if (imageFile) {
+        updatedData.Ima_Producto = imageFile;
+      }
+      onSubmit(updatedData);
+    }
   };
 
   return (
@@ -42,6 +67,7 @@ const FormProducto = ({ buttonForm, producto, onSubmit }) => {
           onChange={handleChange}
           required
         />
+        {errors.Nom_Producto && <span className="text-danger">{errors.Nom_Producto}</span>}
       </div>
       <div className="mb-3">
         <label htmlFor="Car_Producto" className="form-label">Descripción</label>
@@ -54,18 +80,7 @@ const FormProducto = ({ buttonForm, producto, onSubmit }) => {
           onChange={handleChange}
           required
         />
-      </div>
-      <div className="mb-3">
-        <label htmlFor="Pre_Promedio" className="form-label">Precio Promedio</label>
-        <input
-          type="number"
-          className="form-control"
-          id="Pre_Promedio"
-          name="Pre_Promedio"
-          value={formData.Pre_Promedio}
-          onChange={handleChange}
-          required
-        />
+        {errors.Car_Producto && <span className="text-danger">{errors.Car_Producto}</span>}
       </div>
       <div className="mb-3">
         <label htmlFor="Exi_Producto" className="form-label">Existencias</label>
@@ -77,17 +92,19 @@ const FormProducto = ({ buttonForm, producto, onSubmit }) => {
           value={formData.Exi_Producto}
           onChange={handleChange}
           required
+          min="1"
         />
+        {errors.Exi_Producto && <span className="text-danger">{errors.Exi_Producto}</span>}
       </div>
       <div className="mb-3">
         <label htmlFor="Ima_Producto" className="form-label">Imagen del Producto</label>
         <input
-          type="text"
+          type="file"
           className="form-control"
           id="Ima_Producto"
           name="Ima_Producto"
-          value={formData.Ima_Producto}
           onChange={handleChange}
+          accept="image/*"
         />
       </div>
       <div className="mb-3">
@@ -101,29 +118,21 @@ const FormProducto = ({ buttonForm, producto, onSubmit }) => {
           onChange={handleChange}
           required
         />
+        {errors.Fec_Vencimiento && <span className="text-danger">{errors.Fec_Vencimiento}</span>}
       </div>
       <div className="mb-3">
-        <label htmlFor="Id_Categoria" className="form-label">Categoría</label>
+        <label htmlFor="Id_Unidad" className="form-label">ID Unidad</label>
         <input
           type="number"
           className="form-control"
-          id="Id_Categoria"
-          name="Id_Categoria"
-          value={formData.Id_Categoria}
+          id="Id_Unidad"
+          name="Id_Unidad"
+          value={formData.Id_Unidad}
           onChange={handleChange}
           required
+          min="1"
         />
-      </div>
-      <div className="mb-3">
-        <label htmlFor="Pre_Anterior" className="form-label">Precio Anterior</label>
-        <input
-          type="number"
-          className="form-control"
-          id="Pre_Anterior"
-          name="Pre_Anterior"
-          value={formData.Pre_Anterior}
-          onChange={handleChange}
-        />
+        {errors.Id_Unidad && <span className="text-danger">{errors.Id_Unidad}</span>}
       </div>
       <div className="mb-3">
         <label htmlFor="Uni_DeMedida" className="form-label">Unidad de Medida</label>
@@ -136,9 +145,10 @@ const FormProducto = ({ buttonForm, producto, onSubmit }) => {
           onChange={handleChange}
           required
         />
+        {errors.Uni_DeMedida && <span className="text-danger">{errors.Uni_DeMedida}</span>}
       </div>
       <div className="mb-3">
-        <label htmlFor="Pre_Producto" className="form-label">Precio</label>
+        <label htmlFor="Pre_Producto" className="form-label">Precio del Producto</label>
         <input
           type="number"
           className="form-control"
@@ -147,8 +157,11 @@ const FormProducto = ({ buttonForm, producto, onSubmit }) => {
           value={formData.Pre_Producto}
           onChange={handleChange}
           required
+          min="1"
         />
+        {errors.Pre_Producto && <span className="text-danger">{errors.Pre_Producto}</span>}
       </div>
+
       <button type="submit" className="btn btn-primary">
         {buttonForm}
       </button>

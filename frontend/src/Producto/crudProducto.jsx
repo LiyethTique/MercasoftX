@@ -47,11 +47,20 @@ const CrudProducto = () => {
 
   const handleSubmitProducto = async (data) => {
     try {
+      const formData = new FormData();
+      for (let key in data) {
+        formData.append(key, data[key]);
+      }
+
       if (buttonForm === 'Actualizar') {
-        await axios.put(`${URI}${producto.Id_Producto}`, data);
+        await axios.put(`${URI}${producto.Id_Producto}`, formData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
         Swal.fire("Actualizado!", "El producto ha sido actualizado.", "success");
       } else {
-        await axios.post(URI, data);
+        await axios.post(URI, formData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
         Swal.fire("Creado!", "El producto ha sido creado.", "success");
       }
       getAllProductos();
@@ -91,20 +100,18 @@ const CrudProducto = () => {
     setIsModalOpen(true);
   };
 
-  const titles = ['ID', 'Nombre', 'Características', 'Precio Promedio', 'Existencias', 'Imagen', 'Fecha de Vencimiento', 'ID Categoría', 'Precio Anterior', 'Unidad de Medida', 'Precio', 'Acciones'];
+  const titles = ['ID', 'Nombre', 'Características', 'Existencias', 'Imagen', 'Fecha de Vencimiento', 'ID Unidad', 'Unidad de Medida', 'Precio', 'Acciones'];
   const data = productoList.map(producto => [
     producto.Id_Producto,
     producto.Nom_Producto,
     producto.Car_Producto,
-    producto.Pre_Promedio,
     producto.Exi_Producto,
-    producto.Ima_Producto,
+    <img src={`/imagenes/${producto.Ima_Producto}`} alt={producto.Nom_Producto} style={{ maxWidth: '100px', height: 'auto' }} />,
     producto.Fec_Vencimiento,
-    producto.Id_Categoria,
-    producto.Pre_Anterior,
+    producto.Id_Unidad,
     producto.Uni_DeMedida,
     producto.Pre_Producto,
-    <div key={producto.Id_Producto}>
+    <div key={producto.Id_Producto} className="acciones">
       <a 
         href="#!"
         className="btn-custom me-2"
@@ -119,7 +126,7 @@ const CrudProducto = () => {
       </a>
       <a 
         href="#!"
-        className="btn-custom"
+        className ="btn-custom"
         onClick={() => deleteProducto(producto.Id_Producto)}
         title="Borrar"
       >
@@ -164,7 +171,6 @@ const CrudProducto = () => {
           <FormProducto 
             buttonForm={buttonForm}
             producto={producto}
-            URI={URI}
             updateTextButton={setButtonForm}
             setIsFormVisible={setIsModalOpen}
             onSubmit={handleSubmitProducto}

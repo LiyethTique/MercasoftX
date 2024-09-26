@@ -1,0 +1,5 @@
+2024-09-18 21:44:33: error: Cannot delete or update a parent row: a foreign key constraint fails (`mercasoftx`.`entrada`, CONSTRAINT `Id_Unidad` FOREIGN KEY (`Id_Unidad`) REFERENCES `unidad` (`Id_Unidad`))
+2024-09-18 21:44:45: error: Cannot delete or update a parent row: a foreign key constraint fails (`mercasoftx`.`entrada`, CONSTRAINT `Id_Unidad` FOREIGN KEY (`Id_Unidad`) REFERENCES `unidad` (`Id_Unidad`))
+2024-09-18 21:44:48: error: Cannot delete or update a parent row: a foreign key constraint fails (`mercasoftx`.`entrada`, CONSTRAINT `Id_Unidad` FOREIGN KEY (`Id_Unidad`) REFERENCES `unidad` (`Id_Unidad`))
+2024-09-18 21:45:12: error: Cannot delete or update a parent row: a foreign key constraint fails (`mercasoftx`.`entrada`, CONSTRAINT `Id_Unidad` FOREIGN KEY (`Id_Unidad`) REFERENCES `unidad` (`Id_Unidad`))
+2024-09-18 21:45:37: error: Cannot delete or update a parent row: a foreign key constraint fails (`mercasoftx`.`entrada`, CONSTRAINT `Id_Unidad` FOREIGN KEY (`Id_Unidad`) REFERENCES `unidad` (`Id_Unidad`))

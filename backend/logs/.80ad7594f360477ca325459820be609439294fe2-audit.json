@@ -1,0 +1,30 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "logs\\.80ad7594f360477ca325459820be609439294fe2-audit.json",
+    "files": [
+        {
+            "date": 1726701864516,
+            "name": "logs\\pedido-2024-09-18.log",
+            "hash": "2ad7baadb073315eec0a10feccc40ef90ab4090c0661e50e69356f85e1b8bc4f"
+        },
+        {
+            "date": 1726801561792,
+            "name": "logs\\pedido-2024-09-19.log",
+            "hash": "3272c3dd9bc3449592f92672ff577dbbb9ed72870a89ce637d2898f9db6c69da"
+        },
+        {
+            "date": 1727100851496,
+            "name": "logs\\pedido-2024-09-23.log",
+            "hash": "e5e99afa11b134d3d1c033142ef22987cd873db391dc7646dcdfb77e82a794a8"
+        },
+        {
+            "date": 1727281325693,
+            "name": "logs\\pedido-2024-09-25.log",
+            "hash": "8f4779f9a4ab29226e980de723973298cf940c6920d208a3f44f7122874dd470"
+        }
+    ],
+    "hashType": "sha256"
+}

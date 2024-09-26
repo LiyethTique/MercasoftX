@@ -74,14 +74,12 @@ function Sidebar() {
                 </Link>
                 <hr />
 
-                {/* Lista de navegación */}
                 <ul className="nav nav-pills flex-column mb-auto">
                     {renderNavItem('/carrito/', 'shopping_cart.svg', 'Carrito', selectedOption, handleOptionSelect)}
-                    {renderNavItem('/categoria/', 'category.svg', 'Categoria', selectedOption, handleOptionSelect)}
+                    {renderNavItem('/area/', 'arae.svg', 'Area', selectedOption, handleOptionSelect)}
                     {renderNavItem('/cliente/', 'customer.svg', 'Cliente', selectedOption, handleOptionSelect)}
                     {renderNavItem('/entrada/', 'transfer.svg', 'Entrada', selectedOption, handleOptionSelect)}
                     {renderNavItem('/pedido/', 'orders.svg', 'Pedido', selectedOption, handleOptionSelect)}
-                    {/* {renderNavItem('/pedidoproducto/', 'orderproduct.svg', 'PedidoProducto', selectedOption, handleOptionSelect)} */}
                     {renderNavItem('/producto/', 'product.svg', 'Producto', selectedOption, handleOptionSelect)}
                     {renderNavItem('/responsable/', 'responsible.svg', 'Responsable', selectedOption, handleOptionSelect)}
                     {renderNavItem('/traslado/', 'entrance.svg', 'Traslado', selectedOption, handleOptionSelect)}

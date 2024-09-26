@@ -7,7 +7,10 @@ import WriteTable from '../Tabla/Data-Table';
 import ModalForm from '../Model/Model.jsx';
 import AlertaBDVacia from '../alertas/alertaBDVacia.jsx'
 
+
 const URI = (process.env.REACT_APP_SERVER_BACK || 'http://localhost:3002') + '/entrada/';
+
+const URI = process.env.REACT_APP_SERVER_BACK + '/entrada/';
 
 const CrudEntrada = () => {
   const [entradaList, setEntradaList] = useState([]);
@@ -85,7 +88,7 @@ const CrudEntrada = () => {
       confirmButtonText: 'Sí, eliminar',
       cancelButtonText: 'Cancelar'
     });
-  
+
     // Si el usuario confirma la eliminación
     if (result.isConfirmed) {
       try {
@@ -100,7 +103,7 @@ const CrudEntrada = () => {
       // Si el usuario cancela, mostrar un mensaje de cancelación
       Swal.fire('Cancelado', 'La entrada no fue eliminada', 'info');
     }
-  };  
+  };
 
   const titles = ['ID', 'Fecha Entrada', 'Hora', 'Unidad', 'Producto', 'Responsable', 'Cantidad', 'Fecha Vencimiento', 'Acciones'];
   const data = entradaList.map(entrada => [
@@ -129,7 +132,7 @@ const CrudEntrada = () => {
         <center><h1>{moduleName}</h1></center>
         <div className="d-flex justify-content-between mb-3">
           <button className="btn btn-success d-flex align-items-center" onClick={handleShowForm}>
-          <img src="/plus-circle (1).svg" alt="Agregar Entrada" style={{ width: '20px', height: '20px', marginRight: '8px', filter: 'invert(100%)' }} />
+            <img src="/plus-circle (1).svg" alt="Agregar Entrada" style={{ width: '20px', height: '20px', marginRight: '8px', filter: 'invert(100%)' }} />
             Registrar
           </button>
         </div>

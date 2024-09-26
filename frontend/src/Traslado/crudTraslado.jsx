@@ -27,12 +27,17 @@ const CrudTraslado = () => {
       if (Array.isArray(response.data)) {
         if (response.data.length === 0) {
           setTrasladoList([]);
+
+
+          setShowMessage(true);  // Show message if no traslados are found
         } else {
           setTrasladoList(response.data);
+          setShowMessage(false);  // Hide message if traslados are found
         }
       } else {
         console.error("Unexpected response format:", response.data);
         setTrasladoList([]);
+        setShowMessage(true);  // Show message if response data is not an array
       }
     } catch (error) {
       console.error("Error fetching traslados:", error);
@@ -78,6 +83,7 @@ const CrudTraslado = () => {
       setButtonForm('Enviar');
       setTraslado(null);
       setOriginalTraslado(null);  // Clear the original traslado
+      setShowMessage(false);  // Hide the message when a new traslado is created
     } catch (error) {
       Swal.fire("Error", error.response?.data?.message || "Error al guardar el traslado", "error");
     }
@@ -157,6 +163,14 @@ const CrudTraslado = () => {
         <center>
           <h1>Gestionar Traslados</h1>
         </center>
+
+
+
+        {showMessage && (
+          <div className="alert fixed-alert alert-warning text-center" role="alert">
+            No hay Traslados Registrados en la Base de Datos
+          </div>
+        )}
 
         <div className="d-flex justify-content-between mb-3">
           <a

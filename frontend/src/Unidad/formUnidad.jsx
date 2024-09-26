@@ -4,7 +4,7 @@ const FormUnidad = ({ buttonForm, unidad, onSubmit }) => {
   const [formData, setFormData] = useState({
     Nom_Unidad: ''
   });
-  const [isSubmitting, setIsSubmitting] = useState(false); // Estado para deshabilitar el botón
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (unidad) {
@@ -16,19 +16,18 @@ const FormUnidad = ({ buttonForm, unidad, onSubmit }) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (isSubmitting) return; // Si ya está en proceso de envío, no permitir más envíos
-    setIsSubmitting(true); // Deshabilitar el botón
+  const handleSubmit = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     try {
-      await onSubmit(formData); // Asumir que onSubmit es una función asíncrona
+      await onSubmit(formData);
     } finally {
-      setIsSubmitting(false); // Rehabilitar el botón después del envío
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <>
       <div className="mb-3">
         <label htmlFor="Nom_Unidad" className="form-label">Nombre de la Unidad</label>
         <input
@@ -41,10 +40,19 @@ const FormUnidad = ({ buttonForm, unidad, onSubmit }) => {
           required
         />
       </div>
-      <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
-        {isSubmitting ? 'Enviando...' : buttonForm}
-      </button>
-    </form>
+      
+      {/* Contenedor centrado con Bootstrap */}
+      <div className="d-flex justify-content-center">
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={handleSubmit}
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? 'Enviando...' : buttonForm}
+        </button>
+      </div>
+    </>
   );
 };
 

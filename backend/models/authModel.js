@@ -1,34 +1,37 @@
+// models/authModel.js
 import { DataTypes } from 'sequelize';
-import bcrypt from 'bcrypt'; // Asegúrate de tener instalado bcryptjs o bcryptjsjs
-import db from '../database/db.js';
+import sequelize from '../database/db.js';
+import ResponsableModel from './responsableModel.js'; // Importa el modelo Responsable
 
-const UserModel = db.define('usuario', {
+const UserModel = sequelize.define('Usuario', {
   Id_Usuario: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
     primaryKey: true,
   },
-  Cor_Usuario: {  // Corregido el nombre de la columna
-    type: DataTypes.STRING,
-    unique: true,
+  Id_Responsable: {
+    type: DataTypes.INTEGER,
     allowNull: false,
-    validate: {
-      isEmail: true, // Validación para asegurar que el email tiene el formato correcto
+    references: {
+      model: ResponsableModel, // Hace referencia al modelo Responsable
+      key: 'Id_Responsable',   // El campo en Responsable al que se refiere
     },
   },
+  Cor_Usuario: {
+    type: DataTypes.STRING(100),
+    allowNull: false,
+    unique: true, 
+  },
   Password_Usuario: {
-    type: DataTypes.STRING,
+    type: DataTypes.STRING(255),
     allowNull: false,
   },
 }, {
-  freezeTableName: true,
-  tableName: 'usuario',
-  timestamps: true, // Asegura que los timestamps sean manejados correctamente
-  createdAt: 'createdAT', // Mapear el nombre correcto de la columna
-  updatedAt: 'updatedAT', // Mapear el nombre correcto de la columna
+  tableName: 'Usuario',
+  timestamps: false,
 });
 
-// Hash de la contraseña antes de guardar el usuario en la base de datos
+// Definir la relación
 
 
 export default UserModel;

@@ -1,0 +1,144 @@
+2024-09-18T23:33:57.099Z [info]: Todas las entradas recuperadas
+2024-09-18T23:33:57.110Z [info]: Todas las entradas recuperadas
+2024-09-18T23:52:18.248Z [info]: Todos los pedidos recuperados
+2024-09-18T23:52:18.260Z [info]: Todos los pedidos recuperados
+2024-09-18T23:52:30.952Z [info]: Todas las entradas recuperadas
+2024-09-18T23:52:30.959Z [info]: Todas las entradas recuperadas
+2024-09-19T00:16:28.983Z [info]: Todas las entradas recuperadas
+2024-09-19T00:16:29.080Z [info]: Todas las entradas recuperadas
+2024-09-19T00:19:51.322Z [info]: Todas las entradas recuperadas
+2024-09-19T00:19:51.362Z [info]: Todas las entradas recuperadas
+2024-09-19T00:25:08.943Z [info]: Todos los pedidos recuperados
+2024-09-19T00:25:08.958Z [info]: Todos los pedidos recuperados
+2024-09-19T00:25:55.901Z [error]: Error al crear el pedido: Cannot add or update a child row: a foreign key constraint fails (`mercasoftx`.`pedido`, CONSTRAINT `Id_Cliente` FOREIGN KEY (`Id_Cliente`) REFERENCES `cliente` (`Id_Cliente`))
+2024-09-19T00:26:02.334Z [info]: Todos los pedidos recuperados
+2024-09-19T00:26:02.371Z [info]: Todos los pedidos recuperados
+2024-09-19T00:26:08.633Z [info]: Pedido borrado: 8
+2024-09-19T00:26:08.650Z [info]: Todos los pedidos recuperados
+2024-09-19T00:26:38.947Z [error]: Error al crear el pedido: Cannot add or update a child row: a foreign key constraint fails (`mercasoftx`.`pedido`, CONSTRAINT `Id_Cliente` FOREIGN KEY (`Id_Cliente`) REFERENCES `cliente` (`Id_Cliente`))
+2024-09-19T00:26:41.094Z [error]: Error al crear el pedido: Cannot add or update a child row: a foreign key constraint fails (`mercasoftx`.`pedido`, CONSTRAINT `Id_Cliente` FOREIGN KEY (`Id_Cliente`) REFERENCES `cliente` (`Id_Cliente`))
+2024-09-19T00:26:58.233Z [error]: Error al crear el pedido: Cannot add or update a child row: a foreign key constraint fails (`mercasoftx`.`pedido`, CONSTRAINT `Id_Cliente` FOREIGN KEY (`Id_Cliente`) REFERENCES `cliente` (`Id_Cliente`))
+2024-09-19T00:35:25.124Z [error]: Error al crear el pedido: Cannot add or update a child row: a foreign key constraint fails (`mercasoftx`.`pedido`, CONSTRAINT `Id_Cliente` FOREIGN KEY (`Id_Cliente`) REFERENCES `cliente` (`Id_Cliente`))
+2024-09-19T00:48:10.980Z [info]: Pedido creado: 14
+2024-09-19T00:48:10.999Z [info]: Todos los pedidos recuperados
+2024-09-19T01:05:14.698Z [info]: Todos los pedidos recuperados
+2024-09-19T01:05:14.757Z [info]: Todos los pedidos recuperados
+2024-09-19T01:06:15.599Z [info]: Pedido recuperado: 14
+2024-09-19T01:06:23.235Z [info]: Pedido recuperado: 7
+2024-09-19T01:06:26.867Z [info]: Pedido recuperado: 5
+2024-09-19T01:06:35.684Z [info]: Todos los pedidos recuperados
+2024-09-19T01:06:35.709Z [info]: Todos los pedidos recuperados
+2024-09-19T01:08:39.443Z [info]: Pedido recuperado: 14
+2024-09-19T01:13:48.479Z [info]: Todos los pedidos recuperados
+2024-09-19T01:13:48.491Z [info]: Todos los pedidos recuperados
+2024-09-19T01:15:09.039Z [info]: Todos los pedidos recuperados
+2024-09-19T01:15:09.050Z [info]: Todos los pedidos recuperados
+2024-09-19T01:17:34.820Z [info]: Todos los pedidos recuperados
+2024-09-19T01:17:34.871Z [info]: Todos los pedidos recuperados
+2024-09-19T01:17:45.283Z [info]: Todos los pedidos recuperados
+2024-09-19T01:17:45.337Z [info]: Todos los pedidos recuperados
+2024-09-19T01:19:20.367Z [info]: Todos los pedidos recuperados
+2024-09-19T01:19:20.390Z [info]: Todos los pedidos recuperados
+2024-09-19T01:20:20.582Z [info]: Todos los pedidos recuperados
+2024-09-19T01:20:20.614Z [info]: Todos los pedidos recuperados
+2024-09-19T01:20:28.288Z [info]: Pedido creado: 15
+2024-09-19T01:20:28.312Z [info]: Todos los pedidos recuperados
+2024-09-19T01:20:33.018Z [info]: Pedido borrado: 14
+2024-09-19T01:20:33.039Z [info]: Todos los pedidos recuperados
+2024-09-19T01:20:37.980Z [info]: Pedido recuperado: 15
+2024-09-19T01:22:50.778Z [info]: Todos los pedidos recuperados
+2024-09-19T01:22:50.792Z [info]: Todos los pedidos recuperados
+2024-09-19T01:23:17.214Z [info]: Pedido creado: 16
+2024-09-19T01:23:17.236Z [info]: Todos los pedidos recuperados
+2024-09-19T01:23:28.594Z [info]: Pedido recuperado: 16
+2024-09-19T01:23:42.281Z [info]: Pedido actualizado: 16
+2024-09-19T01:23:42.308Z [info]: Todos los pedidos recuperados
+2024-09-19T01:24:55.805Z [info]: Todos los pedidos recuperados
+2024-09-19T01:25:00.807Z [info]: Todos los pedidos recuperados
+2024-09-19T01:25:05.483Z [info]: Todos los pedidos recuperados
+2024-09-19T01:25:11.540Z [info]: Todos los pedidos recuperados
+2024-09-19T01:25:21.757Z [info]: Pedido recuperado: 1
+2024-09-19T01:25:26.628Z [info]: Pedido actualizado: 1
+2024-09-19T01:25:26.643Z [info]: Todos los pedidos recuperados
+2024-09-19T01:25:28.648Z [info]: Pedido recuperado: 1
+2024-09-19T01:25:31.256Z [info]: Pedido actualizado: 1
+2024-09-19T01:25:31.272Z [info]: Todos los pedidos recuperados
+2024-09-19T01:25:50.813Z [info]: Todas las entradas recuperadas
+2024-09-19T01:25:50.824Z [info]: Todas las entradas recuperadas
+2024-09-19T01:26:29.348Z [error]: Error al crear la entrada: Cannot add or update a child row: a foreign key constraint fails (`mercasoftx`.`entrada`, CONSTRAINT `Id_Producto` FOREIGN KEY (`Id_Producto`) REFERENCES `producto` (`Id_Producto`))
+2024-09-19T01:27:10.279Z [error]: Error al crear la entrada: Cannot add or update a child row: a foreign key constraint fails (`mercasoftx`.`entrada`, CONSTRAINT `Id_Producto` FOREIGN KEY (`Id_Producto`) REFERENCES `producto` (`Id_Producto`))
+2024-09-19T01:31:03.079Z [info]: Todos los pedidos recuperados
+2024-09-19T01:31:03.087Z [info]: Todos los pedidos recuperados
+2024-09-19T01:31:17.705Z [info]: Pedido recuperado: 5
+2024-09-19T01:31:20.871Z [info]: Pedido actualizado: 5
+2024-09-19T01:31:20.890Z [info]: Todos los pedidos recuperados
+2024-09-19T01:31:25.240Z [info]: Pedido recuperado: 2
+2024-09-19T01:31:29.177Z [info]: Pedido actualizado: 2
+2024-09-19T01:31:29.196Z [info]: Todos los pedidos recuperados
+2024-09-19T01:34:58.277Z [info]: Todos los pedidos recuperados
+2024-09-19T01:34:58.301Z [info]: Todos los pedidos recuperados
+2024-09-19T01:35:03.228Z [info]: Todos los pedidos recuperados
+2024-09-19T01:35:03.289Z [info]: Todos los pedidos recuperados
+2024-09-19T01:46:37.895Z [info]: Todos los pedidos recuperados
+2024-09-19T01:46:37.904Z [info]: Todos los pedidos recuperados
+2024-09-19T01:46:42.058Z [info]: Todas las entradas recuperadas
+2024-09-19T01:46:42.064Z [info]: Todas las entradas recuperadas
+2024-09-19T01:47:28.151Z [info]: Todos los pedidos recuperados
+2024-09-19T01:47:28.161Z [info]: Todos los pedidos recuperados
+2024-09-19T01:47:37.801Z [info]: Todas las entradas recuperadas
+2024-09-19T01:47:37.811Z [info]: Todas las entradas recuperadas
+2024-09-19T01:49:29.702Z [info]: Todas las entradas recuperadas
+2024-09-19T01:49:29.715Z [info]: Todas las entradas recuperadas
+2024-09-19T01:49:48.449Z [info]: Entrada creada: 9
+2024-09-19T01:49:48.469Z [info]: Todas las entradas recuperadas
+2024-09-19T01:51:16.762Z [info]: Todas las entradas recuperadas
+2024-09-19T01:51:16.805Z [info]: Todas las entradas recuperadas
+2024-09-19T01:51:29.653Z [info]: Entrada borrada: 9
+2024-09-19T01:51:29.670Z [info]: Todas las entradas recuperadas
+2024-09-19T01:51:33.059Z [info]: Todas las entradas recuperadas
+2024-09-19T01:51:33.163Z [info]: Todas las entradas recuperadas
+2024-09-19T01:51:52.986Z [info]: Entrada creada: 10
+2024-09-19T01:51:53.007Z [info]: Todas las entradas recuperadas
+2024-09-19T01:51:57.021Z [info]: Entrada recuperada: 10
+2024-09-19T01:52:12.712Z [info]: Entrada actualizada: 10
+2024-09-19T01:52:12.731Z [info]: Todas las entradas recuperadas
+2024-09-19T01:52:19.523Z [info]: Entrada recuperada: 10
+2024-09-19T01:52:28.648Z [info]: Entrada actualizada: 10
+2024-09-19T01:52:28.667Z [info]: Todas las entradas recuperadas
+2024-09-19T02:01:29.811Z [info]: Todas las entradas recuperadas
+2024-09-19T02:01:37.340Z [info]: Todas las entradas recuperadas
+2024-09-19T02:05:47.536Z [info]: Entrada creada: 11
+2024-09-19T02:05:47.555Z [info]: Todas las entradas recuperadas
+2024-09-19T02:05:51.026Z [info]: Entrada recuperada: 10
+2024-09-19T02:05:57.217Z [info]: Entrada actualizada: 10
+2024-09-19T02:05:57.233Z [info]: Todas las entradas recuperadas
+2024-09-19T02:06:51.981Z [info]: Entrada recuperada: 10
+2024-09-19T02:54:42.532Z [info]: Todos los pedidos recuperados
+2024-09-19T02:54:42.544Z [info]: Todos los pedidos recuperados
+2024-09-19T02:55:11.809Z [info]: Todos los pedidos recuperados
+2024-09-19T02:55:12.804Z [info]: Todos los pedidos recuperados
+2024-09-19T02:55:19.807Z [info]: Todos los pedidos recuperados
+2024-09-19T02:55:22.813Z [info]: Todos los pedidos recuperados
+2024-09-19T02:55:43.823Z [info]: Todos los pedidos recuperados
+2024-09-19T02:55:43.829Z [info]: Todos los pedidos recuperados
+2024-09-19T02:55:45.799Z [info]: Todos los pedidos recuperados
+2024-09-19T02:55:46.802Z [info]: Todos los pedidos recuperados
+2024-09-19T02:55:51.805Z [info]: Todos los pedidos recuperados
+2024-09-19T02:55:51.813Z [info]: Todos los pedidos recuperados
+2024-09-19T02:56:09.811Z [info]: Todos los pedidos recuperados
+2024-09-19T02:58:16.617Z [info]: Todos los pedidos recuperados
+2024-09-19T02:58:16.713Z [info]: Todos los pedidos recuperados
+2024-09-19T02:58:16.877Z [info]: Todos los pedidos recuperados
+2024-09-19T02:58:17.026Z [info]: Todos los pedidos recuperados
+2024-09-19T02:58:20.346Z [info]: Todas las entradas recuperadas
+2024-09-19T02:58:20.361Z [info]: Todas las entradas recuperadas
+2024-09-19T02:58:20.380Z [info]: Todas las entradas recuperadas
+2024-09-19T02:58:20.397Z [info]: Todas las entradas recuperadas
+2024-09-19T02:58:22.410Z [info]: Entrada borrada: 10
+2024-09-19T02:58:22.429Z [info]: Todas las entradas recuperadas
+2024-09-19T02:58:24.508Z [info]: Entrada borrada: 11
+2024-09-19T02:58:24.524Z [info]: Todas las entradas recuperadas
+2024-09-19T02:58:27.681Z [info]: Todas las entradas recuperadas
+2024-09-19T02:58:27.704Z [info]: Todas las entradas recuperadas
+2024-09-19T02:58:27.765Z [info]: Todas las entradas recuperadas
+2024-09-19T02:58:27.827Z [info]: Todas las entradas recuperadas

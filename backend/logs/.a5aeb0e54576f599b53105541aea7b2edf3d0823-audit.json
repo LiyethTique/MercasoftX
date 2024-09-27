@@ -1,0 +1,35 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "logs\\.a5aeb0e54576f599b53105541aea7b2edf3d0823-audit.json",
+    "files": [
+        {
+            "date": 1726701864548,
+            "name": "logs\\venta-2024-09-18.log",
+            "hash": "756694785a86daec21f352ecf41c77c4df48871b557ca975e07e6ad97d2f25fd"
+        },
+        {
+            "date": 1726801561826,
+            "name": "logs\\venta-2024-09-19.log",
+            "hash": "f7d98058ce77281f87479ac6f185c59725fb466145ee6fafde4e381f59788925"
+        },
+        {
+            "date": 1727100851525,
+            "name": "logs\\venta-2024-09-23.log",
+            "hash": "7d06aa69266d4d9cf143a32b75d76b623e4b69366ba664628862d2cc55ba1957"
+        },
+        {
+            "date": 1727281325860,
+            "name": "logs\\venta-2024-09-25.log",
+            "hash": "2998b3417c10b778a5ef7a30adca0dc57161be6c9ec0c8ec4da37577593b21af"
+        },
+        {
+            "date": 1727470539736,
+            "name": "logs\\venta-2024-09-27.log",
+            "hash": "c0faad04ba9bdb8a84b59da995fa5911f30da3998f10aded3a2c361789ad5c52"
+        }
+    ],
+    "hashType": "sha256"
+}

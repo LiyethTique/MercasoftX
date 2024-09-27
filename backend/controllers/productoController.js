@@ -1,10 +1,7 @@
 import Producto from "../models/productoModel.js";
 import winston from "winston";
 import DailyRotateFile from "winston-daily-rotate-file";
-import path from "path";
-import multer from "multer";
 
-// Configuración de logger con winston
 const logger = winston.createLogger({
     level: "error",
     format: winston.format.combine(
@@ -20,62 +17,20 @@ const logger = winston.createLogger({
     ]
 });
 
-// Configuración de multer para subir archivos (imágenes)
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads/');  // Carpeta donde se guardarán las imágenes
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname));  // Nombre único con la fecha actual
-    }
-});
-
-export const upload = multer({ storage });
-
-// Función para subir imagen y crear producto
-export const uploadImage = async (req, res) => {
-    const { Nom_Producto, Car_Producto, Exi_Producto, Fec_Vencimiento, Id_Unidad, Uni_DeMedida, Pre_Producto } = req.body;
-    const imagen = req.file ? req.file.filename : null;
-
-    if (!Nom_Producto || !Car_Producto || !Exi_Producto || !Fec_Vencimiento || !Id_Unidad || !Uni_DeMedida || Pre_Producto === undefined) {
-        logger.warn('Todos los campos son obligatorios');
-        return res.status(400).json({ message: 'Todos los campos son obligatorios' });
-    }
-
-    try {
-        const producto = await Producto.create({
-            Nom_Producto,
-            Car_Producto,
-            Exi_Producto,
-            Ima_Producto: imagen ? `/uploads/${imagen}` : null,  // Guardar la ruta de la imagen
-            Fec_Vencimiento,
-            Id_Unidad,
-            Uni_DeMedida,
-            Pre_Producto
-        });
-        res.status(201).json({ message: 'Producto creado exitosamente', producto });
-    } catch (error) {
-        logger.error(error.message);
-        res.status(500).json({ message: 'Error al crear el producto' });
-    }
-};
-
-// Obtener todos los productos
 export const getAllProducto = async (req, res) => {
     try {
         const productos = await Producto.findAll();
         if (productos.length > 0) {
             res.status(200).json(productos);
-        } else {
-            res.status(400).json({ message: 'No existen productos' });
+            return
         }
+        res.status(200).json({ message: ''})
     } catch (error) {
         logger.error(error.message);
         res.status(500).json({ message: 'Error al obtener productos' });
     }
 };
 
-// Obtener un producto por ID
 export const getProducto = async (req, res) => {
     try {
         const producto = await Producto.findByPk(req.params.id);
@@ -90,26 +45,38 @@ export const getProducto = async (req, res) => {
     }
 };
 
-// Actualizar un producto por ID
-export const updateProducto = async (req, res) => {
-    const { Nom_Producto, Car_Producto, Exi_Producto, Fec_Vencimiento, Id_Unidad, Uni_DeMedida, Pre_Producto } = req.body;
-    const imagen = req.file ? req.file.filename : null;
+export const createProducto = async (req, res) => {
+
+    const { Nom_Producto, Car_Producto, Pre_Promedio, Exi_Producto, Ima_Producto, Fec_Vencimiento, Id_Categoria, Pre_Anterior, Uni_DeMedida, Pre_Producto } = req.body;
+
+    if (!Nom_Producto || !Car_Producto || !Pre_Promedio || !Exi_Producto || !Ima_Producto || !Fec_Vencimiento || !Id_Categoria || !Pre_Anterior || !Uni_DeMedida || !Pre_Producto) {
+        logger.warn('Todos los campos son obligatorios');
+        return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+    }
 
     try {
-        const updated = await Producto.update({
-            Nom_Producto,
-            Car_Producto,
-            Exi_Producto,
-            Ima_Producto: imagen ? `/uploads/${imagen}` : null,
-            Fec_Vencimiento,
-            Id_Unidad,
-            Uni_DeMedida,
-            Pre_Producto
-        }, {
+        const producto = await Producto.create(req.body);
+        res.status(201).json({ message: 'Producto creado exitosamente', producto });
+    } catch (error) {
+        logger.error(error.message);
+        res.status(500).json({ message: 'Error al crear el producto' });
+    }
+};
+
+export const updateProducto = async (req, res) => {
+
+    const { Nom_Producto, Car_Producto, Pre_Promedio, Exi_Producto, Ima_Producto, Fec_Vencimiento, Id_Categoria, Pre_Anterior, Uni_DeMedida, Pre_Producto } = req.body;
+
+    if (!Nom_Producto || !Car_Producto || !Pre_Promedio || !Exi_Producto || !Ima_Producto || !Fec_Vencimiento || !Id_Categoria || !Pre_Anterior || !Uni_DeMedida || !Pre_Producto) {
+        logger.warn('Todos los campos son obligatorios');
+        return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+    }
+
+    try {
+        const [updated] = await Producto.update(req.body, {
             where: { Id_Producto: req.params.id }
         });
-
-        if (updated[0]) {
+        if (updated) {
             const updatedProducto = await Producto.findByPk(req.params.id);
             res.status(200).json({ message: 'Producto actualizado exitosamente', updatedProducto });
         } else {
@@ -121,7 +88,6 @@ export const updateProducto = async (req, res) => {
     }
 };
 
-// Eliminar un producto por ID
 export const deleteProducto = async (req, res) => {
     try {
         const deleted = await Producto.destroy({
@@ -135,5 +101,24 @@ export const deleteProducto = async (req, res) => {
     } catch (error) {
         logger.error(error.message);
         res.status(500).json({ message: 'Error al eliminar el producto' });
+    }
+};
+
+export const getQueryProducto = async (req, res) => {
+    try {
+        const productos = await ProductosModel.findAll({
+            where: {
+                Nom_Producto: {
+                    [Sequelize.Op.iLike]: `%${req.params.Nom_Producto}%`
+                }
+            }
+        });
+        if (productos.length > 0) {
+            res.status(200).json(productos);
+        } else {
+            res.status(404).json({ message: "No se encontraron registros para el nombre especificado" });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
 };

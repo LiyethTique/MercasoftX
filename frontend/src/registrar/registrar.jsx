@@ -7,7 +7,6 @@ import NavPub from '../NavPub/NavPub';
 
 const URI = `${process.env.REACT_APP_SERVER_BACK}/auth/register`; // Usa la variable de entorno correcta
 
-
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
     email: '',

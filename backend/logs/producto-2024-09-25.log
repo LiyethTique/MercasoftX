@@ -1,6 +1,0 @@
-2024-09-25 11:22:42: error: Unknown column 'Pre_Promedio' in 'field list'
-2024-09-25 11:22:42: error: Unknown column 'Pre_Promedio' in 'field list'
-2024-09-25 11:24:51: error: Unknown column 'Pre_Promedio' in 'field list'
-2024-09-25 11:24:59: error: Unknown column 'Pre_Promedio' in 'field list'
-2024-09-25 11:24:59: error: Unknown column 'Pre_Promedio' in 'field list'
-2024-09-25 15:34:06: error: Incorrect integer value: '              ' for column 'Id_Unidad' at row 1

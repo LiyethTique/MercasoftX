@@ -1,0 +1,17 @@
+  .btn-custom {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.6rem; /* Tamaño del texto más pequeño */
+    padding: 0.2rem 0.4rem; /* Padding más pequeño */
+    border-radius: 0.15rem; /* Borde redondeado más pequeño */
+    text-decoration: none; /* Quita el subrayado de los enlaces */
+    color: #fff; /* Color del texto, ajusta según el diseño */
+    border-color: yellow;
+  }
+  
+  .btn-custom img {
+    width: 12px; /* Tamaño del ícono más pequeño */
+    height: 12px; /* Tamaño del ícono más pequeño */
+  }
+
+ 

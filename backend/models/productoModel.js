@@ -15,10 +15,6 @@ const Producto = db.define('producto', {
         type: DataTypes.STRING(255),
         allowNull: true
     },
-    Pre_Promedio: {
-        type: DataTypes.DECIMAL(10, 2),
-        allowNull: true
-    },
     Exi_Producto: {
         type: DataTypes.INTEGER,
         allowNull: true
@@ -31,12 +27,8 @@ const Producto = db.define('producto', {
         type: DataTypes.DATE,
         allowNull: true
     },
-    Id_Categoria: {
+    Id_Unidad: {
         type: DataTypes.INTEGER,
-        allowNull: true
-    },
-    Pre_Anterior: {
-        type: DataTypes.DECIMAL(10, 2),
         allowNull: true
     },
     Uni_DeMedida: {

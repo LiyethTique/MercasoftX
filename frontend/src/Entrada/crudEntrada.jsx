@@ -7,7 +7,7 @@ import WriteTable from '../Tabla/Data-Table';
 import ModalForm from '../Model/Model.jsx';
 import AlertaBDVacia from '../alertas/alertaBDVacia.jsx'
 
-const URI = process.env.REACT_APP_SERVER_BACK + '/entrada/';
+const URI = (process.env.REACT_APP_SERVER_BACK || 'http://localhost:3002') + '/entrada/';
 
 const CrudEntrada = () => {
   const [entradaList, setEntradaList] = useState([]);

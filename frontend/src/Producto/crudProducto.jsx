@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Swal from 'sweetalert2';
-import FormProducto from './formProducto';  // Form component for Productos
+import FormProducto from '../Producto/formProducto';
 import Sidebar from '../Sidebar/Sidebar';
-import WriteTable from '../Tabla/Data-Table';  // Assuming you have a Data-Table component
-import ModalForm from '../Model/Model';  // Assuming a Modal component is available
+import Swal from 'sweetalert2';
+import WriteTable from '../Tabla/Data-Table'; 
+import ModalForm from '../Model/Model';
 import './crudProducto.css';
 
 const URI = process.env.REACT_APP_SERVER_BACK + '/producto/';
@@ -14,84 +14,65 @@ const CrudProducto = () => {
   const [buttonForm, setButtonForm] = useState('Enviar');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [producto, setProducto] = useState(null);
-  const [originalProducto, setOriginalProducto] = useState(null);  // New state to hold the original product
-  const [showMessage, setShowMessage] = useState(false);  // New state to show the message
 
   useEffect(() => {
     getAllProductos();
   }, []);
 
-  // Verify URI value
-  console.log('URI:', URI);
-
   const getAllProductos = async () => {
     try {
-      const response = await axios.get(URI);
-      if (Array.isArray(response.data)) {
-        if (response.data.length === 0) {
-          setProductoList([]);
-          setShowMessage(true);  // Show message if no products are found
-          setTimeout(() => setShowMessage(false), 3000);  // Hide message after 3 seconds
-        } else {
-          setProductoList(response.data);
-        }
+      const respuesta = await axios.get(URI);
+      if (Array.isArray(respuesta.data)) {
+        setProductoList(respuesta.data);
       } else {
-        console.error("Unexpected response format:", response.data);
+        console.error("Unexpected response format:", respuesta.data);
         setProductoList([]);
       }
     } catch (error) {
-      console.error("Error fetching products:", error);
-      Swal.fire("Error", error.response?.data?.message || "Error al obtener los productos", "error");
+      console.error("Error fetching productos:", error);
+      Swal.fire("Error", error.response?.data?.message || "Error al obtener los Productos", "error");
     }
   };
 
   const getProducto = async (Id_Producto) => {
-    // Log the ID before making the request
-    console.log("Id_Producto:", Id_Producto);
     setButtonForm('Actualizar');
     try {
-      const response = await axios.get(`${URI}${Id_Producto}`);
-      setOriginalProducto(response.data);  // Set the original product
-      setProducto(response.data);
+      const respuesta = await axios.get(`${URI}${Id_Producto}`);
+      setProducto(respuesta.data);
       setIsModalOpen(true);
     } catch (error) {
-      Swal.fire("Error", error.response?.data?.message || "Error al obtener el producto", "error");
+      Swal.fire("Error", error.response?.data?.message || "Error al obtener el Producto", "error");
     }
   };
 
   const handleSubmitProducto = async (data) => {
-    if (buttonForm === 'Actualizar') {
-      // Check if there are any changes
-      if (JSON.stringify(data) === JSON.stringify(originalProducto)) {
-        Swal.fire({
-          icon: 'warning',
-          title: 'Atención.',
-          text: 'Por favor, realice al menos una modificación antes de actualizar.',
-        });
-        return;
-      }
-    }
-
     try {
+      const formData = new FormData();
+      for (let key in data) {
+        formData.append(key, data[key]);
+      }
+
       if (buttonForm === 'Actualizar') {
-        await axios.put(`${URI}${producto.Id_Producto}`, data);
+        await axios.put(`${URI}${producto.Id_Producto}`, formData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
         Swal.fire("Actualizado!", "El producto ha sido actualizado.", "success");
       } else {
-        await axios.post(URI, data);
+        await axios.post(URI, formData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
         Swal.fire("Creado!", "El producto ha sido creado.", "success");
       }
       getAllProductos();
       setIsModalOpen(false);
       setButtonForm('Enviar');
       setProducto(null);
-      setOriginalProducto(null);  // Clear the original product
     } catch (error) {
-      Swal.fire("Error", error.response?.data?.message || "Error al guardar el producto", "error");
+      Swal.fire("Error", error.response?.data?.message || "Error al guardar el Producto", "error");
     }
   };
 
   const deleteProducto = async (Id_Producto) => {
-    console.log("Deleting product with ID:", Id_Producto);
     Swal.fire({
       title: "¿Estás seguro?",
       text: "¡No podrás revertir esto!",
@@ -105,9 +86,9 @@ const CrudProducto = () => {
         try {
           await axios.delete(`${URI}${Id_Producto}`);
           Swal.fire("¡Borrado!", "El producto ha sido borrado.", "success");
-          getAllProductos();  // Refresh the list after deletion
+          getAllProductos();
         } catch (error) {
-          Swal.fire("Error", error.response?.data?.message || "Error al eliminar el producto", "error");
+          Swal.fire("Error", error.response?.data?.message || "Error al eliminar el Producto", "error");
         }
       }
     });
@@ -116,28 +97,21 @@ const CrudProducto = () => {
   const handleShowForm = () => {
     setButtonForm('Enviar');
     setProducto(null);
-    setOriginalProducto(null);  // Clear the original product when opening the form
     setIsModalOpen(true);
   };
 
-  const titles = [
-    'Código Producto', 'Nombre', 'Características', 'Precio Promedio', 'Existencias', 
-    'Imagen', 'Fecha Vencimiento', 'Categoría', 'Precio Anterior', 'Unidad de Medida', 
-    'Precio', 'Acciones'
-  ];
+  const titles = ['ID', 'Nombre', 'Características', 'Existencias', 'Imagen', 'Fecha de Vencimiento', 'ID Unidad', 'Unidad de Medida', 'Precio', 'Acciones'];
   const data = productoList.map(producto => [
     producto.Id_Producto,
     producto.Nom_Producto,
     producto.Car_Producto,
-    producto.Pre_Promedio,
     producto.Exi_Producto,
-    producto.Ima_Producto,
+    <img src={`/imagenes/${producto.Ima_Producto}`} alt={producto.Nom_Producto} style={{ maxWidth: '100px', height: 'auto' }} />,
     producto.Fec_Vencimiento,
-    producto.Id_Categoria,
-    producto.Pre_Anterior,
+    producto.Id_Unidad,
     producto.Uni_DeMedida,
     producto.Pre_Producto,
-    <div key={producto.Id_Producto}>
+    <div key={producto.Id_Producto} className="acciones">
       <a 
         href="#!"
         className="btn-custom me-2"
@@ -147,19 +121,18 @@ const CrudProducto = () => {
         <img 
           src="/pencil-square.svg" 
           alt="Editar"
-          style={{ width: '13px', height: '13px' }}  
+          style={{ width: '13px', height: '13px' }}
         />
       </a>
       <a 
         href="#!"
-        className="btn-custom"
+        className ="btn-custom"
         onClick={() => deleteProducto(producto.Id_Producto)}
         title="Borrar"
       >
-        
         <img 
           src="/trash3.svg" 
-          alt="Borrar" 
+          alt="Borrar"
         />
       </a>
     </div>
@@ -172,13 +145,7 @@ const CrudProducto = () => {
         <center>
           <h1>Gestionar Productos</h1>
         </center>
-
-        {showMessage && (
-          <div className="alert alert-warning text-center" role="alert">
-            No hay productos registrados en la base de datos.
-          </div>
-        )}
-
+        
         <div className="d-flex justify-content-between mb-3">
           <a 
             href="#!"
@@ -186,7 +153,7 @@ const CrudProducto = () => {
             onClick={handleShowForm}
           >   
             <img
-              src="/plus-circle.svg"
+              src="/plus-circle (1).svg"
               alt="Add Icon"
               style={{ width: '20px', height: '20px', marginRight: '8px', filter: 'invert(100%)' }}
             />
@@ -198,13 +165,12 @@ const CrudProducto = () => {
 
         <ModalForm
           isOpen={isModalOpen}
-          onClose={() => { setIsModalOpen(false); setProducto(null); setButtonForm('Enviar'); setOriginalProducto(null); }}
+          onClose={() => { setIsModalOpen(false); setProducto(null); setButtonForm('Enviar'); }}
           title={buttonForm === 'Actualizar' ? "Actualizar Producto" : "Agregar Producto"}
         >
           <FormProducto 
             buttonForm={buttonForm}
             producto={producto}
-            URI={URI}
             updateTextButton={setButtonForm}
             setIsFormVisible={setIsModalOpen}
             onSubmit={handleSubmitProducto}

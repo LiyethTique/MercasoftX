@@ -5,8 +5,9 @@ import Sidebar from '../Sidebar/Sidebar';
 import Swal from 'sweetalert2';
 import WriteTable from '../Tabla/Data-Table';
 import ModalForm from '../Model/Model';
+import AlertaBDVacia from '../alertas/alertaBDVacia.jsx'
 
-const URI = process.env.REACT_APP_SERVER_BACK + '/pedido/';
+const URI = (process.env.REACT_APP_SERVER_BACK || 'http://localhost:3002') + '/pedido/';
 
 const CrudPedido = () => {
   const [pedidoList, setPedidoList] = useState([]);
@@ -101,7 +102,7 @@ const CrudPedido = () => {
     }
   };
 
-  const titles = ['Código', 'Fecha Pedido', 'ID Cliente', 'Estado Pedido', 'Valor Pedido', 'Acciones'];
+  const titles = ['Código', 'Fecha Pedido', 'Nombre Cliente', 'Estado Pedido', 'Valor Pedido', 'Acciones'];
   const data = pedidoList.map(pedido => [
     pedido.Id_Pedido,
     pedido.Fec_Pedido,
@@ -130,6 +131,7 @@ const CrudPedido = () => {
           </button>
         </div>
         <WriteTable titles={titles} data={data} moduleName={moduleName} />
+        <AlertaBDVacia uri={URI} />
         <ModalForm
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}

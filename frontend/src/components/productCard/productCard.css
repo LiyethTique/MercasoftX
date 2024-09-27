@@ -1,0 +1,22 @@
+.product-card {
+    max-width: 18rem;
+    margin: 10px;
+  }
+  
+  .card-img-top {
+    height: 200px;
+    object-fit: cover;
+  }
+  
+  .btn-outline-secondary {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  span.mx-3 {
+    font-size: 1.25rem;
+    font-weight: bold;
+  }  

@@ -5,6 +5,7 @@ import FormTraslado from './formTraslado';  // Form component for Traslados
 import Sidebar from '../Sidebar/Sidebar';
 import WriteTable from '../Tabla/Data-Table';  // Assuming you have a Data-Table component
 import ModalForm from '../Model/Model';  // Assuming a Modal component is available
+import AlertaBDVacia from '../alertas/alertaBDVacia.jsx'
 import './crudTraslados.css';
 
 const URI = process.env.REACT_APP_SERVER_BACK + '/traslado/';
@@ -15,14 +16,10 @@ const CrudTraslado = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [traslado, setTraslado] = useState(null);
   const [originalTraslado, setOriginalTraslado] = useState(null);  // New state to hold the original traslado
-  const [showMessage, setShowMessage] = useState(false);  // New state to show the message
 
   useEffect(() => {
     getAllTraslado();
   }, []);
-
-  // Verify URI value
-  console.log('URI:', URI);
 
   const getAllTraslado = async () => {
     try {
@@ -30,15 +27,12 @@ const CrudTraslado = () => {
       if (Array.isArray(response.data)) {
         if (response.data.length === 0) {
           setTrasladoList([]);
-          setShowMessage(true);  // Show message if no traslados are found
         } else {
           setTrasladoList(response.data);
-          setShowMessage(false);  // Hide message if traslados are found
         }
       } else {
         console.error("Unexpected response format:", response.data);
         setTrasladoList([]);
-        setShowMessage(true);  // Show message if response data is not an array
       }
     } catch (error) {
       console.error("Error fetching traslados:", error);
@@ -47,7 +41,6 @@ const CrudTraslado = () => {
   };
 
   const getTraslado = async (Id_Traslado) => {
-    // Log the ID before making the request
     console.log("Id_Traslado:", Id_Traslado);
     setButtonForm('Actualizar');
     try {
@@ -62,7 +55,6 @@ const CrudTraslado = () => {
 
   const handleSubmitTraslado = async (data) => {
     if (buttonForm === 'Actualizar') {
-      // Check if there are any changes
       if (JSON.stringify(data) === JSON.stringify(originalTraslado)) {
         Swal.fire({
           icon: 'warning',
@@ -86,7 +78,6 @@ const CrudTraslado = () => {
       setButtonForm('Enviar');
       setTraslado(null);
       setOriginalTraslado(null);  // Clear the original traslado
-      setShowMessage(false);  // Hide the message when a new traslado is created
     } catch (error) {
       Swal.fire("Error", error.response?.data?.message || "Error al guardar el traslado", "error");
     }
@@ -133,27 +124,27 @@ const CrudTraslado = () => {
     traslado.Val_Traslado,
     traslado.Id_Responsable ? traslado.responsable?.Nom_Responsable || 'Sin Responsable' : 'Sin Responsable',
     <div key={traslado.Id_Traslado}>
-      <a 
+      <a
         href="#!"
         className="btn-custom me-2"
         onClick={() => getTraslado(traslado.Id_Traslado)}
         title="Editar"
       >
-        <img 
-          src="/pencil-square.svg" 
+        <img
+          src="/pencil-square.svg"
           alt="Editar"
-          style={{ width: '13px', height: '13px' }}  
+          style={{ width: '13px', height: '13px' }}
         />
       </a>
-      <a 
+      <a
         href="#!"
         className="btn-custom"
         onClick={() => deleteTraslado(traslado.Id_Traslado)}
         title="Borrar"
       >
-        <img 
-          src="/trash3.svg" 
-          alt="Borrar" 
+        <img
+          src="/trash3.svg"
+          alt="Borrar"
         />
       </a>
     </div>
@@ -167,18 +158,12 @@ const CrudTraslado = () => {
           <h1>Gestionar Traslados</h1>
         </center>
 
-        {showMessage && (
-          <div className="alert fixed-alert alert-warning text-center" role="alert">
-            No hay Traslados Registrados en la Base de Datos
-          </div>
-        )}
-
         <div className="d-flex justify-content-between mb-3">
-          <a 
+          <a
             href="#!"
             className="btn btn-success d-flex align-items-center"
             onClick={handleShowForm}
-          >   
+          >
             <img
               src="/plus-circle.svg"
               alt="Add Icon"
@@ -190,12 +175,14 @@ const CrudTraslado = () => {
 
         <WriteTable titles={titles} data={data} />
 
+        <AlertaBDVacia uri={URI} />
+
         <ModalForm
           isOpen={isModalOpen}
           onClose={() => { setIsModalOpen(false); setTraslado(null); setButtonForm('Enviar'); setOriginalTraslado(null); }}
           title={buttonForm === 'Actualizar' ? "Actualizar Traslado" : "Agregar Traslado"}
         >
-          <FormTraslado 
+          <FormTraslado
             buttonForm={buttonForm}
             traslado={traslado}
             URI={URI}
@@ -204,6 +191,7 @@ const CrudTraslado = () => {
             onSubmit={handleSubmitTraslado}
           />
         </ModalForm>
+
       </div>
     </>
   );

@@ -114,7 +114,11 @@ const FormVenta = ({ buttonForm, venta, onSubmit, onClose }) => {
           {buttonForm}
         </Button>
       </div>
-      
+      <div className="text-center">
+        <Button variant="secondary" onClick={handleClose}>
+          Cancelar
+        </Button>
+      </div>
     </div>
   );
 };

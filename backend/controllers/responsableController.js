@@ -22,9 +22,9 @@ export const getAllResponsables = async (req, res) => {
         const responsables = await Responsable.findAll();
         if (responsables.length > 0) {
             res.status(200).json(responsables);
-            return;
+            return
         }
-        res.status(200).json([]);
+        res.status(400).json({ message: 'No existen Responsables'});
     } catch (error) {
         logger.error(error.message);
         res.status(500).json({ message: 'Error al obtener responsables' });
@@ -37,7 +37,7 @@ export const getResponsable = async (req, res) => {
         if (responsable) {
             res.status(200).json(responsable);
         } else {
-            res.status(200).json({ message: 'Responsable no encontrado' });
+            res.status(404).json({ message: 'Responsable no encontrado' });
         }
     } catch (error) {
         logger.error(error.message);
@@ -46,9 +46,10 @@ export const getResponsable = async (req, res) => {
 };
 
 export const createResponsable = async (req, res) => {
-    const { Nom_Responsable, Tel_Responsable, Tip_Responsable, Tip_Genero } = req.body;
 
-    if (!Nom_Responsable || !Tel_Responsable || !Tip_Responsable || !Tip_Genero) {
+    const { Nom_Responsable, Cor_Responsable, Tel_Responsable, Tip_Responsable, Tip_Genero } = req.body;
+
+    if (!Nom_Responsable || !Cor_Responsable || !Tel_Responsable || !Tip_Responsable || !Tip_Genero) {
         logger.warn('Todos los campos son obligatorios');
         return res.status(400).json({ message: 'Todos los campos son obligatorios' });
     }
@@ -63,13 +64,14 @@ export const createResponsable = async (req, res) => {
 };
 
 export const updateResponsable = async (req, res) => {
-    const { Nom_Responsable, Tel_Responsable, Tip_Responsable, Tip_Genero } = req.body;
 
-    if (!Nom_Responsable || !Tel_Responsable || !Tip_Responsable || !Tip_Genero) {
+    const { Nom_Responsable, Cor_Responsable, Tel_Responsable, Tip_Responsable, Tip_Genero } = req.body;
+
+    if (!Nom_Responsable || !Cor_Responsable || !Tel_Responsable || !Tip_Responsable || !Tip_Genero) {
         logger.warn('Todos los campos son obligatorios');
         return res.status(400).json({ message: 'Todos los campos son obligatorios' });
     }
-
+    
     try {
         const [updated] = await Responsable.update(req.body, {
             where: { Id_Responsable: req.params.id }
@@ -104,7 +106,7 @@ export const deleteResponsable = async (req, res) => {
 
 export const getQueryResponsable = async (req, res) => {
     try {
-        const responsables = await Responsable.findAll({
+        const responsables = await ResponsablesModel.findAll({
             where: {
                 Nom_Responsable: {
                     [Sequelize.Op.like]: `%${req.params.Nom_Responsable}%`

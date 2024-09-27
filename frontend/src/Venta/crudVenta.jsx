@@ -5,7 +5,7 @@ import Sidebar from '../Sidebar/Sidebar';
 import Swal from 'sweetalert2';
 import WriteTable from '../Tabla/Data-Table';
 import ModalForm from '../Model/Model';
-
+import AlertaBDVacia from '../alertas/alertaBDVacia.jsx'
 
 const URI = process.env.REACT_APP_SERVER_BACK + '/venta/';
 
@@ -148,6 +148,8 @@ const CrudVenta = () => {
         </div>
 
         <WriteTable titles={titles} data={data} />
+
+        <AlertaBDVacia uri={URI} />
 
         <ModalForm
           isOpen={isModalOpen}

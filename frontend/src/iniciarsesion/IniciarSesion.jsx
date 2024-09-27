@@ -13,13 +13,13 @@ const LoginForm = () => {
     email: '',
     password: '',
   });
-
+  
   const [errors, setErrors] = useState({
     email: '',
     password: '',
     general: '',
   });
-
+  
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
@@ -30,7 +30,7 @@ const LoginForm = () => {
 
   const validateForm = () => {
     const newErrors = {};
-
+    
     if (!formData.email) {
       newErrors.email = 'El correo es requerido.';
     } else if (!isValidEmail(formData.email)) {
@@ -67,16 +67,13 @@ const LoginForm = () => {
     }
 
     try {
-      // Mostrar alerta personalizada en el centro de la pantalla con spinner
+      // Mostrar alerta personalizada en la parte inferior con spinner
       Swal.fire({
+        position: 'bottom', // Posición en la parte inferior
         html: `
-          <img src="/cargando.gif" alt="Cargando..." style="width: 100px; height: 100px; margin-bottom: 20px;">
+          <img src="/cargando.gif" alt="Cargando..." style="width: 50px; height: 50px; margin-bottom: 20px;">
           <p>Iniciando sesión...</p>
         `,
-        customClass: {
-          container: 'custom-container', // Agregar clase personalizada
-          popup: 'custom-popup', // Agregar clase personalizada
-        },
         showConfirmButton: false,
         allowOutsideClick: false,
         allowEscapeKey: false,
@@ -101,7 +98,7 @@ const LoginForm = () => {
 
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
-        navigate('/Cliente');
+        navigate('/cliente');
       }
     } catch (error) {
       // Cerrar la alerta de carga en caso de error
@@ -126,7 +123,7 @@ const LoginForm = () => {
             <h2>Iniciar Sesión</h2>
             <img src="/Logo-Icono.svg" width="150px" alt="Logo" />
           </center>
-
+          
           <div className="mb-3">
             {errors.email && <div className="error-message">{errors.email}</div>}
             <input
@@ -171,7 +168,9 @@ const LoginForm = () => {
           <div className="mt-3 text-center">
             <a href="/recuperar-contrasena" className="forgot-password-link">¿Olvidaste tu contraseña?</a>
           </div>
-      
+          <div className="mt-3 text-center">
+            <p className="no-account-text">¿No tienes una cuenta? <a href="/register" className="register-link">Regístrate aquí</a></p>
+          </div>
         </form>
       </div>
     </>

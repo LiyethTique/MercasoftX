@@ -5,7 +5,7 @@ import Sidebar from '../Sidebar/Sidebar';
 import Swal from 'sweetalert2';
 import WriteTable from '../Tabla/Data-Table'; 
 import ModalForm from '../Model/Model';
-import './crudUnidad.css';  // Asegúrate de que este archivo esté en la ubicación correcta
+
 
 const URI = process.env.REACT_APP_SERVER_BACK + '/unidad/';
 
@@ -14,7 +14,6 @@ const CrudUnidad = () => {
   const [buttonForm, setButtonForm] = useState('Enviar');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [unidad, setUnidad] = useState(null);
-  const [showMessage, setShowMessage] = useState(false); // Nueva variable de estado para el mensaje
 
   useEffect(() => {
     getAllUnidades();
@@ -25,16 +24,13 @@ const CrudUnidad = () => {
       const respuesta = await axios.get(URI);
       if (Array.isArray(respuesta.data)) {
         setUnidadList(respuesta.data);
-        setShowMessage(respuesta.data.length === 0); // Mostrar mensaje si no hay unidades
       } else {
         console.error("Unexpected response format:", respuesta.data);
         setUnidadList([]);
-        setShowMessage(true);
       }
     } catch (error) {
       console.error("Error fetching unidades:", error);
       Swal.fire("Error", error.response?.data?.message || "Error al obtener las Unidades", "error");
-      setShowMessage(true); // Mostrar mensaje en caso de error
     }
   };
 
@@ -85,7 +81,11 @@ const CrudUnidad = () => {
           // Actualizar la lista de unidades sin el registro eliminado
           const updatedUnidades = unidadList.filter(unidad => unidad.Id_Unidad !== Id_Unidad);
           setUnidadList(updatedUnidades);
-          setShowMessage(updatedUnidades.length === 0); // Mostrar mensaje si no hay unidades
+
+          // Verificar si no quedan unidades y mostrar un mensaje informativo en lugar de un error
+          if (updatedUnidades.length === 0) {
+            Swal.fire("Información", "No quedan más unidades disponibles.", "info");
+          }
 
         } catch (error) {
           Swal.fire("Error", error.response?.data?.message || "Error al eliminar la Unidad", "error");
@@ -138,13 +138,7 @@ const CrudUnidad = () => {
         <center>
           <h1>Gestionar Unidades</h1>
         </center>
-
-        {showMessage && (
-          <div className="alert alert-warning text-center" role="alert">
-            No hay Unidades Registradas en la Base de Datos
-          </div>
-        )}
-
+        
         <div className="d-flex justify-content-between mb-3">
           <a 
             href="#!"

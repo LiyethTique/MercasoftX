@@ -1,6 +1,6 @@
+// Cambia el nombre del componente a AlertaBDVacia.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './alertaBDVacia.css'; // Incluye cualquier estilo adicional aquí
 
 const AlertaBDVacia = ({ uri }) => {
   const [showMessage, setShowMessage] = useState(false);
@@ -25,7 +25,7 @@ const AlertaBDVacia = ({ uri }) => {
 
   return (
     showMessage && (
-      <div className="alerta-bd-vacia">
+      <div className="alert alert-warning text-center" role="alert">
         No hay registros en la base de datos
       </div>
     )

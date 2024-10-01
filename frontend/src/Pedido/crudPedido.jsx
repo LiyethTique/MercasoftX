@@ -8,8 +8,6 @@ import ModalForm from '../Model/Model';
 import AlertaBDVacia from '../alertas/alertaBDVacia.jsx'
 
 
-const URI = (process.env.REACT_APP_SERVER_BACK || 'http://localhost:3002') + '/pedido/';
-
 const URI = process.env.REACT_APP_SERVER_BACK + '/pedido/';
 
 const CrudPedido = () => {

@@ -24,6 +24,26 @@
             "date": 1727281325841,
             "name": "logs\\producto-2024-09-25.log",
             "hash": "4506b4cf0b4d93f36cf1d7b77a3c7c7dd88a64d147af9c39588eb6fb5bf7627b"
+        },
+        {
+            "date": 1727356151303,
+            "name": "logs\\producto-2024-09-26.log",
+            "hash": "e65206e901d226027bdc03733f1ca1989d30e4a2732010fab8c77a3f4bdbfd9d"
+        },
+        {
+            "date": 1727565125730,
+            "name": "logs\\producto-2024-09-28.log",
+            "hash": "c966c5afc141725a3989f155639d8a7315a31fc046eaa203a6f40e706e08af00"
+        },
+        {
+            "date": 1727656266442,
+            "name": "logs\\producto-2024-09-29.log",
+            "hash": "f39de236045776dbd6c09cc2d997f2782f4a54319f38d1728a6feeab89978351"
+        },
+        {
+            "date": 1727698675874,
+            "name": "logs\\producto-2024-09-30.log",
+            "hash": "8d9db744ea4ef8b6c77ca2550b5e93ad09a9f8ea88e84ceef45d1b277ddcac11"
         }
     ],
     "hashType": "sha256"

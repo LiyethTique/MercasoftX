@@ -1,9 +1,6 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import Carrito from './Carrito/crudCarrito.jsx';
-
-// import area from './area/area.jsx';
-
+import Carrito from './Carrito/crudCarrito.jsx'
 import Cliente from './Cliente/crudCliente.jsx';
 import Entrada from './Entrada/crudEntrada.jsx';
 import Pedido from './Pedido/crudPedido.jsx';
@@ -17,6 +14,8 @@ import TeamPresentation from './contact/equipo.jsx';
 import ContactPage from './contact/imageCarrousel.jsx';
 import Login from './iniciarsesion/IniciarSesion.jsx';
 import Auth from './registrar/registrar.jsx';
+import RecuperarContrasena from './Recuperar Contraseña/recuperar_contraseña.jsx';
+import ResetPassword from './Recuperar Contraseña/resetPassword.jsx';
 
 import CatalogPage from './components/catalogPage/catalogPage.jsx';
 
@@ -51,6 +50,8 @@ function App() {
         <Route path="/contacto" element={<ContactPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Auth />} />
+        <Route path="/recuperar-contrasena" element={<RecuperarContrasena />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
 
         {/* Rutas protegidas */}
         <Route

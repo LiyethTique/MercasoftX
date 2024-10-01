@@ -20,3 +20,21 @@
     font-size: 1.25rem;
     font-weight: bold;
   }  
+  .product-card {
+    max-width: 300px;
+    margin: 20px;
+  }
+  
+  .product-card img {
+    max-height: 200px;
+    object-fit: cover;
+  }
+  
+  .btn {
+    padding: 5px 10px;
+  }
+  
+  .fw-bold {
+    font-weight: 700;
+  }
+  

@@ -24,6 +24,26 @@
             "date": 1727281325670,
             "name": "logs\\carrito-2024-09-25.log",
             "hash": "4e83b0b3c77f9aceba77b8d1575df5a334b146083401c19d08ed33b7ea7eb686"
+        },
+        {
+            "date": 1727356151237,
+            "name": "logs\\carrito-2024-09-26.log",
+            "hash": "f1be153fc389427d9db5c4c758a051e19cf0f238d3139c39d869d4c85dbf863c"
+        },
+        {
+            "date": 1727565125665,
+            "name": "logs\\carrito-2024-09-28.log",
+            "hash": "4bd48a28d1771fc18ee06c1ef02217bbf6451e3d2f341c165ff764e17a7b62b4"
+        },
+        {
+            "date": 1727656265792,
+            "name": "logs\\carrito-2024-09-29.log",
+            "hash": "f48d41d2bd7d5cf73cfb96f53786558dceb844ac66c043590cd2a2b0fb089aa7"
+        },
+        {
+            "date": 1727698675613,
+            "name": "logs\\carrito-2024-09-30.log",
+            "hash": "0e6b1859965066ac6ce2a17ca3e1eeab7298c3cf719e74c2eedf98c880478e45"
         }
     ],
     "hashType": "sha256"

@@ -24,6 +24,26 @@
             "date": 1727281325693,
             "name": "logs\\pedido-2024-09-25.log",
             "hash": "8f4779f9a4ab29226e980de723973298cf940c6920d208a3f44f7122874dd470"
+        },
+        {
+            "date": 1727356151258,
+            "name": "logs\\pedido-2024-09-26.log",
+            "hash": "b852d9ca44da1d0f920a01b5c4b44533a6287cfae26492fdea505e61c70f9db5"
+        },
+        {
+            "date": 1727565125686,
+            "name": "logs\\pedido-2024-09-28.log",
+            "hash": "ef531da3040d761ed313b867b6f45343ef1bb0c2731792feeda6cf8218d69f7a"
+        },
+        {
+            "date": 1727656265875,
+            "name": "logs\\pedido-2024-09-29.log",
+            "hash": "310ce1ddcdbd4b6093e8eb95c44151f142edc68042507521c37f7745031638b4"
+        },
+        {
+            "date": 1727698675645,
+            "name": "logs\\pedido-2024-09-30.log",
+            "hash": "730c99780eba9b9f1cb2e149c57048b3e9ca1844ef0c968fb9dfcc82d89a414d"
         }
     ],
     "hashType": "sha256"

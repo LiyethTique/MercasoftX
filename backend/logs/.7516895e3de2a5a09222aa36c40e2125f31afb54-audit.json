@@ -24,6 +24,26 @@
             "date": 1727281325856,
             "name": "logs\\unidad-2024-09-25.log",
             "hash": "6cededac604416e20020bf1bf452b29ba1e08d5c54b4ae9b78ee413d7bc5733c"
+        },
+        {
+            "date": 1727356151318,
+            "name": "logs\\unidad-2024-09-26.log",
+            "hash": "b8bf8c119d44cb3752bf4b45854473d69eae2192ac4dc96236b14f0ca6c7ad91"
+        },
+        {
+            "date": 1727565125746,
+            "name": "logs\\unidad-2024-09-28.log",
+            "hash": "ea2eaa950c9dc90414e00eadd3de32dc71bbf9f33ea06754576122a18493bdfa"
+        },
+        {
+            "date": 1727656266513,
+            "name": "logs\\unidad-2024-09-29.log",
+            "hash": "48e8f4969d0b9d9083fb54db3011f889d060df55f195d8cdfc4557c52ab70aa2"
+        },
+        {
+            "date": 1727698675898,
+            "name": "logs\\unidad-2024-09-30.log",
+            "hash": "e86fc4a2708f25653ac2519ccb039a18fbddc1563febd15afad8d8e8cbbee363"
         }
     ],
     "hashType": "sha256"

@@ -3,9 +3,116 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { promisify } from 'util';
 import UserModel from '../models/authModel.js';
-import Responsable from '../models/responsableModel.js'; // Importa el modelo Responsable
+import Responsable from '../models/responsableModel.js';
+import nodemailer from 'nodemailer';  // Importa el modelo Responsable
+import crypto from 'crypto'
+import { Op } from 'sequelize';
+
 
 const JWT_LLAVE = process.env.JWT_LLAVE;
+
+const transporter = nodemailer.createTransport({
+  service: process.env.EMAIL_SERVICE, // O cualquier servicio de correo que uses
+  auth: {
+    user: process.env.EMAIL_USER, // tu correo
+    pass: process.env.EMAIL_PASSWORD, // tu contraseña de correo
+  },
+});
+console.log(process.env.EMAIL_USER); // Debe mostrar tu correo electrónico
+console.log(process.env.EMAIL_PASSWORD); // Debe mostrar tu contraseña o contraseña de aplicación
+
+
+export const requestPasswordReset = async (req, res) => {
+  const { Cor_Usuario } = req.body;
+  try {
+    const user = await UserModel.findOne({ where: { Cor_Usuario } });
+    if (!user) {
+      return res.status(404).json({ error: 'Correo no registrado' });
+    }
+
+    // Generar token de recuperación
+    const token = crypto.randomBytes(20).toString('hex');
+    const expires = Date.now() + 3600000; // 1 hora de validez
+
+    user.ResetPasswordToken = token;
+    user.ResetPasswordExpires = expires;
+    await user.save();
+
+    // Enviar correo con el enlace de recuperación
+    const resetURL = `${process.env.FRONTEND_URL}/reset-password/${token}`;
+    const mailOptions = {
+      to: user.Cor_Usuario,
+      from: process.env.EMAIL_USER,
+      subject: 'Recuperación de contraseña',
+      text: `Recibimos una solicitud para restablecer tu contraseña. Haz clic en el siguiente enlace para restablecer tu contraseña:\n\n${resetURL}\n\nEste enlace expirará en una hora.`,
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    res.json({ message: 'Correo de recuperación enviado' });
+  } catch (error) {
+    console.error('Error al solicitar la recuperación de contraseña:', error);
+    res.status(500).json({ error: 'Error al solicitar la recuperación de contraseña' });
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  const { token } = req.params;
+  const { Password_Usuario } = req.body;
+
+  try {
+    const user = await UserModel.findOne({
+      where: {
+        ResetPasswordToken: token,
+        ResetPasswordExpires: { [Op.gt]: Date.now() }, // Token aún válido
+      },
+    });
+
+    if (!user) {
+      return res.status(400).json({ error: 'Token inválido o expirado' });
+    }
+
+    const hashedPassword = await bcrypt.hash(Password_Usuario, 10);
+    user.Password_Usuario = hashedPassword;
+    user.ResetPasswordToken = null;
+    user.ResetPasswordExpires = null;
+
+    await user.save();
+
+    res.json({ message: 'Contraseña restablecida con éxito' });
+  } catch (error) {
+    console.error('Error al restablecer la contraseña:', error);
+    res.status(500).json({ error: 'Error al restablecer la contraseña' });
+  }
+
+    // Aquí debes verificar si el token es válido
+   
+};
+
+// controllers/AuthController.js
+
+export const verificarToken = async (token) => {
+  // Implementa tu lógica de verificación aquí
+  return true; // O false dependiendo de la verificación
+};
+
+export const someFunction = async (req, res) => {
+  const token = req.headers.authorization?.split(" ")[1]; // Asegúrate de obtener el token del header
+
+  if (!token) {
+    return res.status(400).json({ message: 'Token no proporcionado.' });
+  }
+
+  const isValidToken = await verificarToken(token);
+
+  if (!isValidToken) {
+    return res.status(400).json({ message: 'Token no válido.' });
+  }
+
+  // Continúa con la lógica si el token es válido
+  return res.status(200).json({ message: 'Token válido.' });
+};
+
 
 export const verifyToken = async (req, res, next) => {
   const token = req.headers['authorization']?.split(' ')[1];

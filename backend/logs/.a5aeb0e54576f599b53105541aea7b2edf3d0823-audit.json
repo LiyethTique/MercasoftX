@@ -24,6 +24,26 @@
             "date": 1727281325860,
             "name": "logs\\venta-2024-09-25.log",
             "hash": "2998b3417c10b778a5ef7a30adca0dc57161be6c9ec0c8ec4da37577593b21af"
+        },
+        {
+            "date": 1727356151323,
+            "name": "logs\\venta-2024-09-26.log",
+            "hash": "1964ef5dc3d679a2acf600602d41a457bafe7d123983614ad6da219f21ef121b"
+        },
+        {
+            "date": 1727565125751,
+            "name": "logs\\venta-2024-09-28.log",
+            "hash": "339325ea8b55c837833e0f5ee0e9c61eaffaaf0c72dd4ced84e519247ae9230c"
+        },
+        {
+            "date": 1727656266545,
+            "name": "logs\\venta-2024-09-29.log",
+            "hash": "2b6c3f81fe2eaf9e1dee258147b43bf535956907a5149d07728c67c4d157e8b6"
+        },
+        {
+            "date": 1727698675905,
+            "name": "logs\\venta-2024-09-30.log",
+            "hash": "9f52e77c669ecafa884e4221c55d23c9fb5f63756d4c239b45217ed6b74eb03c"
         }
     ],
     "hashType": "sha256"

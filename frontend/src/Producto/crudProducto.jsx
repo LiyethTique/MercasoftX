@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import FormProducto from './formProducto';  // Form component for Productos
+import FormProducto from './formProducto';
 import Sidebar from '../Sidebar/Sidebar';
-import WriteTable from '../Tabla/Data-Table';  // Assuming you have a Data-Table component
-import ModalForm from '../Model/Model';  // Assuming a Modal component is available
+import WriteTable from '../Tabla/Data-Table';
+import ModalForm from '../Model/Model';
 import './crudProducto.css';
 
 const URI = process.env.REACT_APP_SERVER_BACK + '/producto/';
@@ -14,15 +14,12 @@ const CrudProducto = () => {
   const [buttonForm, setButtonForm] = useState('Enviar');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [producto, setProducto] = useState(null);
-  const [originalProducto, setOriginalProducto] = useState(null);  // New state to hold the original product
-  const [showMessage, setShowMessage] = useState(false);  // New state to show the message
+  const [originalProducto, setOriginalProducto] = useState(null);
+  const [showMessage, setShowMessage] = useState(false);
 
   useEffect(() => {
     getAllProductos();
   }, []);
-
-  // Verify URI value
-  console.log('URI:', URI);
 
   const getAllProductos = async () => {
     try {
@@ -30,8 +27,8 @@ const CrudProducto = () => {
       if (Array.isArray(response.data)) {
         if (response.data.length === 0) {
           setProductoList([]);
-          setShowMessage(true);  // Show message if no products are found
-          setTimeout(() => setShowMessage(false), 3000);  // Hide message after 3 seconds
+          setShowMessage(true);
+          setTimeout(() => setShowMessage(false), 3000);
         } else {
           setProductoList(response.data);
         }
@@ -46,12 +43,11 @@ const CrudProducto = () => {
   };
 
   const getProducto = async (Id_Producto) => {
-    // Log the ID before making the request
     console.log("Id_Producto:", Id_Producto);
     setButtonForm('Actualizar');
     try {
       const response = await axios.get(`${URI}${Id_Producto}`);
-      setOriginalProducto(response.data);  // Set the original product
+      setOriginalProducto(response.data);
       setProducto(response.data);
       setIsModalOpen(true);
     } catch (error) {
@@ -61,7 +57,6 @@ const CrudProducto = () => {
 
   const handleSubmitProducto = async (data) => {
     if (buttonForm === 'Actualizar') {
-      // Check if there are any changes
       if (JSON.stringify(data) === JSON.stringify(originalProducto)) {
         Swal.fire({
           icon: 'warning',
@@ -93,7 +88,7 @@ const CrudProducto = () => {
       setIsModalOpen(false);
       setButtonForm('Enviar');
       setProducto(null);
-      setOriginalProducto(null);  // Clear the original product
+      setOriginalProducto(null);
     } catch (error) {
       Swal.fire("Error", error.response?.data?.message || "Error al guardar el producto", "error");
     }
@@ -114,7 +109,7 @@ const CrudProducto = () => {
         try {
           await axios.delete(`${URI}${Id_Producto}`);
           Swal.fire("¡Borrado!", "El producto ha sido borrado.", "success");
-          getAllProductos();  // Refresh the list after deletion
+          getAllProductos();
         } catch (error) {
           Swal.fire("Error", error.response?.data?.message || "Error al eliminar el producto", "error");
         }
@@ -125,18 +120,16 @@ const CrudProducto = () => {
   const handleShowForm = () => {
     setButtonForm('Enviar');
     setProducto(null);
-    setOriginalProducto(null);  // Clear the original product when opening the form
+    setOriginalProducto(null);
     setIsModalOpen(true);
   };
-
-
-  const titles = ['ID', 'Nombre', 'Características', 'Existencias', 'Imagen', 'Fecha de Vencimiento', 'ID Unidad', 'Unidad de Medida', 'Precio', 'Acciones'];
 
   const titles = [
     'Código Producto', 'Nombre', 'Características', 'Precio Promedio', 'Existencias',
     'Imagen', 'Fecha Vencimiento', 'Categoría', 'Precio Anterior', 'Unidad de Medida',
     'Precio', 'Acciones'
   ];
+
   const data = productoList.map(producto => [
     producto.Id_Producto,
     producto.Nom_Producto,
@@ -166,7 +159,6 @@ const CrudProducto = () => {
         onClick={() => deleteProducto(producto.Id_Producto)}
         title="Borrar"
       >
-
         <img
           src="/trash3.svg"
           alt="Borrar"

@@ -19,9 +19,17 @@ const CrudCliente = () => {
     getAllClientes();
   }, []);
 
+  const getToken = () => {
+    return localStorage.getItem('token');
+  };
+
   const getAllClientes = async () => {
     try {
-      const respuesta = await axios.get(URI);
+      const respuesta = await axios.get(URI, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`
+        }
+      });
       if (Array.isArray(respuesta.data)) {
         setClienteList(respuesta.data);
       } else {
@@ -30,28 +38,48 @@ const CrudCliente = () => {
       }
     } catch (error) {
       console.error("Error fetching clientes:", error);
-      Swal.fire("Error", error.response?.data?.message || "Error al obtener los Clientes", "error");
+      if (error.response?.status === 401) {
+        Swal.fire("Error", "Tu sesión ha expirado. Inicia sesión de nuevo.", "warning");
+      } else {
+        Swal.fire("Error", error.response?.data?.message || "Error al obtener los Clientes", "error");
+      }
     }
   };
 
   const getCliente = async (Id_Cliente) => {
     setButtonForm('Actualizar');
     try {
-      const respuesta = await axios.get(`${URI}${Id_Cliente}`);
+      const respuesta = await axios.get(`${URI}${Id_Cliente}`, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`
+        }
+      });
       setCliente(respuesta.data);
       setIsModalOpen(true);
     } catch (error) {
-      Swal.fire("Error", error.response?.data?.message || "Error al obtener el Cliente", "error");
+      if (error.response?.status === 401) {
+        Swal.fire("Error", "Tu sesión ha expirado. Inicia sesión de nuevo.", "warning");
+      } else {
+        Swal.fire("Error", error.response?.data?.message || "Error al obtener el Cliente", "error");
+      }
     }
   };
 
   const handleSubmitCliente = async (data) => {
     try {
       if (buttonForm === 'Actualizar') {
-        await axios.put(`${URI}${cliente.Id_Cliente}`, data);
+        await axios.put(`${URI}${cliente.Id_Cliente}`, data, {
+          headers: {
+            Authorization: `Bearer ${getToken()}`
+          }
+        });
         Swal.fire("Actualizado!", "El cliente ha sido actualizado.", "success");
       } else {
-        await axios.post(URI, data);
+        await axios.post(URI, data, {
+          headers: {
+            Authorization: `Bearer ${getToken()}`
+          }
+        });
         Swal.fire("Creado!", "El cliente ha sido creado.", "success");
       }
       getAllClientes();
@@ -59,7 +87,11 @@ const CrudCliente = () => {
       setButtonForm('Enviar');
       setCliente(null);
     } catch (error) {
-      Swal.fire("Error", error.response?.data?.message || "Error al guardar el Cliente", "error");
+      if (error.response?.status === 401) {
+        Swal.fire("Error", "Tu sesión ha expirado. Inicia sesión de nuevo.", "warning");
+      } else {
+        Swal.fire("Error", error.response?.data?.message || "Error al guardar el Cliente", "error");
+      }
     }
   };
 
@@ -75,11 +107,19 @@ const CrudCliente = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axios.delete(`${URI}${Id_Cliente}`);
+          await axios.delete(`${URI}${Id_Cliente}`, {
+            headers: {
+              Authorization: `Bearer ${getToken()}`
+            }
+          });
           Swal.fire("¡Borrado!", "El registro ha sido borrado.", "success");
           getAllClientes();
         } catch (error) {
-          Swal.fire("Error", error.response?.data?.message || "Error al eliminar el Cliente", "error");
+          if (error.response?.status === 401) {
+            Swal.fire("Error", "Tu sesión ha expirado. Inicia sesión de nuevo.", "warning");
+          } else {
+            Swal.fire("Error", error.response?.data?.message || "Error al eliminar el Cliente", "error");
+          }
         }
       }
     });
@@ -99,9 +139,8 @@ const CrudCliente = () => {
     cliente.Tel_Cliente,
     <div key={cliente.Id_Cliente}>
       <a
-       href="#!"
-      
-        className="btn-custom me-2" 
+        href="#!"
+        className="btn-custom me-2"
         onClick={() => getCliente(cliente.Id_Cliente)}
         title="Editar"
       >
@@ -112,7 +151,7 @@ const CrudCliente = () => {
         />
       </a>
       <a
-       href="#!"
+        href="#!"
         className="btn-custom" 
         onClick={() => deleteCliente(cliente.Id_Cliente)}
         title="Borrar"
@@ -120,7 +159,6 @@ const CrudCliente = () => {
         <img 
           src="/trash3.svg" 
           alt="Borrar" 
-          
         />
       </a>
     </div>
@@ -137,10 +175,10 @@ const CrudCliente = () => {
         {/* Botón para abrir el modal */}
         <div className="d-flex justify-content-between mb-3">
           <a
-           href="#!"
-
-          className="btn btn-success d-flex align-items-center"
-           onClick={handleShowForm}>   
+            href="#!"
+            className="btn btn-success d-flex align-items-center"
+            onClick={handleShowForm}
+          >   
             <img
               src="/plus-circle (1).svg"
               alt="Add Icon"

@@ -113,7 +113,7 @@ const CrudUsuario = () => {
     setIsModalOpen(true);
   };
 
-  const titles = ['ID Usuario', 'Correo', 'Responsable ID', 'Acciones'];
+  const titles = ['Codigo Usuario', 'Correo', 'Responsable ID', 'Acciones'];
   const data = usuarioList.map(usuario => [
     usuario.Id_Usuario,
     usuario.Cor_Usuario,

@@ -10,12 +10,6 @@ const FormUsuario = ({ buttonForm, usuario, onSubmit, onClose, isEdit }) => {
     Id_Responsable: ''
   });
 
-  const [initialData, setInitialData] = useState({
-    Cor_Usuario: '',
-    Password_Usuario: '',
-    Id_Responsable: ''
-  });
-
   const [errors, setErrors] = useState({
     Cor_Usuario: '',
     Password_Usuario: '',
@@ -24,41 +18,66 @@ const FormUsuario = ({ buttonForm, usuario, onSubmit, onClose, isEdit }) => {
 
   const [responsables, setResponsables] = useState([]);
 
+  // Cargar datos del usuario cuando se edita
   useEffect(() => {
-    if (usuario) {
-      setFormData(usuario);
-      setInitialData(usuario);
+    if (isEdit && usuario) {
+      setFormData({
+        Cor_Usuario: usuario.Cor_Usuario || '',
+        Password_Usuario: '',
+        Id_Responsable: usuario.Id_Responsable || ''
+      });
     }
-  }, [usuario]);
+  }, [isEdit, usuario]);
 
   useEffect(() => {
     const fetchResponsables = async () => {
       try {
-        const response = await axios.get(URI_RESPONSABLE);
+        const token = localStorage.getItem('token');
+        const response = await axios.get(URI_RESPONSABLE, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
         setResponsables(response.data);
       } catch (error) {
-        console.error("Error al obtener los responsables", error);
+        console.error('Error al obtener los responsables', error);
       }
     };
 
     fetchResponsables();
   }, []);
 
+  // Función para validar si el email tiene un dominio permitido
+  const isEmailDomainValid = (email) => {
+    const validDomains = ['gmail.com', 'hotmail.com'];
+    const emailParts = email.split('@');
+    if (emailParts.length !== 2) {
+      return false;
+    }
+    const domain = emailParts[1].toLowerCase();
+    return validDomains.includes(domain);
+  };
+
   const validateForm = () => {
     const newErrors = {};
 
+    // Validación para el correo electrónico
     if (!formData.Cor_Usuario) {
-      newErrors.Cor_Usuario = 'El correo es requerido.';
+      newErrors.Cor_Usuario = 'El campo de correo electrónico es obligatorio.';
     } else if (!/\S+@\S+\.\S+/.test(formData.Cor_Usuario)) {
-      newErrors.Cor_Usuario = 'El formato del correo es inválido.';
+      newErrors.Cor_Usuario = 'El formato del correo electrónico es inválido. Ejemplo: usuario@gmail.com o usuario@hotmail.com';
+    } else if (!isEmailDomainValid(formData.Cor_Usuario)) {
+      newErrors.Cor_Usuario = 'El dominio del correo debe ser "gmail.com" o "hotmail.com".';
     }
 
+    // Validación para la contraseña (solo si no es edición)
     if (!isEdit && !formData.Password_Usuario) {
-      newErrors.Password_Usuario = 'La contraseña es requerida.';
+      newErrors.Password_Usuario = 'El campo de contraseña es obligatorio.';
     }
 
+    // Validación para el responsable
     if (!formData.Id_Responsable) {
-      newErrors.Id_Responsable = 'El ID del responsable es requerido.';
+      newErrors.Id_Responsable = 'Debe seleccionar un responsable.';
     }
 
     return newErrors;
@@ -123,7 +142,7 @@ const FormUsuario = ({ buttonForm, usuario, onSubmit, onClose, isEdit }) => {
             onChange={handleChange}
           >
             <option value="">Seleccione un responsable</option>
-            {responsables.map(responsable => (
+            {responsables.map((responsable) => (
               <option key={responsable.Id_Responsable} value={responsable.Id_Responsable}>
                 {responsable.Nom_Responsable} - {responsable.Tip_Responsable}
               </option>

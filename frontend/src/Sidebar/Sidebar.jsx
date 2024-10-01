@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Swal from 'sweetalert2';  // Importa SweetAlert2
 import '../Estilos/Sidebar.css';
+import jwt_decode from 'jwt-decode';
+
 
 function Sidebar() {
     const [isVisible, setIsVisible] = useState(false); // Estado para la visibilidad del sidebar
@@ -53,6 +55,21 @@ function Sidebar() {
         });
     };
 
+    // Función para verificar si el usuario es administrador
+    const isAdmin = () => {
+        const token = localStorage.getItem('token');
+        if (!token) return false;
+
+        try {
+            const decodedToken = jwt_decode(token); // Usamos jwt_decode para decodificar el token
+            console.log("Decoded Token:", decodedToken);
+            return decodedToken.Tip_Responsable === 'Administrador'; // Verifica si el rol es "Administrador"
+        } catch (error) {
+            console.error('Error al decodificar el token', error);
+            return false;
+        }
+    };
+
     return (
         <>
             {/* Botón de menú hamburguesa */}
@@ -81,11 +98,11 @@ function Sidebar() {
                     {renderNavItem('/entrada/', 'transfer.svg', 'Entrada', selectedOption, handleOptionSelect)}
                     {renderNavItem('/pedido/', 'orders.svg', 'Pedido', selectedOption, handleOptionSelect)}
                     {renderNavItem('/producto/', 'product.svg', 'Producto', selectedOption, handleOptionSelect)}
-                    {renderNavItem('/responsable/', 'responsible.svg', 'Responsable', selectedOption, handleOptionSelect)}
                     {renderNavItem('/traslado/', 'entrance.svg', 'Traslado', selectedOption, handleOptionSelect)}
                     {renderNavItem('/unidad/', 'unit.svg', 'Unidad', selectedOption, handleOptionSelect)}
                     {renderNavItem('/venta/', 'sale.svg', 'Venta', selectedOption, handleOptionSelect)}
-                    {renderNavItem('/users/', 'user.svg', 'Usuarios', selectedOption, handleOptionSelect)} {/* Nuevo enlace para Usuarios */}
+                    {isAdmin() && renderNavItem('/responsable/', 'responsible.svg', 'Responsable', selectedOption, handleOptionSelect)}
+                    {isAdmin() && renderNavItem('/users/', 'adminUser.svg', 'Usuarios', selectedOption, handleOptionSelect)} {/* Nuevo enlace para Usuarios */}
                 </ul>
                 <hr />
 

@@ -1,11 +1,12 @@
 import axios from 'axios'
 import { useState, useEffect } from 'react'
 import FormPedidoProducto from './formPedidoProducto'
+import FormQueryPedidoProducto from './formQueryPedidoProducto'
 import Sidebar from '../Sidebar/Sidebar'
 
 import Swal from 'sweetalert2'
 
-const URI = process.env.SERVER_BACK + '/pedidoproducto/' // Ajusta la URI
+const URI = process.env.REACT_APP_SERVER_BACK + '/pedidoproducto/' // Ajusta la URI
 
 const CrudPedidoProducto = () => {
 
@@ -84,6 +85,7 @@ const CrudPedidoProducto = () => {
             <hr />
             <FormPedidoProducto buttonForm={buttonForm} entity={entity} URI={URI} updateTextButton={updateTextButton} />
             <hr />
+            <FormQueryPedidoProducto URI={URI} getEntity={getEntity} deleteEntity={deleteEntity} buttonForm={buttonForm} />
         </>
     )
 }

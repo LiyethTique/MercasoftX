@@ -3,14 +3,14 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
+# HOLA CAMBIOS
 # User-specific files
+
 *.rsuser
 *.suo
 *.user
 *.userosscache
 *.sln.docstates
- bb37ab92bc2ea9c01e81d45fc5b28fb6ac705547
- !node_modules/
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -285,6 +285,8 @@ FakesAssemblies/
 
 # Node.js Tools for Visual Studio
 .ntvs_analysis.dat
+
+
 # Visual Studio 6 build log
 *.plg
 

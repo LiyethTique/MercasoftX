@@ -1,6 +1,7 @@
 import Traslado from "../models/trasladoModel.js";
 import winston from "winston";
 import DailyRotateFile from "winston-daily-rotate-file";
+import { Sequelize } from "sequelize";
 
 const logger = winston.createLogger({
     level: "error",
@@ -22,12 +23,12 @@ export const getAllTraslados = async (req, res) => {
         const traslados = await Traslado.findAll();
         if (traslados.length > 0) {
             res.status(200).json(traslados);
-            return
+        } else {
+            res.status(200).json([]);
         }
-        res.status(400).json({ message: 'No existen traslados' });
     } catch (error) {
         logger.error(error.message);
-        res.status(500).json({ message: 'Error al obtener traslados' });
+        res.status(500).json({ message: 'Error al obtener los traslados' });
     }
 };
 
@@ -46,10 +47,9 @@ export const getTraslado = async (req, res) => {
 };
 
 export const createTraslado = async (req, res) => {
+    const { Fec_Traslado, Dcp_Traslado, Ori_Traslado, Des_Traslado, Uni_DeMedida, Id_Producto, Can_Producto, Val_Unitario, Id_Responsable } = req.body;
 
-    const { Fec_Traslado, Des_Traslado, Id_Producto, Can_Producto, Val_Unitario, Val_Traslado, Id_Responsable } = req.body;
-
-    if (!Fec_Traslado || !Des_Traslado || !Id_Producto || !Can_Producto || !Val_Unitario || !Val_Traslado || !Id_Responsable) {
+    if (!Fec_Traslado || !Dcp_Traslado || !Ori_Traslado || !Des_Traslado || !Uni_DeMedida || !Id_Producto || !Can_Producto || !Val_Unitario || !Id_Responsable) {
         logger.warn('Todos los campos son obligatorios');
         return res.status(400).json({ message: 'Todos los campos son obligatorios' });
     }
@@ -64,14 +64,13 @@ export const createTraslado = async (req, res) => {
 };
 
 export const updateTraslado = async (req, res) => {
+    const { Fec_Traslado, Dcp_Traslado, Ori_Traslado, Des_Traslado, Uni_DeMedida, Id_Producto, Can_Producto, Val_Unitario, Id_Responsable } = req.body;
 
-    const { Fec_Traslado, Des_Traslado, Id_Producto, Can_Producto, Val_Unitario, Val_Traslado, Id_Responsable } = req.body;
-
-    if (!Fec_Traslado || !Des_Traslado || !Id_Producto || !Can_Producto || !Val_Unitario || !Val_Traslado || !Id_Responsable) {
+    if (!Fec_Traslado || !Dcp_Traslado || !Ori_Traslado || !Des_Traslado || !Uni_DeMedida || !Id_Producto || !Can_Producto || !Val_Unitario || !Id_Responsable) {
         logger.warn('Todos los campos son obligatorios');
         return res.status(400).json({ message: 'Todos los campos son obligatorios' });
     }
-    
+
     try {
         const [updated] = await Traslado.update(req.body, {
             where: { Id_Traslado: req.params.id }
@@ -80,7 +79,7 @@ export const updateTraslado = async (req, res) => {
             const updatedTraslado = await Traslado.findByPk(req.params.id);
             res.status(200).json({ message: 'Traslado actualizado exitosamente', updatedTraslado });
         } else {
-            res.status(404).json({ message: 'Traslado no encontrado' });
+            res.status(404).json({ message: 'Debe modificar al menos un campo.' });
         }
     } catch (error) {
         logger.error(error.message);
@@ -101,5 +100,24 @@ export const deleteTraslado = async (req, res) => {
     } catch (error) {
         logger.error(error.message);
         res.status(500).json({ message: 'Error al eliminar el traslado' });
+    }
+};
+
+export const getQueryTraslado = async (req, res) => {
+    try {
+        const traslados = await Traslado.findAll({
+            where: {
+                Dcp_Traslado: {
+                    [Sequelize.Op.like]: `%${req.params.Dcp_Traslado}%`
+                }
+            }
+        });
+        if (traslados.length > 0) {
+            res.status(200).json(traslados);
+        } else {
+            res.status(404).json({ message: 'No se encontraron registros para la descripción especificada' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
 };

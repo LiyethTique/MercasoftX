@@ -1,1 +1,0 @@
-2024-09-17T03:12:16.593Z [error]: Error al crear la entrada: Cannot add or update a child row: a foreign key constraint fails (`mercasoftx`.`entrada`, CONSTRAINT `Id_Producto` FOREIGN KEY (`Id_Producto`) REFERENCES `producto` (`Id_Producto`))

@@ -3,10 +3,12 @@ import axios from 'axios';
 import FormPedido from '../Pedido/formPedido';
 import Sidebar from '../Sidebar/Sidebar';
 import Swal from 'sweetalert2';
-import WriteTable from '../Tabla/Data-Table';
 import ModalForm from '../Model/Model';
+import { IoTrash, IoPencil } from "react-icons/io5";
+import { Button } from 'react-bootstrap';
+import WriteTable from '../Tabla/Data-Table';
 
-const URI = (process.env.SERVER_BACK || 'http://localhost:3002') + '/pedido/';
+const URI = process.env.REACT_APP_SERVER_BACK + '/pedido/';
 
 const CrudPedido = () => {
   const [pedidoList, setPedidoList] = useState([]);
@@ -101,20 +103,33 @@ const CrudPedido = () => {
     }
   };
 
-  const titles = ['Código', 'Fecha Pedido', 'ID Cliente', 'Estado Pedido', 'Valor Pedido', 'Acciones'];
-  const data = pedidoList.map(pedido => [
-    pedido.Id_Pedido,
-    pedido.Fec_Pedido,
-    pedido.Id_Cliente,
-    pedido.Est_Pedido,
-    pedido.Val_Pedido,
-    <div key={pedido.Id_Pedido}>
-      <button className="btn btn-warning me-2" onClick={() => getPedido(pedido.Id_Pedido)} title="Editar">
-        <img src="/pencil-square.svg" alt="Editar" style={{ width: '24px', height: '24px' }} />
-      </button>
-      <button className="btn btn-danger" onClick={() => deletePedido(pedido.Id_Pedido)} title="Borrar">
-        <img src="/archive.svg" alt="Borrar" style={{ width: '24px', height: '24px' }} />
-      </button>
+  const titles = ['Código', 'Fecha Pedido', 'Nombre Cliente', 'Estado Pedido', 'Valor Pedido', 'Acciones'];
+  const data = pedidoList.length === 0
+   ? [[ '', '', '', '', '', '', '', ]]
+   : pedidoList.map(pedidoItem => [
+    pedidoItem.Id_Pedido,
+    pedidoItem.Fec_Pedido,
+    pedidoItem.Id_Cliente,
+    pedidoItem.Est_Pedido,
+    <div key={pedidoItem.Id_Pedido}>
+      <a
+        href="#!"
+        className='btn-custom me-2'
+        onClick={() => getPedido(pedidoItem.Id_Pedido)}
+        title="Editar"
+        style={{ pointerEvents: pedidoList.length > 0 ? 'auto' : 'none', opacity: pedidoList.length > 0 ? 1 : 0.5 }}
+      >
+        <IoPencil size={20} color="blue" />
+      </a>
+      <a
+        href="#!"
+        className='btn-custom'
+        onClick={() => deletePedido(pedidoItem.Id_Pedido)}
+        title="Borrar"
+        style={{ pointerEvents: pedidoList.length > 0 ? 'auto' : 'none', opacity: pedidoList.length > 0 ? 1 : 0.5 }}
+      >
+        <IoTrash size={20} color="red" />
+      </a>
     </div>
   ]);
 
@@ -122,12 +137,20 @@ const CrudPedido = () => {
     <>
       <Sidebar />
       <div className="container mt-4">
-        <center><h1>{moduleName}</h1></center>
+        <center>
+          <h1>{moduleName}</h1>
+        </center>
         <div className="d-flex justify-content-between mb-3">
-          <button className="btn btn-success d-flex align-items-center" onClick={handleShowForm}>
-            <img src="/plus-circle (1).svg" alt="Agregar Pedido" style={{ width: '20px', height: '20px', marginRight: '8px', filter: 'invert(100%)' }} />
-            Agregar Pedido
-          </button>
+          <Button
+            style={{ backgroundColor: 'orange', borderColor: 'orange' }}
+            onClick={handleShowForm}>
+            <img
+              src="/plus-circle (1).svg"
+              alt="Add Icon"
+              style={{ width: '20px', height: '20px', marginRight: '8px', filter: 'invert(100%)' }}
+            />
+            Registrar
+          </Button>
         </div>
         <WriteTable titles={titles} data={data} moduleName={moduleName} />
         <ModalForm

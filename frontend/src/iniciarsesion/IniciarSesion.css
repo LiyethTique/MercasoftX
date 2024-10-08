@@ -1,5 +1,3 @@
-/* iniciarSesion.css */
-
 /* Contenedor del formulario */
 .login-container {
   display: flex;
@@ -47,9 +45,33 @@
   outline: none;
 }
 
+/* Contenedor para la contraseña y el ícono */
+.password-container {
+  position: relative;
+  width: 100%;
+}
+
+/* Campo de entrada de contraseña con espacio para el ícono */
+.password-container input {
+  padding-right: 40px; /* Espacio para el ícono */
+}
+
+/* Botón para mostrar/ocultar contraseña */
+.password-toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #333;
+  font-size: 18px;
+}
+
 /* Botón de inicio de sesión */
 .login-button {
-  background-color: #007bff; /* Color de fondo del botón */
+  background-color: orange; /* Color de fondo del botón */
   color: white;
   border: none;
   border-radius: 8px; /* Bordes redondeados */
@@ -64,21 +86,52 @@
   transform: scale(1.02); /* Efecto de escala al pasar el cursor */
 }
 
-/* Enlace de registro */
+/* Estilo para el enlace de registro */
 .register-link {
-  margin-top: 20px;
-}
-
-.register-link p {
-  font-size: 16px;
-}
-
-.register-link a {
-  color: #007bff; /* Color del enlace */
-  text-decoration: none;
+  color: #ff8c00; /* Color del enlace anaranjado brillante */
+  text-decoration: none; /* Elimina la subrayado por defecto */
   font-weight: bold;
+  position: relative; /* Necesario para el pseudo-elemento */
+  transition: color 0.3s ease, background-color 0.3s ease, transform 0.3s ease;
+  padding: 4px 0; /* Espacio para el efecto de fondo */
 }
 
-.register-link a:hover {
-  text-decoration: underline; /* Subrayado al pasar el cursor */
+/* Animación del fondo del enlace */
+.register-link::before {
+  content: ""; /* Contenido vacío para el pseudo-elemento */
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2px; /* Altura del fondo animado */
+  background-color: rgba(250, 248, 245, 0.3); /* Fondo con opacidad */
+  transform: scaleX(0); /* Comienza con la escala de la línea en 0 */
+  transform-origin: bottom left; /* Animación comienza desde la izquierda */
+  transition: transform 0.3s ease; /* Transición suave */
+}
+
+/* Estilo para el hover del enlace */
+.register-link:hover {
+  color: #ff4500; /* Un tono más intenso de anaranjado al pasar el cursor */
+  background-color: rgba(255, 140, 0, 0.1); /* Fondo con opacidad al pasar el cursor */
+  border-radius: 4px; /* Bordes redondeados para el fondo */
+}
+
+.register-link:hover::before {
+  transform: scaleX(1); /* Anima la línea al 100% al pasar el cursor */
+}
+
+/* IniciarSesion.css */
+.custom-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.custom-popup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }

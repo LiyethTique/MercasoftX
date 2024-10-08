@@ -1,5 +1,12 @@
-import express from "express";
-import { createUnidad, deleteUnidad, getAllUnidades, getUnidad, updateUnidad } from "../controllers/unidadController.js";
+import express from 'express';
+import {
+    createUnidad,
+    updateUnidad,
+    getAllUnidades,
+    getUnidad,
+    deleteUnidad,
+    getQueryUnidad
+} from '../controllers/unidadController.js';
 import winston from "winston";
 import DailyRotateFile from "winston-daily-rotate-file";
 
@@ -20,17 +27,18 @@ const logger = winston.createLogger({
     ]
 });
 
+// Middleware para registrar errores
 const logError = (err, req, res, next) => {
     logger.error(err.message);
     res.status(500).json({ error: 'Internal Server Error' });
 };
 
+// Rutas para el controlador de Unidad
 router.get('/', getAllUnidades);
 router.get('/:id', getUnidad);
 router.post('/', createUnidad);
 router.put('/:id', updateUnidad);
 router.delete('/:id', deleteUnidad);
-
-router.use(logError);
+router.get('/Nom_Unidad/:Nom_Unidad', getQueryUnidad);
 
 export default router;

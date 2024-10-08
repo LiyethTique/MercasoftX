@@ -11,8 +11,20 @@ const Traslado = db.define('traslado', {
         type: DataTypes.DATE,
         allowNull: false
     },
+    Dcp_Traslado: {
+        type: DataTypes.STRING(100),
+        allowNull: false
+    },
+    Ori_Traslado: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
     Des_Traslado: {
-        type: DataTypes.STRING(255),
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    Uni_DeMedida: {
+        type: DataTypes.STRING(50),
         allowNull: false
     },
     Id_Producto: {
@@ -24,10 +36,6 @@ const Traslado = db.define('traslado', {
         allowNull: false
     },
     Val_Unitario: {
-        type: DataTypes.DECIMAL(10, 2),
-        allowNull: false
-    },
-    Val_Traslado: {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false
     },

@@ -1,18 +1,24 @@
-import { Sequelize } from "sequelize";
 import Venta from "../models/ventaModel.js";
+import Pedido from "../models/pedidoModel.js";
 
+// Mostrar todos los registros
 // Mostrar todos los registros
 export const getAllVenta = async (req, res) => {
     try {
-        const ventas = await Venta.findAll();
-        console.log(ventas)
+        const ventas = await Venta.findAll({
+            include: [{ 
+                model: Pedido,
+                as: 'pedido',  // Alias corregido
+            }]
+        });
+        console.log(ventas);
         if (ventas.length > 0) {
             res.status(200).json(ventas);
-            return
+        } else {
+            res.status(400).json({ message: "No existen Ventas" });
         }
-        res.status(400).json({ message: "No existen Ventas" });
     } catch (error) {
-        console.log(error)
+        console.log(error);
         res.status(500).json({ message: error.message });
     }
 }
@@ -20,11 +26,14 @@ export const getAllVenta = async (req, res) => {
 // Mostrar un registro
 export const getVenta = async (req, res) => {
     try {
-        const venta = await Venta.findAll({
-            where: { Id_Venta: req.params.id }
+        const venta = await Venta.findByPk(req.params.id, {
+            include: [{ 
+                model: Pedido,
+                as: 'pedido',  // Alias corregido
+            }]
         });
-        if (venta.length > 0) {
-            res.status(200).json(venta[0]);
+        if (venta) {
+            res.status(200).json(venta);
         } else {
             res.status(404).json({ message: 'Venta no encontrada' });
         }
@@ -88,7 +97,7 @@ export const deleteVenta = async (req, res) => {
         const deleted = await Venta.destroy({
             where: { id: req.params.id }
         });
-        if (deleteVenta) {
+        if (deletedVenta) {
             res.status(200).json({ message: '¡Registro Borrado Exitosamente!' });
         } else {
             res.status(404).json({ message: 'Venta no encontrada' });
@@ -96,4 +105,4 @@ export const deleteVenta = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
-};
+}

@@ -1,118 +1,123 @@
-import axios from 'axios';
-import { useState, useEffect, useCallback } from 'react';
-import FormCarrito from './formCarrito';
-import Sidebar from '../Sidebar/Sidebar'
+import React, { useState, useEffect } from 'react';
+import './ShoppingCart.css';
 
-import Swal from 'sweetalert2';
+const ShoppingCart = () => {
+  // Estado para almacenar los productos en el carrito, inicializamos desde localStorage
+  const [cartItems, setCartItems] = useState(() => {
+    const savedCart = localStorage.getItem('cartItems');
+    return savedCart ? JSON.parse(savedCart) : [];
+  });
 
-// Esta es la URI a la que se conectará el backend
-const URI = process.env.SERVER_BACK + '/carrito/'; // Asegúrate de que esta variable esté configurada correctamente
+  // Productos disponibles (podrías cargarlos desde una API)
+  const products = [
+    { id: 1, name: 'Zapato deportivo', image: 'https://example.com/shoe-image.jpg', price: 50000, discount: 20 },
+    { id: 2, name: 'Camiseta', image: 'https://example.com/t-shirt-image.jpg', price: 30000, discount: 15 },
+    { id: 3, name: 'Mochila', image: 'https://example.com/backpack-image.jpg', price: 45000, discount: 10 },
+  ];
 
-const CrudCarrito = () => {
-    const [carritoList, setCarritoList] = useState([]);
-    const [buttonForm, setButtonForm] = useState('Enviar');
-    const [carrito, setCarrito] = useState({
-        Id_Carrito: '',
-        Can_Producto: ''
-    });
+  // Guardar los cambios del carrito en localStorage cuando se actualicen los productos
+  useEffect(() => {
+    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+  }, [cartItems]);
 
-    useEffect(() => {
-        getAllCarritos();
-    }, []);
+  // Función para agregar productos al carrito
+  const addToCart = (product) => {
+    const existingProduct = cartItems.find(item => item.id === product.id);
+    if (existingProduct) {
+      setCartItems(cartItems.map(item =>
+        item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+      ));
+    } else {
+      setCartItems([...cartItems, { ...product, quantity: 1 }]);
+    }
+  };
 
-    const getAllCarritos = useCallback(async () => {
-        try {
-            const respuesta = await axios.get(URI);
-            setCarritoList(respuesta.data);
-        } catch (error) {
-            Swal.fire({
-                title: 'Error',
-                text: error.response?.data?.message || 'Hubo un problema al obtener los carritos.',
-                icon: 'error'
-            });
-        }
-    }, []);
+  // Función para actualizar la cantidad de productos en el carrito
+  const updateQuantity = (productId, quantity) => {
+    setCartItems(cartItems.map(item =>
+      item.id === productId ? { ...item, quantity: Math.max(quantity, 1) } : item
+    ));
+  };
 
-    const getCarrito = useCallback(async (idCarrito) => {
-        setButtonForm('Actualizar');
-        try {
-            const respuesta = await axios.get(URI + idCarrito);
-            setCarrito(respuesta.data);
-        } catch (error) {
-            Swal.fire({
-                title: 'Error',
-                text: error.response?.data?.message || 'Hubo un problema al obtener el carrito.',
-                icon: 'error'
-            });
-        }
-    }, []);
+  // Función para eliminar un producto del carrito
+  const removeFromCart = (productId) => {
+    setCartItems(cartItems.filter(item => item.id !== productId));
+  };
 
-    const updateTextButton = (texto) => {
-        setButtonForm(texto);
-        if (texto === 'Enviar') {
-            setCarrito({ Id_Carrito: '', Can_Producto: '' }); // Limpiar el estado del carrito si es necesario
-        }
-    };
+  // Calcular el subtotal del carrito
+  const calculateSubtotal = () => {
+    return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
+  };
 
-    const deleteCarrito = async (idCarrito) => {
-        Swal.fire({
-            title: "¿Estás seguro?",
-            text: "¡No podrás revertir esto!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Sí, borrar!"
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                try {
-                    await axios.delete(URI + idCarrito);
-                    Swal.fire({
-                        title: "¡Borrado!",
-                        text: "El registro ha sido borrado.",
-                        icon: "success"
-                    });
-                    getAllCarritos(); // Refresh the list after deletion
-                } catch (error) {
-                    Swal.fire({
-                        title: 'Error',
-                        text: error.response?.data?.message || 'Hubo un problema al borrar el carrito.',
-                        icon: 'error'
-                    });
-                }
-            }
-        });
-    };
+  // Calcular impuestos y envío
+  const calculateTotal = () => {
+    const subtotal = calculateSubtotal();
+    const tax = subtotal * 0.19; // Suponiendo 19% de impuestos
+    const shipping = subtotal > 100000 ? 0 : 10000; // Envío gratis si el subtotal es mayor a 100,000
+    return subtotal + tax + shipping;
+  };
 
-    return (
-        <>
-        <Sidebar />
-            <table className="table table-striped">
-                <thead>
-                    <tr>
-                        <th>ID Carrito</th>
-                        <th>Can_Producto</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {carritoList.map((carrito) => (
-                        <tr key={carrito.Id_Carrito}>
-                            <td>{carrito.Id_Carrito}</td>
-                            <td>{carrito.Can_Producto}</td>
-                            <td>
-                                <button className="btn btn-warning" onClick={() => getCarrito(carrito.Id_Carrito)}>Editar</button>
-                                <button className="btn btn-danger" onClick={() => deleteCarrito(carrito.Id_Carrito)}>Borrar</button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-            <hr />
-            <FormCarrito buttonForm={buttonForm} carrito={carrito} URI={URI} updateTextButton={updateTextButton} />
-            <hr />
-        </>
-    );
+  return (
+    <div className="shopping-cart">
+      {/* Sección de productos disponibles */}
+      <div className="available-products">
+        <h2>PRODUCTOS DISPONIBLES</h2>
+        <div className="product-list">
+          {products.map((product) => (
+            <div key={product.id} className="product-card">
+              <img
+                src={product.image}
+                alt={product.name}
+                className="product-image"
+              />
+              <h3>{product.name}</h3>
+              <p>Precio: ${product.price}</p>
+              <button onClick={() => addToCart(product)}>Agregar al carrito</button>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Sección del carrito */}
+      <div className="cart-section">
+        <h1>Carrito</h1>
+        {cartItems.length > 0 ? (
+          <>
+            {cartItems.map((item) => (
+              <div key={item.id} className="cart-item">
+                <img src={item.image} alt={item.name} className="cart-item-image" />
+                <div className="cart-item-info">
+                  <h3>{item.name}</h3>
+                  <p>Precio: ${item.price}</p>
+                  <input
+                    type="number"
+                    value={item.quantity}
+                    min="1"
+                    onChange={(e) => updateQuantity(item.id, parseInt(e.target.value))}
+                  />
+                  <p>Total: ${item.price * item.quantity}</p>
+                  <button onClick={() => removeFromCart(item.id)}>Eliminar</button>
+                </div>
+              </div>
+            ))}
+            <div className="cart-summary">
+              <h2>Resumen</h2>
+              <p>Subtotal: ${calculateSubtotal()}</p>
+              <p>Impuestos (19%): ${(calculateSubtotal() * 0.19).toFixed(2)}</p>
+              <p>Envío: ${calculateSubtotal() > 100000 ? 'Gratis' : '10,000'}</p>
+              <h3>Total a pagar: ${calculateTotal().toFixed(2)}</h3>
+              <button>Pagar</button>
+            </div>
+          </>
+        ) : (
+          <div className="empty-cart">
+            <img src="/cart-plus.svg" alt="Carrito vacío" className="empty-cart-icon" />
+            <p>Tu carrito está vacío.</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 };
 
-export default CrudCarrito;
+export default ShoppingCart;

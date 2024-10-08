@@ -1,37 +1,38 @@
+// models/authModel.js
 import { DataTypes } from 'sequelize';
-import bcryptjs from 'bcryptjs'; // Asegúrate de tener instalado bcryptjs o bcryptjsjs
-import db from '../database/db.js';
+import sequelize from '../database/db.js'; // tu configuración de base de datos
 
-const UserModel = db.define('usuario', {
+const UserModel = sequelize.define('usuario', {
   Id_Usuario: {
     type: DataTypes.INTEGER,
-    autoIncrement: true,
     primaryKey: true,
+    autoIncrement: true,
   },
-  Cor_Usuario: {  // Corregido el nombre de la columna
+  Cor_Usuario: {
     type: DataTypes.STRING,
-    unique: true,
     allowNull: false,
-    validate: {
-      isEmail: true, // Validación para asegurar que el email tiene el formato correcto
-    },
+    unique: true,
   },
   Password_Usuario: {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  Id_Responsable: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  // Nuevos campos para la recuperación de contraseña
+  ResetPasswordToken: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  ResetPasswordExpires: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
 }, {
-  freezeTableName: true,
   tableName: 'usuario',
-  timestamps: true, // Asegura que los timestamps sean manejados correctamente
-  createdAt: 'createdAT', // Mapear el nombre correcto de la columna
-  updatedAt: 'updatedAT', // Mapear el nombre correcto de la columna
-});
-
-// Hash de la contraseña antes de guardar el usuario en la base de datos
-UserModel.beforeCreate(async (user) => {
-  const salt = await bcryptjs.genSalt(10);
-  user.Password_Usuario = await bcryptjs.hash(user.Password_Usuario, salt);
+  timestamps: false,
 });
 
 export default UserModel;

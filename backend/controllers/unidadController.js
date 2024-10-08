@@ -1,6 +1,7 @@
 import Unidad from "../models/unidadModel.js";
 import winston from "winston";
 import DailyRotateFile from "winston-daily-rotate-file";
+import { Area,Responsable } from "../app.js";
 
 const logger = winston.createLogger({
     level: "error",
@@ -19,12 +20,24 @@ const logger = winston.createLogger({
 
 export const getAllUnidades = async (req, res) => {
     try {
-        const unidades = await Unidad.findAll();
-        if(unidades.length > 0) {
+        const unidades = await Unidad.findAll({
+            include: [
+                {
+                    model: Area,
+                    as: 'area'
+                },
+                {
+                    model: Responsable,
+                    as: 'responsable'
+                }
+            ]
+            
+        });
+        if (unidades.length > 0) {
             res.status(200).json(unidades);
-            return
+            return;
         }
-        res.status(400).json({ message: 'No existen unidades' });
+        res.status(200).json([]);
     } catch (error) {
         logger.error(error.message);
         res.status(500).json({ message: 'Error al obtener unidades' });
@@ -33,11 +46,22 @@ export const getAllUnidades = async (req, res) => {
 
 export const getUnidad = async (req, res) => {
     try {
-        const unidad = await Unidad.findByPk(req.params.id);
+        const unidad = await Unidad.findByPk(req.params.id,{
+            include: [
+                {
+                    model: Area,
+                    as: 'area'
+                },
+                {
+                    model: Responsable,
+                    as: 'responsable'
+                }
+            ]
+    });
         if (unidad) {
             res.status(200).json(unidad);
         } else {
-            res.status(404).json({ message: 'Unidad no encontrada' });
+            res.status(200).json({ message: 'Unidad no encontrada' });
         }
     } catch (error) {
         logger.error(error.message);
@@ -46,12 +70,11 @@ export const getUnidad = async (req, res) => {
 };
 
 export const createUnidad = async (req, res) => {
+    const { Id_Area, Id_Responsable, Nom_Unidad } = req.body;
 
-    const { Nom_Unidad } = req.body;
-
-    if (!Nom_Unidad) {
-        logger.warn('El campo Nom_Unidad es obligatorio');
-        return res.status(400).json({ message: 'El campo Nom_Unidad es obligatorio' });
+    if (!Id_Area || !Id_Responsable || !Nom_Unidad) {
+        logger.warn('Todos los campos son obligatorios');
+        return res.status(400).json({ message: 'Todos los campos son obligatorios' });
     }
 
     try {
@@ -64,12 +87,11 @@ export const createUnidad = async (req, res) => {
 };
 
 export const updateUnidad = async (req, res) => {
+    const { Id_Area, Id_Responsable, Nom_Unidad } = req.body;
 
-    const { Nom_Unidad } = req.body;
-
-    if (!Nom_Unidad) {
-        logger.warn('El campo Nom_Unidad es obligatorio');
-        return res.status(400).json({ message: 'El campo Nom_Unidad es obligatorio' });
+    if (!Id_Area || !Id_Responsable || !Nom_Unidad) {
+        logger.warn('Todos los campos son obligatorios');
+        return res.status(400).json({ message: 'Todos los campos son obligatorios' });
     }
 
     try {
@@ -80,7 +102,7 @@ export const updateUnidad = async (req, res) => {
             const updatedUnidad = await Unidad.findByPk(req.params.id);
             res.status(200).json({ message: 'Unidad actualizada exitosamente', updatedUnidad });
         } else {
-            res.status(404).json({ message: 'Unidad no encontrada' });
+            res.status(404).json({icon: 'warning', message: 'Debe modificar al menos un campo.' });
         }
     } catch (error) {
         logger.error(error.message);
@@ -101,5 +123,25 @@ export const deleteUnidad = async (req, res) => {
     } catch (error) {
         logger.error(error.message);
         res.status(500).json({ message: 'Error al eliminar la unidad' });
+    }
+};
+
+export const getQueryUnidad = async (req, res) => {
+    try {
+        const unidades = await Unidad.findAll({
+            where: {
+                Nom_Unidad: {
+                    [Sequelize.Op.like]: `%${req.params.Nom_Unidad}%`
+                }
+            }
+        });
+        if (unidades.length > 0) {
+            res.status(200).json(unidades);
+        } else {
+            res.status(404).json({ message: "No se encontraron registros para el nombre especificado" });
+        }
+    } catch (error) {
+       
+        res.status(500).json({ message: error.message });
     }
 };

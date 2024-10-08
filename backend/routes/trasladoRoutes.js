@@ -1,14 +1,15 @@
-import express from "express";
-import { createTraslado, deleteTraslado, getAllTraslados, getTraslado, updateTraslado } from "../controllers/trasladoController.js";
-import winston from "winston";
-import DailyRotateFile from "winston-daily-rotate-file";
+import express from 'express';
+import { createTraslado, updateTraslado, getAllTraslados, getTraslado, deleteTraslado, getQueryTraslado } from '../controllers/trasladoController.js';
+import winston from 'winston';
+import DailyRotateFile from 'winston-daily-rotate-file';
 
-const routerTraslados = express.Router();
+const router = express.Router();
 
+// Configuración de Winston Logger para manejar errores
 const logger = winston.createLogger({
-    level: "error",
+    level: 'error',
     format: winston.format.combine(
-        winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
+        winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
         winston.format.printf(info => `${info.timestamp}: ${info.level}: ${info.message}`)
     ),
     transports: [
@@ -20,17 +21,21 @@ const logger = winston.createLogger({
     ]
 });
 
+// Middleware para manejar errores y registrar logs
 const logError = (err, req, res, next) => {
     logger.error(err.message);
     res.status(500).json({ error: 'Internal Server Error' });
 };
 
-routerTraslados.get('/', getAllTraslados);
-routerTraslados.get('/:id', getTraslado);
-routerTraslados.post('/', createTraslado);
-routerTraslados.put('/:id', updateTraslado);
-routerTraslados.delete('/:id', deleteTraslado);
+// Definición de las rutas para el CRUD de Traslados
+router.get('/', getAllTraslados);
+router.get('/:id', getTraslado);
+router.post('/', createTraslado);
+router.put('/:id', updateTraslado);
+router.delete('/:id', deleteTraslado);
+router.get('/Dcp_Traslado/:Dcp_Traslado', getQueryTraslado);
 
-routerTraslados.use(logError);
+// Middleware de manejo de errores
+router.use(logError);
 
-export default routerTraslados;
+export default router;

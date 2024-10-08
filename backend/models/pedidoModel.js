@@ -19,6 +19,7 @@ const PedidoModel = db.define('pedido', {
     Val_Pedido: {
         type: Sequelize.DECIMAL(10, 2)
     }
+    
 }, {
     timestamps: false,
     tableName: 'pedido'

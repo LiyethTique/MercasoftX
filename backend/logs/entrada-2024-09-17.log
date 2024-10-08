@@ -1,2 +1,0 @@
-2024-09-17 08:38:53: error: Cannot add or update a child row: a foreign key constraint fails (`mercasoftx`.`entrada`, CONSTRAINT `Id_Producto` FOREIGN KEY (`Id_Producto`) REFERENCES `producto` (`Id_Producto`))
-2024-09-17 08:39:34: error: Cannot add or update a child row: a foreign key constraint fails (`mercasoftx`.`entrada`, CONSTRAINT `Id_Producto` FOREIGN KEY (`Id_Producto`) REFERENCES `producto` (`Id_Producto`))

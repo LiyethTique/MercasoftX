@@ -1,104 +1,135 @@
-import EntradaModel from "../models/entradaModel.js";
-import logger from "../logs/logger.js";
+import Entrada from "../models/entradaModel.js";
+import winston from "winston";
+import DailyRotateFile from "winston-daily-rotate-file";
+import { Unidad, Producto, Responsable } from '../app.js'; // Asegúrate de que estos modelos existan
 
-// Mostrar todos los registros
-export const getAllEntradas = async (req, res, next) => {
+const logger = winston.createLogger({
+    level: "error",
+    format: winston.format.combine(
+        winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
+        winston.format.printf(info => `${info.timestamp}: ${info.level}: ${info.message}`)
+    ),
+    transports: [
+        new DailyRotateFile({
+            filename: 'logs/entrada-%DATE%.log',
+            datePattern: 'YYYY-MM-DD',
+            maxFiles: '14d'
+        })
+    ]
+});
+
+// Obtener todas las entradas
+export const getAllEntradas = async (req, res) => {
     try {
-        const entradas = await EntradaModel.findAll();
-        logger.info('Todas las entradas recuperadas');
-        console.log(entradas)
-        if(entradas.length > 0) {
-            res.status(200).json(entradas);
-            return   
-        }
-        res.status(400).json({ message: "No existen Entradas" });
+        const entradas = await Entrada.findAll({
+            include: [
+                {
+                    model: Unidad,
+                    as: 'unidad'
+                },
+                {
+                    model: Producto,
+                    as: 'producto'
+                },
+                {
+                    model: Responsable,
+                    as: 'responsable'
+                }
+            ]
+        });
+        res.status(200).json(entradas.length > 0 ? entradas : []);
     } catch (error) {
-        console.log(error)
-        res.status(500).json({ message: error.message });
-        logger.error(`Error al recuperar todas las entradas: ${error.message}`);
-        next(error);
+        logger.error(error.message);
+        res.status(500).json({ message: 'Error al obtener entradas' });
     }
 };
 
-// Mostrar un registro
-export const getEntrada = async (req, res, next) => {
+// Obtener una sola entrada por ID
+export const getEntrada = async (req, res) => {
     try {
-        const entrada = await EntradaModel.findByPk(req.params.id);
+        const entrada = await Entrada.findByPk(req.params.id, {
+            include: [
+                {
+                    model: Unidad,
+                    as: 'unidad'
+                },
+                {
+                    model: Producto,
+                    as: 'producto'
+                },
+                {
+                    model: Responsable,
+                    as: 'responsable'
+                }
+            ]
+        });
         if (entrada) {
-            logger.info(`Entrada recuperada: ${entrada.Id_Entrada}`);
             res.status(200).json(entrada);
         } else {
-            logger.warn(`Entrada no encontrada con id: ${req.params.id}`);
             res.status(404).json({ message: 'Entrada no encontrada' });
         }
     } catch (error) {
-        logger.error(`Error al recuperar la entrada: ${error.message}`);
-        next(error);
+        logger.error(error.message);
+        res.status(500).json({ message: 'Error al obtener la entrada' });
     }
 };
 
-// Crear una entrada
-export const createEntrada = async (req, res, next) => {
+// Crear una nueva entrada
+export const createEntrada = async (req, res) => {
+    const { Dcp_Entrada, Fec_Entrada, Ori_Entrada, Des_Entrada, Val_Unitario, Val_Total, Id_Unidad, Id_Producto, Id_Responsable, Can_Entrada, Fec_Vencimiento } = req.body;
 
-    const { Fec_Entrada, Hor_Entrada, Id_Unidad, Id_Producto, Id_Responsable, Can_Entrada, Fec_Vencimiento } = req.body;
-
-    if (!Fec_Entrada || !Hor_Entrada || !Id_Unidad || !Id_Producto || !Id_Responsable || !Can_Entrada || !Fec_Vencimiento) {
+    if (!Dcp_Entrada || !Fec_Entrada || !Ori_Entrada || !Des_Entrada || !Val_Unitario || !Val_Total || !Id_Unidad || !Id_Producto || !Id_Responsable || !Can_Entrada) {
         logger.warn('Todos los campos son obligatorios');
         return res.status(400).json({ message: 'Todos los campos son obligatorios' });
     }
 
     try {
-        const nuevaEntrada = await EntradaModel.create(req.body);
-        logger.info(`Entrada creada: ${nuevaEntrada.Id_Entrada}`);
-        res.status(201).json({ message: '¡Entrada creada exitosamente!', entrada: nuevaEntrada });
+        const entrada = await Entrada.create(req.body);
+        res.status(201).json({ message: 'Entrada creada exitosamente', entrada });
     } catch (error) {
-        logger.error(`Error al crear la entrada: ${error.message}`);
-        next(error);
+        logger.error(error.message);
+        res.status(500).json({ message: 'Error al crear la entrada' });
     }
 };
 
-// Actualizar un registro
-export const updateEntrada = async (req, res, next) => {
+// Actualizar una entrada existente
+export const updateEntrada = async (req, res) => {
+    const { Dcp_Entrada, Fec_Entrada, Ori_Entrada, Des_Entrada, Val_Unitario, Val_Total, Id_Unidad, Id_Producto, Id_Responsable, Can_Entrada, Fec_Vencimiento } = req.body;
 
-    const { Fec_Entrada, Hor_Entrada, Id_Unidad, Id_Producto, Id_Responsable, Can_Entrada, Fec_Vencimiento } = req.body;
-
-    if (!Fec_Entrada || !Hor_Entrada || !Id_Unidad || !Id_Producto || !Id_Responsable || !Can_Entrada || !Fec_Vencimiento) {
+    if (!Dcp_Entrada || !Fec_Entrada || !Ori_Entrada || !Des_Entrada || !Val_Unitario || !Val_Total || !Id_Unidad || !Id_Producto || !Id_Responsable || !Can_Entrada) {
         logger.warn('Todos los campos son obligatorios');
         return res.status(400).json({ message: 'Todos los campos son obligatorios' });
     }
 
     try {
-        const [updated] = await EntradaModel.update(req.body, {
+        const [updated] = await Entrada.update(req.body, {
             where: { Id_Entrada: req.params.id }
         });
         if (updated) {
-            logger.info(`Entrada actualizada: ${req.params.id}`);
-            res.status(200).json({ message: '¡Entrada actualizada exitosamente!' });
+            const updatedEntrada = await Entrada.findByPk(req.params.id);
+            res.status(200).json({ message: 'Entrada actualizada exitosamente', updatedEntrada });
         } else {
-            logger.warn(`Entrada no encontrada con id: ${req.params.id}`);
-            res.status(404).json({ message: 'Entrada no encontrada' });
+            res.status(404).json({ message: 'Debe modificar al menos un campo.' });
         }
     } catch (error) {
-        logger.error(`Error al actualizar la entrada: ${error.message}`);
-        next(error);
+        logger.error(error.message);
+        res.status(500).json({ message: 'Error al actualizar la entrada' });
     }
 };
 
-// Borrar un registro
-export const deleteEntrada = async (req, res, next) => {
+// Eliminar una entrada
+export const deleteEntrada = async (req, res) => {
     try {
-        const deleted = await EntradaModel.destroy({
+        const deleted = await Entrada.destroy({
             where: { Id_Entrada: req.params.id }
         });
         if (deleted) {
-            logger.info(`Entrada borrada: ${req.params.id}`);
-            res.status(200).json({ message: '¡Entrada borrada exitosamente!' });
+            res.status(200).json({ message: 'Entrada eliminada exitosamente' });
         } else {
-            logger.warn(`Entrada no encontrada con id: ${req.params.id}`);
             res.status(404).json({ message: 'Entrada no encontrada' });
         }
     } catch (error) {
-        logger.error(`Error al borrar la entrada: ${error.message}`);
-        next(error);
+        logger.error(error.message);
+        res.status(500).json({ message: 'Error al eliminar la entrada' });
     }
 };

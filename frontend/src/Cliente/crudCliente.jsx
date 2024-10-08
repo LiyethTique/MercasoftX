@@ -1,18 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import FormCliente from '../Cliente/formCliente.jsx';
+import FormCliente from '../Cliente/formCliente';
 import Sidebar from '../Sidebar/Sidebar';
 import Swal from 'sweetalert2';
 import WriteTable from '../Tabla/Data-Table';
-import ModalForm from '../Model/Model.jsx'; // Asegúrate de que esta ruta sea correcta
+import ModalForm from '../Model/Model';
+import './crudCliente.css';
+import { IoTrash, IoPencil } from "react-icons/io5";
+import { Button } from 'react-bootstrap';
 
-const URI = (process.env.SERVER_BACK || 'http://localhost:3002') + '/cliente/';
+const URI = process.env.REACT_APP_SERVER_BACK + '/cliente/';
 
 const CrudCliente = () => {
   const [clienteList, setClienteList] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [buttonForm, setButtonForm] = useState('Enviar');
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [cliente, setCliente] = useState(null);
+  const moduleName = "Gestionar Clientes"
 
   useEffect(() => {
     getAllClientes();
@@ -90,36 +94,33 @@ const CrudCliente = () => {
     setIsModalOpen(true);
   };
 
-  const titles = ['ID', 'Nombre', 'Correo', 'Teléfono', 'ID Carrito', 'Acciones'];
-  const data = clienteList.map(cliente => [
-    cliente.Id_Cliente,
-    cliente.Nom_Cliente,
-    cliente.Cor_Cliente,
-    cliente.Tel_Cliente,
-    cliente.Id_Carrito,
-    <div key={cliente.Id_Cliente}>
-      <button 
-        className="btn btn-warning me-2" 
-        onClick={() => getCliente(cliente.Id_Cliente)}
+  const titles = ['ID', 'Nombre Cliente', 'Correo Cliente', 'Teléfono Cliente', 'Acciones'];
+  const data = clienteList.length === 0
+   ? [[ '', '', '', '', '' ]]
+  : clienteList.map(clienteItem => [
+    clienteItem.Id_Cliente,
+    clienteItem.Nom_Cliente,
+    clienteItem.Cor_Cliente,
+    clienteItem.Tel_Cliente,
+    <div key={clienteItem.Id_Cliente}>
+      <a
+        href="#!"
+        className='btn-custom me-2'
+        onClick={() => getCliente(clienteItem.Id_Cliente)}
         title="Editar"
+        style={{ pointerEvents: clienteItem.length > 0 ? 'auto' : 'none', opacity: clienteItem.length > 0 ? 1 : 0.5 }}
       >
-        <img 
-          src="/pencil-square.svg" 
-          alt="Editar" 
-          style={{ width: '24px', height: '24px' }}
-        />
-      </button>
-      <button 
-        className="btn btn-danger" 
-        onClick={() => deleteCliente(cliente.Id_Cliente)}
+        <IoPencil size={20} color="blue" />
+      </a>
+      <a
+        href="#!"
+        className='btn-custom'
+        onClick={() => deleteCliente(clienteItem.Id_Cliente)}
         title="Borrar"
+        style={{ pointerEvents: clienteItem.length > 0 ? 'auto' : 'none', opacity: clienteItem.length > 0 ? 1 : 0.5 }}
       >
-        <img 
-          src="/archive.svg" 
-          alt="Borrar" 
-          style={{ width: '24px', height: '24px' }}
-        />
-      </button>
+        <IoTrash size={20} color="red" />
+      </a>
     </div>
   ]);
 
@@ -128,35 +129,33 @@ const CrudCliente = () => {
       <Sidebar />
       <div className="container mt-4">
         <center>
-          <h1>Gestionar Clientes</h1>
+          <h1>{moduleName}</h1>
         </center>
         
+        {/* Botón para abrir el modal */}
         <div className="d-flex justify-content-between mb-3">
-          <button className="btn btn-success d-flex align-items-center" onClick={handleShowForm}>
-            <img 
-              src="/plus-circle (1).svg" 
-              alt="Agregar Cliente" 
-              style={{ width: '24px', height: '24px', marginRight: '8px' }}
+          <Button
+            style={{ backgroundColor: 'orange', borderColor: 'orange' }}
+            onClick={handleShowForm}>
+            <img
+              src="/plus-circle (1).svg"
+              alt="Add Icon"
+              style={{ width: '20px', height: '20px', marginRight: '8px', filter: 'invert(100%)' }}
             />
-            Agregar Cliente
-          </button>
+            Registrar
+          </Button>
         </div>
 
-        <WriteTable
-          titles={titles}
-          data={data}
-        />
+        {/* Tabla de datos */}
+        <WriteTable titles={titles} data={data} moduleName={moduleName} />
 
-        <ModalForm 
+        {/* Modal Reutilizable */}
+        <ModalForm
           isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          title={buttonForm === 'Actualizar' ? 'Actualizar Cliente' : 'Agregar Cliente'}
-          onSubmit={() => {
-            const form = document.querySelector('form');
-            if (form) form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
-          }}
+          onClose={() => { setIsModalOpen(false); setCliente(null); setButtonForm('Enviar'); }}
+          title={buttonForm === 'Actualizar' ? "Actualizar Cliente" : "Agregar Cliente"}
         >
-          <FormCliente
+          <FormCliente 
             buttonForm={buttonForm}
             cliente={cliente}
             URI={URI}

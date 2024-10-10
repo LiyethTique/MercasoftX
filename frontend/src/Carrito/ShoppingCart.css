@@ -1,94 +1,31 @@
-.shopping-cart {
-    display: flex;
-    justify-content: space-between;
-    padding: 20px;
-  }
-  
-  .recommended-products {
-    width: 30%;
-    background-color: #f9f9f9;
-    padding: 10px;
-    border-radius: 10px;
-  }
-  
-  .product-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    margin-bottom: 20px;
-  }
-  
-  .product-image {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-  }
-  
-  .product-info {
-    text-align: center;
-    margin-top: 10px;
-  }
-  
-  .old-price {
-    text-decoration: line-through;
-    color: gray;
-  }
-  
-  .new-price {
-    color: red;
-    font-weight: bold;
-  }
-  
-  .product-discount {
-    position: relative;
-    top: -20px;
-    right: -10px;
-    background-color: red;
-    color: white;
-    padding: 5px 10px;
-    border-radius: 5px;
-  }
-  
-  .icon-options {
-    display: flex;
-    flex-direction: column;
-    margin-top: 20px;
-  }
-  
-  .icon-option {
-    display: flex;
-    align-items: center;
-    margin-bottom: 15px;
-  }
-  
-  .icon-option img {
-    width: 40px;
-    margin-right: 10px;
-  }
-  
-  .cart-section {
-    width: 65%;
-    text-align: center;
-  }
-  
-  .cart-section h1 {
-    color: red;
-    font-size: 24px;
-  }
-  
-  .cart-subtitle {
-    color: gray;
-  }
-  
-  .empty-cart {
-    margin-top: 50px;
-  }
-  
-  .empty-cart-icon {
-    width: 80px;
-    margin-bottom: 10px;
-  }
-  
+.cart-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Asegúrate de que esté por encima de otros elementos */
+}
+
+.cart-window {
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  width: 800px; /* Ancho del carrito */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); /* Sombra de la ventana */
+  position: relative;
+}
+
+.close-cart {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}

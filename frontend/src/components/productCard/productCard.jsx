@@ -1,43 +1,80 @@
-import React, { useState } from 'react';
-import './productCard.css';
+import React from 'react';
 
-const ProductCard = ({
-  name = "Huevos",
-  description = "AAA",
-  price = 99.99,
-  imageUrl = "https://via.placeholder.com/200",
-  onAddToCart // Recibe la función como prop
-}) => {
-  const [quantity, setQuantity] = useState(1);
+const URI_IMG = `${process.env.REACT_APP_SERVER_BACK}${process.env.REACT_APP_IMAGE_PATH}`;
 
-  // Función para incrementar la cantidad
-  const incrementQuantity = () => setQuantity(prev => prev + 1);
+const ProductCard = ({ name, description, price, stock, imageUrl, onAddToCart }) => {
+  const formattedPrice = isNaN(price) ? 'N/A' : parseFloat(price).toFixed(2);
   
-  // Función para decrementar la cantidad (mínimo 1)
-  const decrementQuantity = () => setQuantity(prev => prev > 1 ? prev - 1 : 1);
+  const cardStyle = {
+    borderRadius: '10px',
+    overflow: 'hidden',
+    backgroundColor: '#fff',
+    transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+    boxShadow: '0 8px 16px rgba(0, 0, 0, 0.15)',
+    margin: '15px',
+    width: '300px',
+  };
 
-  const handleAddToCart = () => {
-    const product = { name, price, quantity }; // Puedes incluir otros detalles según sea necesario
-    onAddToCart(product); // Llama la función para agregar al carrito
-    setQuantity(1); // Resetea la cantidad al agregar al carrito
+  const imageStyle = {
+    height: '150px',
+    width: '100%',
+    objectFit: 'cover',
+    borderRadius: '10px 10px 0 0',
+  };
+
+  const nameStyle = {
+    fontSize: '1.25rem',
+    fontWeight: 'bold',
+    color: '#333',
+    margin: '10px 0',
+  };
+
+  const descriptionStyle = {
+    color: '#666',
+    fontSize: '0.9rem',
+    margin: '0',
+  };
+
+  const priceStyle = {
+    color: '#ff8c42',
+    fontSize: '1.1rem',
+    fontWeight: 'bold',
+    margin: '10px 0',
+  };
+
+  const stockStyle = {
+    color: stock > 0 ? '#777' : 'red', // Cambia el color si está agotado
+    fontSize: '0.85rem',
+    margin: '10px 0',
+  };
+
+  const buttonStyle = {
+    backgroundColor: '#ff8c42',
+    color: 'white',
+    border: 'none',
+    padding: '10px 20px',
+    fontSize: '0.9rem',
+    fontWeight: 'bold',
+    borderRadius: '25px',
+    cursor: stock > 0 ? 'pointer' : 'not-allowed', // Cambia el cursor si está agotado
+    transition: 'background-color 0.3s ease, transform 0.2s ease',
+    marginTop: '10px',
   };
 
   return (
-    <div className="card product-card shadow-sm">
-      <img src={imageUrl} className="card-img-top" alt={name} />
+    <div style={cardStyle} className="product-card">
+      <img src={imageUrl || URI_IMG} style={imageStyle} alt={name} />
       <div className="card-body">
-        <h5 className="card-title">{name}</h5>
-        <p className="card-text">{description}</p>
-        <div className="d-flex justify-content-between align-items-center">
-          <span className="fw-bold">${price.toFixed(2)}</span>
-          <div className="d-flex align-items-center">
-            <button className="btn btn-outline-secondary" onClick={decrementQuantity}>-</button>
-            <span className="mx-3">{quantity}</span>
-            <button className="btn btn-outline-secondary" onClick={incrementQuantity}>+</button>
-          </div>
-        </div>
-        <button className="btn btn-warning w-100 mt-3 fw-bold" onClick={handleAddToCart}>
-          Agregar al carrito
+        <h5 style={nameStyle}>{name}</h5>
+        <p style={descriptionStyle}>{description}</p>
+        <p style={priceStyle}>Precio: <span>${formattedPrice}</span></p>
+        <p style={stockStyle}>Existencia: {stock > 0 ? stock : 'Producto Agotado'}</p>
+        <button
+          style={buttonStyle}
+          onClick={stock > 0 ? onAddToCart : null} // Solo llama a la función si hay stock
+          disabled={stock === 0} // Desactiva el botón si está agotado
+        >
+          Añadir Producto
         </button>
       </div>
     </div>

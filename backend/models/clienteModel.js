@@ -1,29 +1,35 @@
-import db from "../database/db.js";
 import { DataTypes } from "sequelize";
+import  sequelize  from "../database/db.js"; // Asegúrate de que la ruta sea correcta
 
-const ClienteModel = db.define('cliente', {
+const ClientesModel = sequelize.define("cliente", {
     Id_Cliente: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true,
-        allowNull: false
+        autoIncrement: true
     },
     Nom_Cliente: {
-        type: DataTypes.STRING(100),
-        allowNull: true // Ajusta según sea necesario
+        type: DataTypes.STRING,
+        allowNull: false
     },
     Cor_Cliente: {
-        type: DataTypes.STRING(100),
-        allowNull: true // Ajusta según sea necesario
+        type: DataTypes.STRING,
+        allowNull: false
     },
     Tel_Cliente: {
-        type: DataTypes.STRING(15),
-        allowNull: true // Ajusta según sea necesario
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    Dir_Cliente: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    Tip_Cliente: {
+        type: DataTypes.STRING,
+        allowNull: false
     }
-  
 }, {
-    freezeTableName: true,
+    timestamps: true, // Si deseas incluir campos de creación y actualización
     tableName: 'cliente'
 });
 
-export default ClienteModel;
+export default ClientesModel;

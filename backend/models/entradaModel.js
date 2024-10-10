@@ -1,36 +1,72 @@
-import { Sequelize } from "sequelize";
-import db from "../database/db.js";
+import { DataTypes } from 'sequelize';
+import db from '../database/db.js';
+import Unidad from './unidadModel.js'
+import Responsable from './responsableModel.js'
+import Producto from './productoModel.js';
 
-const EntradaModel = db.define('entrada', {
+
+const Entrada = db.define('entrada', {
     Id_Entrada: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
     Fec_Entrada: {
-        type: Sequelize.DATE
+        type: DataTypes.DATE,
+        allowNull: false
     },
     Hor_Entrada: {
-        type: Sequelize.TIME
+        type: DataTypes.TIME,
+        allowNull: false
     },
     Id_Unidad: {
-        type: Sequelize.INTEGER
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: Unidad,
+            key: 'Id_Unidad'
+        }
     },
     Id_Producto: {
-        type: Sequelize.INTEGER
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: Producto,
+            key: 'Id_Producto'
+        }
     },
     Id_Responsable: {
-        type: Sequelize.INTEGER
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: Responsable,
+            key: 'Id_Responsable'
+        }
     },
     Can_Entrada: {
-        type: Sequelize.INTEGER
+        type: DataTypes.INTEGER,
+        allowNull: false
     },
     Fec_Vencimiento: {
-        type: Sequelize.DATE
+        type: DataTypes.DATE,
+        allowNull: true
+    },
+    createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW
+    },
+    updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW
     }
 }, {
-    timestamps: false,
-    tableName: 'entrada'
+    tableName: 'entrada',
+    timestamps: true
 });
 
-export default EntradaModel;
+// Definir relaciones
+
+
+export default Entrada;

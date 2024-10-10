@@ -6,31 +6,6 @@
     "auditLog": "logs\\.80ad7594f360477ca325459820be609439294fe2-audit.json",
     "files": [
         {
-            "date": 1726701864516,
-            "name": "logs\\pedido-2024-09-18.log",
-            "hash": "2ad7baadb073315eec0a10feccc40ef90ab4090c0661e50e69356f85e1b8bc4f"
-        },
-        {
-            "date": 1726801561792,
-            "name": "logs\\pedido-2024-09-19.log",
-            "hash": "3272c3dd9bc3449592f92672ff577dbbb9ed72870a89ce637d2898f9db6c69da"
-        },
-        {
-            "date": 1727100851496,
-            "name": "logs\\pedido-2024-09-23.log",
-            "hash": "e5e99afa11b134d3d1c033142ef22987cd873db391dc7646dcdfb77e82a794a8"
-        },
-        {
-            "date": 1727281325693,
-            "name": "logs\\pedido-2024-09-25.log",
-            "hash": "8f4779f9a4ab29226e980de723973298cf940c6920d208a3f44f7122874dd470"
-        },
-        {
-            "date": 1727356151258,
-            "name": "logs\\pedido-2024-09-26.log",
-            "hash": "b852d9ca44da1d0f920a01b5c4b44533a6287cfae26492fdea505e61c70f9db5"
-        },
-        {
             "date": 1727565125686,
             "name": "logs\\pedido-2024-09-28.log",
             "hash": "ef531da3040d761ed313b867b6f45343ef1bb0c2731792feeda6cf8218d69f7a"
@@ -44,6 +19,51 @@
             "date": 1727698675645,
             "name": "logs\\pedido-2024-09-30.log",
             "hash": "730c99780eba9b9f1cb2e149c57048b3e9ca1844ef0c968fb9dfcc82d89a414d"
+        },
+        {
+            "date": 1727783944563,
+            "name": "logs\\pedido-2024-10-01.log",
+            "hash": "3e182a7676ce3733ccd81f155589c1a617b27fe8d9ebf0642ff0f9649443a82c"
+        },
+        {
+            "date": 1727973985908,
+            "name": "logs\\pedido-2024-10-03.log",
+            "hash": "d2a6d5b7a833f59e80549b7561eccef9651653c9c4baeb843021a9cd93c5b3e7"
+        },
+        {
+            "date": 1728071918836,
+            "name": "logs\\pedido-2024-10-04.log",
+            "hash": "308f9d364f4b1aecf124e9ddbd2c99a5564635658c610cf4cd5cff744fa2d595"
+        },
+        {
+            "date": 1728159211611,
+            "name": "logs\\pedido-2024-10-05.log",
+            "hash": "3585081739d944da0a5ee4688b8391a358daeb2d2d8d66235d3e96d2251348bf"
+        },
+        {
+            "date": 1728247410203,
+            "name": "logs\\pedido-2024-10-06.log",
+            "hash": "a1b97b77557def21b0af915c3f5f6c5a0f130adfeb59be392e1555b9a62fd824"
+        },
+        {
+            "date": 1728304195751,
+            "name": "logs\\pedido-2024-10-07.log",
+            "hash": "24f846c207fd1f41381a2baccc74e2a2e70acfe5440fa6c1f41815a20e886407"
+        },
+        {
+            "date": 1728365499658,
+            "name": "logs\\pedido-2024-10-08.log",
+            "hash": "b5a0e4b60d84b48b8818ee662a3914690aeef32efb81b896aeb3a3ef9055f538"
+        },
+        {
+            "date": 1728450582746,
+            "name": "logs\\pedido-2024-10-09.log",
+            "hash": "a3b2d8bff00378d03582767909b233c45da1a0b189b37e84c440176c0d40706e"
+        },
+        {
+            "date": 1728568125977,
+            "name": "logs\\pedido-2024-10-10.log",
+            "hash": "f4c523cb05616ae1651804b581f690d016a5f9be6af0b958f360a00f933b7078"
         }
     ],
     "hashType": "sha256"

@@ -10,3 +10,7 @@
     background-color: transparent; /* Elimina cualquier fondo que aparezca al enfocar o pasar el ratón */
     box-shadow: none; /* Elimina cualquier sombra o brillo */
 }
+
+.navbar{
+    height: 68px;
+}

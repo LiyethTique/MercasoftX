@@ -5,6 +5,7 @@ import Sidebar from '../Sidebar/Sidebar';
 import ModalForm from '../Model/Model';
 import Swal from 'sweetalert2';
 import { Button } from 'react-bootstrap';
+import { IoTrash, IoPencil } from "react-icons/io5";
 import WriteTable from '../Tabla/Data-Table';
 
 const URI = process.env.REACT_APP_SERVER_BACK + '/responsable/';
@@ -192,26 +193,20 @@ const CrudResponsable = () => {
           className="btn-custom me-2"
           onClick={() => getResponsable(responsable.Id_Responsable)}
           title="Editar"
-          style={{ pointerEvents: responsableList.length > 0 ? 'auto' : 'none', opacity: responsableList.length > 0 ? 1 : 0.5 }} // Desactivar si no hay registros
+          style={{ pointerEvents: responsableList.length > 0 ? 'auto' : 'none', opacity: responsableList.length > 0 ? 1 : 0.5 }}
         >
-          <img
-            src="/pencil-square.svg"
-            alt="Editar"
-            style={{ width: '20px', height: '20px' }}
-          />
+           <IoPencil size={20} color="blue" />
         </a>
         <a
           href="#!"
           className="btn-custom"
           onClick={() => deleteResponsable(responsable.Id_Responsable)}
           title="Borrar"
-          style={{ pointerEvents: responsableList.length > 0 ? 'auto' : 'none', opacity: responsableList.length > 0 ? 1 : 0.5 }} // Desactivar si no hay registros
+          style={{ pointerEvents: responsableList.length > 0 ? 'auto' : 'none', opacity: responsableList.length > 0 ? 1 : 0.5 }}
         >
-          <img
-            src="/trash3.svg"
-            alt="Borrar"
-            style={{ width: '20px', height: '20px' }}
-          />
+        
+        <IoTrash size={20} color="red" />
+          
         </a>
       </div>
     ]);
@@ -248,6 +243,7 @@ const CrudResponsable = () => {
             responsable={responsable}
             onSubmit={handleSubmitResponsable}
             onInputChange={handleInputChange}
+            formData={formData} // Pasar formData como prop
           />
         </ModalForm>
       </div>
@@ -256,5 +252,3 @@ const CrudResponsable = () => {
 };
 
 export default CrudResponsable;
-
-

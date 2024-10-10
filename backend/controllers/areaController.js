@@ -1,7 +1,8 @@
-import Area from "../models/areaModel.js"; // Asegúrate de que el modelo Area esté correctamente definido
-import winston from "winston";
-import DailyRotateFile from "winston-daily-rotate-file";
+import Area from '../models/areaModel.js';
+import winston from 'winston';
+import DailyRotateFile from 'winston-daily-rotate-file';
 
+// Configuración del logger
 const logger = winston.createLogger({
     level: "error",
     format: winston.format.combine(
@@ -17,20 +18,18 @@ const logger = winston.createLogger({
     ]
 });
 
+// Obtener todas las áreas
 export const getAllAreas = async (req, res) => {
     try {
         const areas = await Area.findAll();
-        if (areas.length > 0) {
-            res.status(200).json(areas);
-            return;
-        }
-        res.status(200).json([]);
+        res.status(200).json(areas);
     } catch (error) {
         logger.error(error.message);
         res.status(500).json({ message: 'Error al obtener áreas' });
     }
 };
 
+// Obtener un área por ID
 export const getArea = async (req, res) => {
     try {
         const area = await Area.findByPk(req.params.id);
@@ -45,6 +44,7 @@ export const getArea = async (req, res) => {
     }
 };
 
+// Crear un nuevo área
 export const createArea = async (req, res) => {
     const { Nom_Area } = req.body;
 
@@ -62,6 +62,7 @@ export const createArea = async (req, res) => {
     }
 };
 
+// Actualizar un área
 export const updateArea = async (req, res) => {
     const { Nom_Area } = req.body;
 
@@ -86,6 +87,7 @@ export const updateArea = async (req, res) => {
     }
 };
 
+// Eliminar un área
 export const deleteArea = async (req, res) => {
     try {
         const deleted = await Area.destroy({
@@ -99,25 +101,5 @@ export const deleteArea = async (req, res) => {
     } catch (error) {
         logger.error(error.message);
         res.status(500).json({ message: 'Error al eliminar el área' });
-    }
-};
-
-export const getQueryArea = async (req, res) => {
-    try {
-        const areas = await Area.findAll({
-            where: {
-                Nom_Area: {
-                    [Sequelize.Op.like]: `%${req.params.Nom_Area}%`
-                }
-            }
-        });
-        if (areas.length > 0) {
-            res.status(200).json(areas);
-        } else {
-            res.status(404).json({ message: "No se encontraron registros para el nombre especificado" });
-        }
-    } catch (error) {
-        logger.error(error.message);
-        res.status(500).json({ message: error.message });
     }
 };

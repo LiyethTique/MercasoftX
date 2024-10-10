@@ -4,7 +4,7 @@ import { default as jwt_decode } from 'jwt-decode';
 
 
 import Carrito from './Carrito/crudCarrito.jsx';
-import Cliente from './Cliente/crudCliente.jsx';
+import Cliente from './Cliente/formCliente.jsx';
 import Entrada from './Entrada/crudEntrada.jsx';
 import Pedido from './Pedido/crudPedido.jsx';
 import PedidoProducto from './PedidoProducto/crudPedidoProducto.jsx';
@@ -16,7 +16,6 @@ import Venta from './Venta/crudVenta.jsx';
 import TeamPresentation from './contact/equipo.jsx';
 import ContactPage from './contact/imageCarrousel.jsx';
 import Login from './iniciarsesion/IniciarSesion.jsx';
-import Auth from './registrar/registrar.jsx';
 import RecuperarContrasena from './Recuperar Contraseña/recuperar_contraseña.jsx';
 import ResetPassword from './Recuperar Contraseña/resetPassword.jsx';
 import CatalogPage from './components/catalogPage/catalogPage.jsx';
@@ -74,25 +73,16 @@ function App() {
         <Route path="/team-presentation" element={<TeamPresentation />} />
         <Route path="/contacto" element={<ContactPage />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Auth />} />
         <Route path="/recuperar-contrasena" element={<RecuperarContrasena />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
-
+        <Route path='/carrito' element={<Carrito />}/>
         {/* Rutas protegidas */}
-        <Route
-          path="/carrito"
-          element={
-            <ProtectedRoute>
-              <Carrito />
-            </ProtectedRoute>
-          }
-        />
+        
         <Route
           path="/cliente"
           element={
-            <ProtectedRoute>
+           
               <Cliente />
-            </ProtectedRoute>
           }
         />
         <Route

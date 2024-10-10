@@ -1,6 +1,7 @@
 import { Sequelize } from "sequelize";
 import ClientesModel from "../models/clienteModel.js";
 
+// Obtener todos los clientes
 export const getAllClientes = async (req, res) => {
     try {
         const clientes = await ClientesModel.findAll();
@@ -10,6 +11,7 @@ export const getAllClientes = async (req, res) => {
     }
 };
 
+// Obtener un cliente por ID
 export const getCliente = async (req, res) => {
     try {
         const cliente = await ClientesModel.findByPk(req.params.id);
@@ -23,26 +25,31 @@ export const getCliente = async (req, res) => {
     }
 };
 
+// Crear un nuevo cliente
 export const createCliente = async (req, res) => {
-    const { Nom_Cliente, Cor_Cliente, Tel_Cliente } = req.body;
+    const { Nom_Cliente, Cor_Cliente, Tel_Cliente, Dir_Cliente, Tip_Cliente } = req.body;
 
-    if (!Nom_Cliente || !Cor_Cliente || !Tel_Cliente) {
-        return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+    // Validación de campos obligatorios
+    if (!Nom_Cliente || !Tel_Cliente || !Dir_Cliente || !Tip_Cliente) {
+        return res.status(400).json({ message: 'Los campos Nombre, Teléfono, Dirección y Tipo son obligatorios' });
     }
 
     try {
-        await ClientesModel.create(req.body);
-        res.status(201).json({ message: "¡Registro creado exitosamente!" });
+       const cliente =  await ClientesModel.create(req.body);
+       console.log(cliente)
+        res.status(201).json({ message: "¡Registro creado exitosamente!", cliente: cliente  });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
 
+// Actualizar un cliente
 export const updateCliente = async (req, res) => {
-    const { Nom_Cliente, Cor_Cliente, Tel_Cliente } = req.body;
+    const { Nom_Cliente, Cor_Cliente, Tel_Cliente, Dir_Cliente, Tip_Cliente } = req.body;
 
-    if (!Nom_Cliente || !Cor_Cliente || !Tel_Cliente) {
-        return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+    // Validación de campos obligatorios
+    if (!Nom_Cliente || !Tel_Cliente || !Dir_Cliente || !Tip_Cliente) {
+        return res.status(400).json({ message: 'Los campos Nombre, Teléfono, Dirección y Tipo son obligatorios' });
     }
 
     try {
@@ -59,6 +66,7 @@ export const updateCliente = async (req, res) => {
     }
 };
 
+// Eliminar un cliente
 export const deleteCliente = async (req, res) => {
     try {
         const respuesta = await ClientesModel.destroy({
@@ -68,27 +76,6 @@ export const deleteCliente = async (req, res) => {
             res.status(200).json({ message: "¡Registro eliminado exitosamente!" });
         } else {
             res.status(404).json({ message: "Registro no encontrado!" });
-        }
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
-
-export const getQueryCliente = async (req, res) => {
-    try {
-        const { Nom_Cliente } = req.params;
-        const clientes = await ClientesModel.findAll({
-            where: {
-                Nom_Cliente: {
-                    [Sequelize.Op.like]: `%${Nom_Cliente}%`
-                }
-            }
-        });
-
-        if (clientes.length > 0) {
-            res.status(200).json(clientes);
-        } else {
-            res.status(404).json({ message: "No se encontraron registros para el nombre especificado" });
         }
     } catch (error) {
         res.status(500).json({ message: error.message });

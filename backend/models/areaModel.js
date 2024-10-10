@@ -1,22 +1,3 @@
-
-import { Sequelize } from "sequelize";
-import db from "../database/db.js";
-
-const Area = db.define('area', {
-  Id_Area: {
-    type: Sequelize.INTEGER,
-    primaryKey: true,
-    autoIncrement: true
-  },
-  Nom_Area: {
-    type: Sequelize.STRING(100)
-  }
-},{
-    timestamps: false
-});
-
-export default Area;
-
 import { DataTypes } from 'sequelize';
 import db from '../database/db.js';
 
@@ -32,7 +13,7 @@ const Area = db.define('area', {
     }
 }, {
     tableName: 'area',
-    timestamps: false
+    timestamps: true,  // Activamos timestamps para createdAt y updatedAt
 });
 
 export default Area;

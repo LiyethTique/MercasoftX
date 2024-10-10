@@ -82,9 +82,9 @@ const LoginForm = () => {
         allowEscapeKey: false,
         timer: 2000, // Duración de 2 segundos
         timerProgressBar: true,
-        didOpen: () => {
-          Swal.showLoading();
-        },
+        // didOpen: () => {
+        //   Swal.showLoading();
+        // },
       });
 
       // Esperar 2 segundos antes de hacer la solicitud
@@ -101,7 +101,7 @@ const LoginForm = () => {
 
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
-        navigate('/Cliente');
+        navigate('/Producto');
       }
     } catch (error) {
       // Cerrar la alerta de carga en caso de error

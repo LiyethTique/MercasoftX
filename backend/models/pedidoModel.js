@@ -1,27 +1,57 @@
-import { Sequelize } from "sequelize";
-import db from "../database/db.js";
+import { DataTypes } from 'sequelize';
+import db from '../database/db.js';
+import Cliente from './clienteModel.js'; // Asegúrate de que la ruta sea correcta
 
-const PedidoModel = db.define('pedido', {
+const Pedido = db.define('pedido', {
     Id_Pedido: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
-    },
-    Fec_Pedido: {
-        type: Sequelize.DATE
+        autoIncrement: true,
     },
     Id_Cliente: {
-        type: Sequelize.INTEGER
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: Cliente,
+            key: 'Id_Cliente',
+        },
+    },
+    Id_Producto: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: Cliente,
+            key: 'Id_Cliente',
+        },
+        // Aquí puedes agregar una referencia a la tabla de productos si es necesario
+    },
+    Fec_Pedido: {
+        type: DataTypes.DATE,
+        allowNull: false,
     },
     Est_Pedido: {
-        type: Sequelize.STRING
+        type: DataTypes.STRING(50),
+        allowNull: false,
     },
     Val_Pedido: {
-        type: Sequelize.DECIMAL(10, 2)
-    }
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: false,
+    },
+    createdAT: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW, // Valor por defecto para la fecha de creación
+    },
+    updatedAT: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW, // Valor por defecto para la fecha de actualización
+    },
 }, {
-    timestamps: false,
-    tableName: 'pedido'
+    tableName: 'pedido',
+    timestamps: false, // Cambia a true si quieres que Sequelize maneje createdAt y updatedAt automáticamente
 });
 
-export default PedidoModel;
+// Si deseas establecer la relación con el modelo de Cliente
+
+export default Pedido;

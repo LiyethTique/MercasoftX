@@ -113,11 +113,11 @@ const CrudUsuario = () => {
     setIsModalOpen(true);
   };
 
-  const titles = ['Codigo Usuario', 'Correo', 'Responsable ID', 'Acciones'];
+  const titles = ['Codigo Usuario', 'Correo', 'Acceso', 'Acciones'];
   const data = usuarioList.map(usuario => [
     usuario.Id_Usuario,
     usuario.Cor_Usuario,
-    usuario.Id_Responsable,
+    usuario.Id_Responsable ?  usuario.responsable?.Tip_Responsable || 'Sin Responsable' : 'Sin Responsable',
     <div className='botones-img' key={usuario.Id_Usuario} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
       <a 
         href="#!"

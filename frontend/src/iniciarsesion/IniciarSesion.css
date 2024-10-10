@@ -82,7 +82,7 @@
 }
 
 .login-button:hover {
-  background-color: #0056b3; /* Color de fondo al pasar el cursor */
+  background-color: orange; /* Color de fondo al pasar el cursor */
   transform: scale(1.02); /* Efecto de escala al pasar el cursor */
 }
 

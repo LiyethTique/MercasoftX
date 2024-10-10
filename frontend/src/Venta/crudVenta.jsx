@@ -1,173 +1,204 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import FormVenta from './formVenta'; // Asegúrate de que el nombre del archivo sea correcto
-import Sidebar from '../Sidebar/Sidebar';
-import Swal from 'sweetalert2';
-import WriteTable from '../Tabla/Data-Table';
-import ModalForm from '../Model/Model';
-import AlertaBDVacia from '../alertas/alertaBDVacia.jsx'
+import VentaForm from './formVenta';
 
-const URI = process.env.REACT_APP_SERVER_BACK + '/venta/';
-
-const CrudVenta = () => {
-  const [ventaList, setVentaList] = useState([]);
-  const [buttonForm, setButtonForm] = useState('Enviar');
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [venta, setVenta] = useState(null);
-
-  useEffect(() => {
-    getAllVenta();
-  }, []);
-
-  const getAllVenta = async () => {
-    try {
-      const respuesta = await axios.get(URI);
-      if (Array.isArray(respuesta.data)) {
-        setVentaList(respuesta.data);
-      } else {
-        console.error("Unexpected response format:", respuesta.data);
-        setVentaList([]);
-      }
-    } catch (error) {
-      console.error("Error fetching ventas:", error);
-      Swal.fire("Error", error.response?.data?.message || "Error al obtener las Ventas", "error");
-    }
-  };
-
-  const getVenta = async (Id_Venta) => {
-    setButtonForm('Actualizar');
-    try {
-      const respuesta = await axios.get(`${URI}${Id_Venta}`);
-      setVenta(respuesta.data);
-      setIsModalOpen(true);
-    } catch (error) {
-      Swal.fire("Error", error.response?.data?.message || "Error al obtener la Venta", "error");
-    }
-  };
-
-  const handleSubmitVenta = async (data) => {
-    try {
-      if (buttonForm === 'Actualizar') {
-        await axios.put(`${URI}${venta.Id_Venta}`, data);
-        Swal.fire("Actualizado!", "La venta ha sido actualizada.", "success");
-      } else {
-        await axios.post(URI, data);
-        Swal.fire("Creado!", "La venta ha sido creada.", "success");
-      }
-      getAllVenta();
-      setIsModalOpen(false);
-      setButtonForm('Enviar');
-      setVenta(null);
-    } catch (error) {
-      Swal.fire("Error", error.response?.data?.message || "Error al guardar la Venta", "error");
-    }
-  };
-
-  const deleteVenta = async (Id_Venta) => {
-    Swal.fire({
-      title: "¿Estás seguro?",
-      text: "¡No podrás revertir esto!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Sí, borrar!"
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          await axios.delete(`${URI}${Id_Venta}`);
-          Swal.fire("¡Borrado!", "El registro ha sido borrado.", "success");
-          getAllVenta();
-        } catch (error) {
-          Swal.fire("Error", error.response?.data?.message || "Error al eliminar la Venta", "error");
-        }
-      }
+const CrudVentas = () => {
+    const [ventas, setVentas] = useState([]);
+    const [venta, setVenta] = useState({
+        Fec_Venta: '',
+        Val_Venta: '',
+        Tip_Cliente: '',
+        Id_Pedido: '',
+        Id_Producto: ''
     });
-  };
+    const [isEditing, setIsEditing] = useState(false);
+    const [currentVentaId, setCurrentVentaId] = useState(null);
 
-  const handleShowForm = () => {
-    setButtonForm('Enviar');
-    setVenta(null);
-    setIsModalOpen(true);
-  };
+    // Obtener todas las ventas
+    const fetchVentas = async () => {
+        try {
+            const response = await axios.get('/api/ventas');
+            setVentas(response.data);
+        } catch (error) {
+            console.error('Error al obtener ventas:', error);
+        }
+    };
 
-  const titles = ['ID Venta', 'Fecha de Venta', 'Valor de Venta', 'ID Pedido', 'Acciones'];
-  const data = ventaList.map(venta => [
-    venta.Id_Venta,
-    venta.Fec_Venta,
-    venta.Val_Venta,
-    venta.Id_Pedido,
-    <div key={venta.Id_Venta}>
-      <a 
-        href="#!"
-        className="btn-custom me-2"
-        onClick={() => getVenta(venta.Id_Venta)}
-        title="Editar"
-      >
-        <img 
-          src="/pencil-square.svg" 
-          alt="Editar"
-          style={{ width: '13px', height: '13px' }}  
-        />
-      </a>
-      <a 
-        href="#!"
-        className="btn-custom"
-        onClick={() => deleteVenta(venta.Id_Venta)}
-        title="Borrar"
-      >
-        <img 
-          src="/trash3.svg" 
-          alt="Borrar" 
-        />
-      </a>
-    </div>
-  ]);
+    useEffect(() => {
+        fetchVentas();
+    }, []);
 
-  return (
-    <>
-      <Sidebar />
-      <div className="container mt-4">
-        <center>
-          <h1>Gestionar Ventas</h1>
-        </center>
-        
-        <div className="d-flex justify-content-between mb-3">
-          <a 
-            href="#!"
-            className="btn btn-success d-flex align-items-center"
-            onClick={handleShowForm}
-          >   
-            <img
-              src="/plus-circle (1).svg"
-              alt="Add Icon"
-              style={{ width: '20px', height: '20px', marginRight: '8px', filter: 'invert(100%)' }}
-            />
-            Registrar
-          </a>
+    // Manejar cambios en el formulario
+    const handleChange = (e) => {
+        setVenta({
+            ...venta,
+            [e.target.name]: e.target.value
+        });
+    };
+
+    // Crear nueva venta
+    const handleCreateVenta = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.post('/api/ventas', venta);
+            setVentas([...ventas, response.data.venta]);
+            setVenta({
+                Fec_Venta: '',
+                Val_Venta: '',
+                Tip_Cliente: '',
+                Id_Pedido: '',
+                Id_Producto: ''
+            });
+            alert('Venta creada exitosamente');
+        } catch (error) {
+            console.error('Error al crear la venta:', error);
+            alert('Error al crear la venta');
+        }
+    };
+
+    // Editar venta
+    const handleEditVenta = (venta) => {
+        setVenta({
+            Fec_Venta: venta.Fec_Venta,
+            Val_Venta: venta.Val_Venta,
+            Tip_Cliente: venta.Tip_Cliente,
+            Id_Pedido: venta.Id_Pedido,
+            Id_Producto: venta.Id_Producto
+        });
+        setIsEditing(true);
+        setCurrentVentaId(venta.Id_Venta);
+    };
+
+    // Actualizar venta
+    const handleUpdateVenta = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.put(`/api/ventas/${currentVentaId}`, venta);
+            const updatedVentas = ventas.map((v) =>
+                v.Id_Venta === currentVentaId ? response.data.updatedVenta : v
+            );
+            setVentas(updatedVentas);
+            setVenta({
+                Fec_Venta: '',
+                Val_Venta: '',
+                Tip_Cliente: '',
+                Id_Pedido: '',
+                Id_Producto: ''
+            });
+            setIsEditing(false);
+            setCurrentVentaId(null);
+            alert('Venta actualizada exitosamente');
+        } catch (error) {
+            console.error('Error al actualizar la venta:', error);
+            alert('Error al actualizar la venta');
+        }
+    };
+
+    // Eliminar venta
+    const handleDeleteVenta = async (id) => {
+        if (!window.confirm('¿Estás seguro de que deseas eliminar esta venta?')) return;
+
+        try {
+            await axios.delete(`/api/ventas/${id}`);
+            const updatedVentas = ventas.filter((v) => v.Id_Venta !== id);
+            setVentas(updatedVentas);
+            alert('Venta eliminada exitosamente');
+        } catch (error) {
+            console.error('Error al eliminar la venta:', error);
+            alert('Error al eliminar la venta');
+        }
+    };
+
+    return (
+        <div>
+            <h1>{isEditing ? 'Editar Venta' : 'Crear Venta'}</h1>
+            <form onSubmit={isEditing ? handleUpdateVenta : handleCreateVenta}>
+                <div>
+                    <label>Fecha de Venta:</label>
+                    <input
+                        type="date"
+                        name="Fec_Venta"
+                        value={venta.Fec_Venta}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                <div>
+                    <label>Valor de Venta:</label>
+                    <input
+                        type="number"
+                        step="0.01"
+                        name="Val_Venta"
+                        value={venta.Val_Venta}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                <div>
+                    <label>Tipo de Cliente:</label>
+                    <input
+                        type="text"
+                        name="Tip_Cliente"
+                        value={venta.Tip_Cliente}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                <div>
+                    <label>ID del Pedido:</label>
+                    <input
+                        type="number"
+                        name="Id_Pedido"
+                        value={venta.Id_Pedido}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                <div>
+                    <label>ID del Producto:</label>
+                    <input
+                        type="number"
+                        name="Id_Producto"
+                        value={venta.Id_Producto}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                <button type="submit">{isEditing ? 'Actualizar Venta' : 'Crear Venta'}</button>
+            </form>
+
+            <h2>Lista de Ventas</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Fecha de Venta</th>
+                        <th>Valor de Venta</th>
+                        <th>Tipo de Cliente</th>
+                        <th>ID Pedido</th>
+                        <th>ID Producto</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {ventas.map((v) => (
+                        <tr key={v.Id_Venta}>
+                            <td>{v.Id_Venta}</td>
+                            <td>{v.Fec_Venta}</td>
+                            <td>{v.Val_Venta}</td>
+                            <td>{v.Tip_Cliente}</td>
+                            <td>{v.Id_Pedido}</td>
+                            <td>{v.Id_Producto}</td>
+                            <td>
+                                <button onClick={() => handleEditVenta(v)}>Editar</button>
+                                <button onClick={() => handleDeleteVenta(v.Id_Venta)}>Eliminar</button>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
         </div>
-
-        <WriteTable titles={titles} data={data} />
-
-        <AlertaBDVacia uri={URI} />
-
-        <ModalForm
-          isOpen={isModalOpen}
-          onClose={() => { setIsModalOpen(false); setVenta(null); setButtonForm('Enviar'); }}
-          title={buttonForm === 'Actualizar' ? "Actualizar Venta" : "Agregar Venta"}
-        >
-          <FormVenta 
-            buttonForm={buttonForm}
-            venta={venta}
-            URI={URI}
-            updateTextButton={setButtonForm}
-            setIsFormVisible={setIsModalOpen}
-            onSubmit={handleSubmitVenta}
-          />
-        </ModalForm>
-      </div>
-    </>
-  );
+    );
 };
 
-export default CrudVenta;
+export default CrudVentas;

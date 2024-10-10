@@ -1,33 +1,53 @@
-import db from "../database/db.js";
-import { DataTypes } from "sequelize";
+import { DataTypes } from 'sequelize';
+import db from '../database/db.js';
+import Pedido from './pedidoModel.js';
+import Producto from './productoModel.js';
 
-const PedidoProductoModel = db.define('pedidoproducto', {
+const PedidoProducto = db.define('pedidoProducto', {
     Id_PedidoProducto: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true,
-        allowNull: false
+        autoIncrement: true
     },
     Id_Pedido: {
         type: DataTypes.INTEGER,
-        allowNull: true // Ajusta según sea necesario
+        allowNull: false,
+        references: {
+            model: Pedido,
+            key: 'Id_Pedido'
+        },
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
     },
     Id_Producto: {
         type: DataTypes.INTEGER,
-        allowNull: true // Ajusta según sea necesario
-    },
-    Ind_entrega: {
-        type: DataTypes.TINYINT,
-        allowNull: true // Ajusta según sea necesario
+        allowNull: false,
+        references: {
+            model: Producto,
+            key: 'Id_Producto'
+        },
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
     },
     Can_Producto: {
         type: DataTypes.INTEGER,
-        allowNull: true // Ajusta según sea necesario
+        allowNull: false
+    },
+    createdAT: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW
+    },
+    updatedAT: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW
     }
 }, {
-    freezeTableName: true,
-    tableName: 'pedidoproducto'
+    tableName: 'pedidoProducto',
+    timestamps: false
 });
 
+// Definir la relación muchos-a-muchos entre Pedido y Producto
 
-export default PedidoProductoModel;
+export default PedidoProducto;

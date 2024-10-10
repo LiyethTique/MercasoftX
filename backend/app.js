@@ -11,6 +11,7 @@ import {
 
 // Importar rutas
 import authRoutes from "./routes/authRoutes.js";
+import areaRoutes from "./routes/areaRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import carritoRoutes from "./routes/carritoRoutes.js";
 import clienteRoutes from "./routes/clienteRoutes.js";
@@ -33,6 +34,9 @@ import Producto from "./models/productoModel.js";
 import Responsable from "./models/responsableModel.js";
 import Traslado from "./models/trasladoModel.js";
 import UserModel from "./models/authModel.js";
+import Area from "./models/areaModel.js";
+import Unidad from "./models/unidadModel.js";
+import PedidoProducto from "./models/pedidoProducto.js";
 
 // Cargar variables de entorno
 dotenv.config({ path: "./.env" });
@@ -52,20 +56,21 @@ app.use("/uploads", express.static(path.join(path.resolve(), "uploads")));
 app.post("/auth/login", loginUser);
 app.post("/auth/register", registerUser);
 
-// Rutas protegidas (Puedes aplicar verifyToken si lo necesitas en todas)
+// Rutas protegidas (aplicando verifyToken en las necesarias)
 app.use("/auth", authRoutes);
-app.use("/users",  verifyToken, userRoutes);
-app.use("/carrito", verifyToken,  carritoRoutes);
-app.use("/cliente", verifyToken, clienteRoutes);
+app.use("/users", verifyToken, userRoutes);
+app.use("/carrito", carritoRoutes);
+app.use("/cliente", clienteRoutes);
 app.use("/entrada", verifyToken, entradasRoutes);
-app.use("/pedido", verifyToken, pedidoRoutes);
-app.use("/pedidoProducto", verifyToken, pedidoProductoRoutes);
-app.use("/producto", verifyToken, productoRoutes);
+app.use("/pedido",  pedidoRoutes);
+app.use("/pedidoProducto", pedidoProductoRoutes);
+app.use("/producto", productoRoutes);
 app.use("/responsable", verifyToken, responsableRoutes);
-app.use("/traslado", verifyToken,  trasladoRoutes);
+app.use("/traslado", verifyToken, trasladoRoutes);
 app.use("/unidad", verifyToken, unidadRoutes);
 app.use("/venta", verifyToken, ventaRoutes);
 app.use("/carritoproducto", verifyToken, carritoproductoRoutes);
+app.use("/area", verifyToken, areaRoutes);
 
 // Conexión a la base de datos
 try {
@@ -89,23 +94,33 @@ Carrito.belongsTo(Cliente, { as: "cliente", foreignKey: "Id_Cliente" });
 Traslado.belongsTo(Producto, { as: "producto", foreignKey: "Id_Producto" });
 Producto.hasMany(Traslado, { as: "traslados", foreignKey: "Id_Producto" });
 
-Traslado.belongsTo(Responsable, {
-  as: "responsable",
-  foreignKey: "Id_Responsable",
-});
-Responsable.hasMany(Traslado, {
-  as: "traslados",
-  foreignKey: "Id_Responsable",
-});
+Area.hasMany(Unidad, { foreignKey: 'Id_Area', as: 'unidades' });
+Unidad.belongsTo(Area, { foreignKey: 'Id_Area', as: 'area' });
 
-UserModel.belongsTo(Responsable, {
-  as: "responsable",
-  foreignKey: "Id_Responsable",
-});
-Responsable.hasMany(UserModel, {
-  as: "usuarios",
-  foreignKey: "Id_Responsable",
-});
+Responsable.hasMany(Unidad, { foreignKey: 'Id_Responsable', as: 'unidades' });
+Unidad.belongsTo(Responsable, { foreignKey: 'Id_Responsable', as: 'responsable' });
+
+Unidad.hasMany(Producto, { foreignKey: 'Id_Unidad', as: 'productos' });
+Producto.belongsTo(Unidad, { foreignKey: 'Id_Unidad', as: 'unidad' });
+
+Traslado.belongsTo(Responsable, { as: "responsable", foreignKey: "Id_Responsable" });
+Responsable.hasMany(Traslado, { as: "traslados", foreignKey: "Id_Responsable" });
+
+UserModel.belongsTo(Responsable, { as: "responsable", foreignKey: "Id_Responsable" });
+Responsable.hasMany(UserModel, { as: "usuarios", foreignKey: "Id_Responsable" });
+
+
+// modelo pedido.js
+Pedido.belongsTo(Cliente, { foreignKey: 'Id_Cliente', as: 'clientePedido' }); // Aquí asegúrate de que 'cliente' no se use en otro lugar
+
+// modelo pedidoProducto.js
+PedidoProducto.belongsTo(Pedido, { foreignKey: 'Id_Pedido', as: 'pedido' }); // Asegúrate de que este alias sea único
+PedidoProducto.belongsTo(Producto, { foreignKey: 'Id_Producto', as: 'producto' }); // Asegúrate de que este alias sea único
+
+Pedido.belongsToMany(Producto, { through: PedidoProducto, foreignKey: 'Id_Pedido', as: 'productos' });
+Producto.belongsToMany(Pedido, { through: PedidoProducto, foreignKey: 'Id_Producto', as: 'pedidos' });
+
+
 
 // Ruta principal
 app.get("/", (req, res) => {
@@ -117,4 +132,4 @@ app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`);
 });
 
-export { Venta, Pedido, Cliente, Carrito, Producto, Traslado, Responsable, UserModel };
+export {Area, Unidad, Venta, Pedido, Cliente, Carrito, Producto, Traslado, Responsable, UserModel, PedidoProducto };

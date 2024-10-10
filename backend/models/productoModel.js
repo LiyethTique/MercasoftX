@@ -1,5 +1,7 @@
 import { DataTypes } from 'sequelize';
 import db from '../database/db.js';
+import Unidad from  './unidadModel.js'
+
 
 const Producto = db.define('producto', {
     Id_Producto: {
@@ -29,7 +31,11 @@ const Producto = db.define('producto', {
     },
     Id_Unidad: {
         type: DataTypes.INTEGER,
-        allowNull: true
+        allowNull: false,
+        references: {
+            model: Unidad,
+            key: "Id_Unidad"
+        },
     },
     Uni_DeMedida: {
         type: DataTypes.STRING(50),

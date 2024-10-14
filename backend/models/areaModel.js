@@ -13,7 +13,7 @@ const Area = db.define('area', {
     }
 }, {
     tableName: 'area',
-    timestamps: false
+    timestamps: true,  // Activamos timestamps para createdAt y updatedAt
 });
 
 export default Area;

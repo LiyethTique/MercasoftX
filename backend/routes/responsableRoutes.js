@@ -1,5 +1,5 @@
 import express from 'express';
-import { createResponsable, updateResponsable, getAllResponsables, getResponsable, deleteResponsable, getQueryResponsable } from '../controllers/responsableController.js';
+import { createResponsable, updateResponsable, getAllResponsables, getResponsable, deleteResponsable } from '../controllers/responsableController.js';
 import winston from "winston";
 import DailyRotateFile from "winston-daily-rotate-file";
 
@@ -30,6 +30,5 @@ router.get('/:id', getResponsable);
 router.post('/', createResponsable);
 router.put('/:id', updateResponsable);
 router.delete('/:id', deleteResponsable);
-router.get('/Nom_Responsable/:Nom_Responsable', getQueryResponsable);
 
 export default router;

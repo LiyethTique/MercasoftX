@@ -1,160 +1,258 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
 import Swal from 'sweetalert2';
-import Sidebar from '../Sidebar/Sidebar';
+import axios from 'axios';
+import './ShoppingCart.css';
+import ClienteForm from '../Cliente/formCliente';
 
-const URI_PRODUCTO = process.env.REACT_APP_SERVER_BACK + '/producto/';
-const URI_CARRITO = process.env.REACT_APP_SERVER_BACK + '/carrito/';
+const CartModal = ({ children }) => (
+  <div
+    style={{
+      backgroundColor: '#fff',
+      padding: '30px',
+      borderRadius: '20px',
+      width: '729px',
+      maxWidth: '100%',
+      position: 'relative',
+      animation: 'slide-down 0.3s ease-out',
+    }}
+  >
+    {children}
+  </div>
+);
 
-const CrudCarritoAdmin = () => {
-  const [productos, setProductos] = useState([]);
-  const [carrito, setCarrito] = useState([]);
-  const [idProducto, setIdProducto] = useState('');
+const CloseButton = ({ onClick }) => (
+  <button
+    onClick={onClick}
+    style={{
+      position: 'absolute',
+      top: '20px',
+      right: '20px',
+      background: 'none',
+      border: 'none',
+      fontSize: '1.8rem',
+      cursor: 'pointer',
+      color: '#ff8c42',
+      transition: 'color 0.3s ease',
+    }}
+    onMouseOver={(e) => (e.currentTarget.style.color = '#ff5200')}
+    onMouseOut={(e) => (e.currentTarget.style.color = '#ff8c42')}
+  >
+    &times; {/* Close icon */}
+  </button>
+);
 
-  // Obtener todos los productos al cargar el componente
-  useEffect(() => {
-    const fetchDatos = async () => {
-      try {
-        // Obtener productos
-        const productosResponse = await axios.get(URI_PRODUCTO);
-        setProductos(productosResponse.data);
+const CartTitle = () => (
+  <h2
+    style={{
+      color: '#ff8c42',
+      fontSize: '1.8rem',
+      marginBottom: '20px',
+      textAlign: 'center',
+      fontWeight: 600,
+    }}
+  >
+    Carrito de Compras
+  </h2>
+);
 
-        // Puedes eliminar esta parte si no se usa el carrito del usuario
-        // const carritoResponse = await axios.get(URI_CARRITO_USER);
-        // setCarrito(carritoResponse.data);
+const CartItemsList = ({ children }) => (
+  <ul
+    style={{
+      listStyleType: 'none',
+      padding: '0',
+    }}
+  >
+    {children}
+  </ul>
+);
 
-      } catch (error) {
-        console.error('Error al obtener datos:', error);
-      }
-    };
+const CartItem = ({ children }) => (
+  <li
+    style={{
+      margin: '15px 0',
+      padding: '20px',
+      border: '1px solid #f0f0f0',
+      borderRadius: '12px',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      backgroundColor: '#fff8f0',
+      boxShadow: '0 2px 10px rgba(0, 0, 0, 0.05)',
+      transition: 'background-color 0.3s ease, transform 0.2s ease',
+    }}
+    onMouseOver={(e) => {
+      e.currentTarget.style.backgroundColor = '#ffe0b2';
+      e.currentTarget.style.transform = 'scale(1.02)';
+    }}
+    onMouseOut={(e) => {
+      e.currentTarget.style.backgroundColor = '#fff8f0';
+      e.currentTarget.style.transform = 'scale(1)';
+    }}
+  >
+    {children}
+  </li>
+);
 
-    fetchDatos();
-  }, []);
+const ItemTitle = ({ title }) => (
+  <h3
+    style={{
+      margin: '0',
+      fontSize: '1.2rem',
+      color: '#333',
+    }}
+  >
+    {title}
+  </h3>
+);
 
-  // Función para agregar un producto al carrito
-  const agregarAlCarrito = async () => {
-    if (!idProducto) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Debe seleccionar un producto',
-      });
-      return;
-    }
+const ItemQuantity = ({ quantity }) => (
+  <p
+    style={{
+      margin: '0',
+      fontSize: '1rem',
+      color: '#777',
+    }}
+  >
+    Cantidad: {quantity}
+  </p>
+);
 
-    try {
-      const response = await axios.post(URI_CARRITO, {
-        Id_Producto: idProducto,
-        Can_Producto: 1, // Puedes ajustar esto según tus necesidades
-        Id_Cliente: null // Ajusta según el cliente actual o usa un valor predeterminado
-      });
+const ItemButton = ({ onClick, children }) => (
+  <button
+    onClick={onClick}
+    style={{
+      padding: '8px 15px',
+      border: 'none',
+      borderRadius: '8px',
+      color: '#fff',
+      backgroundColor: '#ff8c42',
+      cursor: 'pointer',
+      fontSize: '0.9rem',
+      transition: 'background-color 0.3s, transform 0.1s',
+    }}
+    onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#ff6f00')}
+    onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#ff8c42')}
+    onMouseDown={(e) => (e.currentTarget.style.transform = 'scale(0.95)')}
+    onMouseUp={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+  >
+    {children}
+  </button>
+);
 
-      const productoAgregado = response.data; // Ajusta según la respuesta del backend
+const Total = ({ total }) => (
+  <p
+    style={{
+      fontSize: '1.4rem',
+      fontWeight: 'bold',
+      color: '#333',
+      marginTop: '30px',
+      textAlign: 'right',
+    }}
+  >
+    Total: ${total} COP
+  </p>
+);
 
-      // Añadir producto con datos adicionales al carrito
-      const producto = productos.find(p => p.Id_Producto === idProducto);
-      if (producto) {
-        setCarrito([...carrito, { ...productoAgregado, ...producto }]);
-      } else {
-        setCarrito([...carrito, productoAgregado]);
-      }
+const OrderButton = ({ onClick }) => (
+  <button
+    onClick={onClick}
+    style={{
+      width: '100%',
+      padding: '15px 0',
+      border: 'none',
+      borderRadius: '10px',
+      backgroundColor: '#ff6600',
+      color: '#fff',
+      fontSize: '1.2rem',
+      cursor: 'pointer',
+      transition: 'background-color 0.3s, box-shadow 0.3s',
+      marginTop: '20px',
+      boxShadow: '0 4px 12px rgba(255, 102, 0, 0.4)',
+    }}
+    onMouseOver={(e) => {
+      e.currentTarget.style.backgroundColor = '#ff5200';
+      e.currentTarget.style.boxShadow = '0 6px 16px rgba(255, 102, 0, 0.6)';
+    }}
+    onMouseOut={(e) => {
+      e.currentTarget.style.backgroundColor = '#ff6600';
+      e.currentTarget.style.boxShadow = '0 4px 12px rgba(255, 102, 0, 0.4)';
+    }}
+  >
+    Hacer Pedido
+  </button>
+);
 
-      Swal.fire({
-        icon: 'success',
-        title: 'Producto agregado',
-        text: 'El producto se ha agregado al carrito exitosamente',
-      });
-    } catch (error) {
-      console.error('Error al agregar producto al carrito:', error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Hubo un problema al agregar el producto al carrito',
-      });
+const Cart = ({ carrito = [], setCarrito }) => {
+  const [showForm, setShowForm] = useState(false);
+  const [clienteData, setClienteData] = useState(null);
+
+  console.log('Contenido de carrito:', carrito); // Verifica el contenido del carrito
+
+  const eliminarDelCarrito = (idProducto) => {
+    const carritoActualizado = carrito.filter(item => item.Id_Producto !== idProducto);
+    setCarrito(carritoActualizado);
+    Swal.fire('¡Producto eliminado!', 'El producto ha sido eliminado del carrito.', 'info');
+  };
+
+  const aumentarCantidad = (idProducto, existencia) => {
+    const existingItem = carrito.find(item => item.Id_Producto === idProducto);
+    
+    if (existingItem.Can_Producto < existencia) {
+      const carritoActualizado = carrito.map(item =>
+        item.Id_Producto === idProducto
+          ? { ...item, Can_Producto: item.Can_Producto + 1 }
+          : item
+      );
+      setCarrito(carritoActualizado);
+    } else {
+      Swal.fire('¡No puedes agregar más!', `Solo quedan ${existencia} unidades disponibles.`, 'warning');
     }
   };
 
-  // Función para eliminar un producto del carrito
-  const eliminarDelCarrito = async (idCarrito) => {
-    try {
-      await axios.delete(`${URI_CARRITO}${idCarrito}`);
-      setCarrito(carrito.filter((item) => item.Id_Carrito !== idCarrito));
-      Swal.fire({
-        icon: 'success',
-        title: 'Producto eliminado',
-        text: 'El producto ha sido eliminado del carrito',
-      });
-    } catch (error) {
-      console.error('Error al eliminar producto del carrito:', error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Hubo un problema al eliminar el producto del carrito',
-      });
-    }
+  const disminuirCantidad = (idProducto) => {
+    const carritoActualizado = carrito.map(item =>
+      item.Id_Producto === idProducto && item.Can_Producto > 1
+        ? { ...item, Can_Producto: item.Can_Producto - 1 }
+        : item
+    );
+    setCarrito(carritoActualizado);
   };
+  
+  const total = carrito.reduce((total, item) => total + item.Pre_Producto * item.Can_Producto, 0).toFixed(2);
 
   return (
-    <>
-      <Sidebar />
-      <div className="container mt-4">
-        <h2>Administrar Carrito</h2>
-
-        {/* Formulario para agregar productos al carrito */}
-        <div className="card p-3 mb-4">
-          <h5>Agregar Producto al Carrito</h5>
-          <div className="form-group mb-3">
-            <label htmlFor="producto">Producto</label>
-            <select
-              id="producto"
-              className="form-control"
-              value={idProducto}
-              onChange={(e) => setIdProducto(e.target.value)}
-            >
-              <option value="">Seleccione un producto</option>
-              {productos.map((producto) => (
-                <option key={producto.Id_Producto} value={producto.Id_Producto}>
-                  {producto.Nom_Producto}
-                </option>
-              ))}
-            </select>
-          </div>
-          <button className="btn btn-primary" onClick={agregarAlCarrito}>
-            Agregar al Carrito
-          </button>
-        </div>
-
-        {/* Recuadros de productos en el carrito */}
-        <h5>Productos en el Carrito</h5>
-        <div className="row">
-          {carrito.length > 0 ? (
-            carrito.map((item) => (
-              <div className="col-md-4 mb-3" key={item.Id_Carrito}>
-                <div className="card">
-                  <img src={item.Ima_Producto} className="card-img-top" alt={item.Nom_Producto} />
-                  <div className="card-body">
-                    <h5 className="card-title">{item.Nom_Producto}</h5>
-                    <p className="card-text">Precio: ${item.Pre_Producto}</p>
-                    <p className="card-text">Cantidad en Existencia: {item.Exi_Producto}</p>
-                    <button
-                      className="btn btn-danger"
-                      onClick={() => eliminarDelCarrito(item.Id_Carrito)}
-                    >
-                      Eliminar
-                    </button>
-                  </div>
+    <CartModal>
+      <CartTitle />
+      {carrito.length === 0 ? (
+        <p>No hay productos en el carrito.</p>
+      ) : (
+        <>
+          <CartItemsList>
+            {carrito.map(item => (
+              <CartItem key={item.Id_Producto}>
+                <ItemTitle title={item.Nom_Producto} />
+                <ItemQuantity quantity={item.Can_Producto} />
+                <div>
+                  <ItemButton onClick={() => disminuirCantidad(item.Id_Producto)}>-</ItemButton>
+                  <ItemButton onClick={() => aumentarCantidad(item.Id_Producto, item.Exi_Producto)}>+</ItemButton>
+                  <ItemButton onClick={() => eliminarDelCarrito(item.Id_Producto)}>Eliminar</ItemButton>
                 </div>
-              </div>
-            ))
-          ) : (
-            <div className="col-12 text-center">
-              <p>No hay productos en el carrito</p>
-            </div>
+              </CartItem>
+            ))}
+          </CartItemsList>
+          <Total total={total} />
+          <OrderButton onClick={() => setShowForm(true)} />
+          {showForm && (
+            <ClienteForm
+              setShowForm={setShowForm}
+              setClienteData={setClienteData}
+              carrito={carrito} // Asegúrate de pasar el carrito aquí
+            />
           )}
-        </div>
-      </div>
-    </>
+        </>
+      )}
+    </CartModal>
   );
 };
 
-export default CrudCarritoAdmin;
+export default Cart;

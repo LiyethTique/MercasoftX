@@ -1,37 +1,38 @@
 // models/authModel.js
 import { DataTypes } from 'sequelize';
-import sequelize from '../database/db.js';
-import ResponsableModel from './responsableModel.js'; // Importa el modelo Responsable
+import sequelize from '../database/db.js'; // tu configuración de base de datos
 
-const UserModel = sequelize.define('Usuario', {
+const UserModel = sequelize.define('usuario', {
   Id_Usuario: {
     type: DataTypes.INTEGER,
-    autoIncrement: true,
     primaryKey: true,
+    autoIncrement: true,
+  },
+  Cor_Usuario: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true,
+  },
+  Password_Usuario: {
+    type: DataTypes.STRING,
+    allowNull: false,
   },
   Id_Responsable: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    references: {
-      model: ResponsableModel, // Hace referencia al modelo Responsable
-      key: 'Id_Responsable',   // El campo en Responsable al que se refiere
-    },
   },
-  Cor_Usuario: {
-    type: DataTypes.STRING(100),
-    allowNull: false,
-    unique: true, 
+  // Nuevos campos para la recuperación de contraseña
+  ResetPasswordToken: {
+    type: DataTypes.STRING,
+    allowNull: true,
   },
-  Password_Usuario: {
-    type: DataTypes.STRING(255),
-    allowNull: false,
+  ResetPasswordExpires: {
+    type: DataTypes.DATE,
+    allowNull: true,
   },
 }, {
-  tableName: 'Usuario',
+  tableName: 'usuario',
   timestamps: false,
 });
-
-// Definir la relación
-
 
 export default UserModel;

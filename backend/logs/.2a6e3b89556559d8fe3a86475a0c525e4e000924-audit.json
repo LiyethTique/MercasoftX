@@ -6,29 +6,64 @@
     "auditLog": "logs\\.2a6e3b89556559d8fe3a86475a0c525e4e000924-audit.json",
     "files": [
         {
-            "date": 1726701864522,
-            "name": "logs\\pedidoproducto-2024-09-18.log",
-            "hash": "9a86d6797b2ab72d4bc485e0f600e070e403dcb57aa9a789927ee78a82c0ea1e"
-        },
-        {
-            "date": 1726801561802,
-            "name": "logs\\pedidoproducto-2024-09-19.log",
-            "hash": "d46d4c5239d55fc21e1e0e7821eb82eceb480cefc342a79e0c9ddc5fde5f6a70"
-        },
-        {
-            "date": 1727100851501,
-            "name": "logs\\pedidoproducto-2024-09-23.log",
-            "hash": "b5c2c2e148122a2e920639111843a928aace26d517e3eac55bb81e57d3264c6f"
-        },
-        {
             "date": 1727281325697,
             "name": "logs\\pedidoproducto-2024-09-25.log",
             "hash": "39b9263cea9ef8036b1d71ba6f9591a1cc776bc9c6a0f9f2ccadd49667e46032"
         },
         {
-            "date": 1727470539671,
-            "name": "logs\\pedidoproducto-2024-09-27.log",
-            "hash": "ac1e52fc0ff8d4cc59e223c95a2b58a60eb505d6df66e6a7c6235424a2ef70d6"
+            "date": 1727356151263,
+            "name": "logs\\pedidoproducto-2024-09-26.log",
+            "hash": "c9e7250cf9f7df9071683e3763d8eca0d6ed552b1037cdcf10bc05cd4b480a16"
+        },
+        {
+            "date": 1727565125690,
+            "name": "logs\\pedidoproducto-2024-09-28.log",
+            "hash": "c194cbee5b30090f1ee67ce85414d27b86ecff45d3a30940e447f89989ab40b0"
+        },
+        {
+            "date": 1727656265890,
+            "name": "logs\\pedidoproducto-2024-09-29.log",
+            "hash": "d0e45c54844ec2a92aaf2385a70782c2d3f62383a83df4b6033e2d77fb248a95"
+        },
+        {
+            "date": 1727698675653,
+            "name": "logs\\pedidoproducto-2024-09-30.log",
+            "hash": "714a172b5421de978371bfc7b7f5933a54130bdd785cb6c455ee055ac5f065b0"
+        },
+        {
+            "date": 1727783944580,
+            "name": "logs\\pedidoproducto-2024-10-01.log",
+            "hash": "688e3147254a40083e8cb30fc2c5964313c35356b424a8ab4a8df7a4d89a5049"
+        },
+        {
+            "date": 1727973985915,
+            "name": "logs\\pedidoproducto-2024-10-03.log",
+            "hash": "db92cb78341507595a599a9290c1026368ffcd09c073c43dc50e9d201bdd633a"
+        },
+        {
+            "date": 1728071918888,
+            "name": "logs\\pedidoproducto-2024-10-04.log",
+            "hash": "bd086aa043880178ee28a9b9cd7c53997a704380884a1bb2319fb11fc2b08506"
+        },
+        {
+            "date": 1728159211632,
+            "name": "logs\\pedidoproducto-2024-10-05.log",
+            "hash": "d42b2674d8e23ccd50e30be28abf141adbd15888660a3608adb2ae29d5c19f36"
+        },
+        {
+            "date": 1728247410247,
+            "name": "logs\\pedidoproducto-2024-10-06.log",
+            "hash": "132f23d10710e86af93f252a0b394456122726db3bd21705c0400b6f1d5c06a9"
+        },
+        {
+            "date": 1728304195757,
+            "name": "logs\\pedidoproducto-2024-10-07.log",
+            "hash": "04590f6baf77c73ea06ddf02400da64eb8ca34da3d77451644edb5942f05834f"
+        },
+        {
+            "date": 1728365499670,
+            "name": "logs\\pedidoproducto-2024-10-08.log",
+            "hash": "cc88c9246acdeff76b90489eacc978d12807faaf081ba06ed7166bd06feaac77"
         }
     ],
     "hashType": "sha256"

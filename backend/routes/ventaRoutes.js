@@ -1,5 +1,5 @@
 import express from "express";
-import { createVenta, deleteVenta, getAllVenta, getVenta, updateVenta} from "../controllers/ventaController.js";
+import { createVenta, deleteVenta, getAllVentas, getVenta, updateVenta} from "../controllers/ventaController.js";
 import winston from "winston";
 import DailyRotateFile from "winston-daily-rotate-file";
 
@@ -25,7 +25,7 @@ const logError = (err, req, res, next) => {
     res.status(500).json({ error: 'Internal Server Error' });
 };
 
-router.get('/', getAllVenta);
+router.get('/', getAllVentas);
 router.get('/:id', getVenta);
 router.post('/', createVenta);
 router.put('/:id', updateVenta);

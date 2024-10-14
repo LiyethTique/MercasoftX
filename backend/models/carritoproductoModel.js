@@ -1,23 +1,40 @@
-import { Sequelize } from "sequelize";
-import db from "../database/db.js";
+import { DataTypes } from 'sequelize';
+import db from '../database/db.js';
+import Producto from './productoModel.js'; // Asegúrate de que la ruta sea correcta
 
-const CarritoProductoModel = db.define('carritoproducto', {
-    Id_carritoProducto: {
-        type: Sequelize.INTEGER,
+const CarritoProducto = db.define('carritoProducto', {
+    Id_CarritoProducto: {
+        type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
     Id_Carrito: {
-        type: Sequelize.INTEGER,
-        allowNull: false
+        type: DataTypes.INTEGER,
+        allowNull: false,
     },
     Id_Producto: {
-        type: Sequelize.INTEGER,
-        allowNull: false
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: Producto,
+            key: 'Id_Producto',
+        },
+    },
+    Can_Producto: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    createdAT: {
+        type: DataTypes.DATE,
+        allowNull: false,
+    },
+    updatedAT: {
+        type: DataTypes.DATE,
+        allowNull: false,
     }
 }, {
-    timestamps: false,
-    tableName: 'carritoproducto'
+    tableName: 'carritoProducto',
+    timestamps: false
 });
 
-export default CarritoProductoModel;
+export default CarritoProducto;

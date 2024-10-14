@@ -1,28 +1,24 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import Swal from 'sweetalert2';  // Importa SweetAlert2
-import '../Estilos/Sidebar.css';
+import Swal from 'sweetalert2';
+import jwt_decode from 'jwt-decode';
 
 function Sidebar() {
-    const [isVisible, setIsVisible] = useState(false); // Estado para la visibilidad del sidebar
-    const [selectedOption, setSelectedOption] = useState('/'); // Estado para la opción seleccionada
-    const navigate = useNavigate(); // Hook para redirección
+    const [isVisible, setIsVisible] = useState(false);
+    const [selectedOption, setSelectedOption] = useState('/');
+    const navigate = useNavigate();
 
-    // Función para alternar la visibilidad del sidebar
     const toggleSidebar = () => {
         setIsVisible(!isVisible);
     };
 
-    // Función para manejar la selección de una opción
     const handleOptionSelect = (href) => {
-        setSelectedOption(href); // Actualiza la opción seleccionada
+        setSelectedOption(href);
     };
 
-    // Función para manejar el cierre de sesión
     const handleLogout = (event) => {
-        event.preventDefault(); // Previene el comportamiento por defecto del enlace
+        event.preventDefault();
 
-        // Mostrar alerta de confirmación
         Swal.fire({
             title: '¿Estás seguro?',
             text: '¿Quieres cerrar sesión?',
@@ -33,19 +29,16 @@ function Sidebar() {
             reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
-                // Mostrar alerta de "Cerrando sesión" si se confirma
                 Swal.fire({
                     title: 'Cerrando sesión...',
                     text: 'Por favor espera un momento.',
-                    imageUrl: '/cargando.gif', // Usar GIF de carga
-                    imageWidth: 100, // Ajusta el tamaño del GIF
+                    imageUrl: '/cargando.gif',
+                    imageWidth: 100,
                     imageAlt: 'Cargando...',
-                    showConfirmButton: false,  // Oculta el botón de confirmación
-                    timer: 1000,  // Alerta visible durante 1 segundo
+                    showConfirmButton: false,
+                    timer: 1000,
                     willClose: () => {
-                        // Limpiar el token de autenticación o cualquier dato relacionado con la sesión
                         localStorage.removeItem('token');
-                        // Redirigir al usuario a la página de inicio de sesión
                         navigate('/');
                     }
                 });
@@ -53,9 +46,22 @@ function Sidebar() {
         });
     };
 
+    const isAdmin = () => {
+        const token = localStorage.getItem('token');
+        if (!token) return false;
+
+        try {
+            const decodedToken = jwt_decode(token);
+            console.log("Decoded Token:", decodedToken);
+            return decodedToken.Tip_Responsable === 'Administrador';
+        } catch (error) {
+            console.error('Error al decodificar el token', error);
+            return false;
+        }
+    };
+
     return (
         <>
-            {/* Botón de menú hamburguesa */}
             <button 
                 className={`hamburger ${isVisible ? 'open' : ''}`} 
                 onClick={toggleSidebar}
@@ -65,15 +71,12 @@ function Sidebar() {
                 <span className="hamburger-line"></span>
             </button>
 
-            {/* Sidebar con clases condicionales para transiciones */}
             <div className={`sidebar ${isVisible ? 'visible' : 'hidden'}`}>
-                {/* Encabezado del Sidebar */}
                 <Link to="/" className="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
                     <img rel="icon" type="image/svg+xml" src="/Logo-Icono.svg" width="60px" alt="Logo" />
                     <span className="fs-4"><b>MERCASOFTX</b></span>
                 </Link>
                 <hr />
-
                 <ul className="nav nav-pills flex-column mb-auto">
                     {renderNavItem('/carrito/', 'shopping_cart.svg', 'Carrito', selectedOption, handleOptionSelect)}
                     {renderNavItem('/area/', 'arae.svg', 'Area', selectedOption, handleOptionSelect)}
@@ -81,24 +84,19 @@ function Sidebar() {
                     {renderNavItem('/entrada/', 'transfer.svg', 'Entrada', selectedOption, handleOptionSelect)}
                     {renderNavItem('/pedido/', 'orders.svg', 'Pedido', selectedOption, handleOptionSelect)}
                     {renderNavItem('/producto/', 'product.svg', 'Producto', selectedOption, handleOptionSelect)}
-                    {renderNavItem('/responsable/', 'responsible.svg', 'Responsable', selectedOption, handleOptionSelect)}
                     {renderNavItem('/traslado/', 'entrance.svg', 'Traslado', selectedOption, handleOptionSelect)}
                     {renderNavItem('/unidad/', 'unit.svg', 'Unidad', selectedOption, handleOptionSelect)}
                     {renderNavItem('/venta/', 'sale.svg', 'Venta', selectedOption, handleOptionSelect)}
-                    {renderNavItem('/users/', 'user.svg', 'Usuarios', selectedOption, handleOptionSelect)} {/* Nuevo enlace para Usuarios */}
+                    {isAdmin() && renderNavItem('/responsable/', 'responsible.svg', 'Responsable', selectedOption, handleOptionSelect)}
+                    {isAdmin() && renderNavItem('/users/', 'adminUser.svg', 'Usuarios', selectedOption, handleOptionSelect)}
                 </ul>
                 <hr />
-
-                {/* Opción de cerrar sesión */}
                 <div className="nav-item">
                     <a 
                         href="/login" 
                         className="nav-link text-white" 
                         onClick={handleLogout} 
-                        style={{ cursor: 'pointer',
-                            fontSize: '1.4rem', // Tamaño de fuente más grande para el texto
-                            fontWeight: 'bold'   // Hacer el texto en negrita
-                         }}
+                        style={{ cursor: 'pointer', fontSize: '1.4rem', fontWeight: 'bold' }}
                     >
                         <img src="/logout.png" alt="Cerrar Sesión" style={{ width: '30px', height: '30px', marginRight: '5px' }} />
                         Cerrar Sesión
@@ -121,7 +119,7 @@ function renderNavItem(href, iconSrc, text, selectedOption, handleOptionSelect) 
                 <img 
                     src={`/${iconSrc}`} 
                     alt={text} 
-                    style={{ marginRight: '10px' }} // Estilo en línea para separar el icono del texto
+                    style={{ marginRight: '10px' }} 
                 />
                 {text}
             </Link>

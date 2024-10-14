@@ -1,5 +1,5 @@
 import express from 'express';
-import { createArea, updateArea, getAllAreas, getArea, deleteArea } from '../controllers/areaController.js';
+import { createArea, updateArea, getAllAreas, getArea, deleteArea, getQueryArea } from '../controllers/areaController.js';
 import winston from "winston";
 import DailyRotateFile from "winston-daily-rotate-file";
 
@@ -31,6 +31,7 @@ router.get('/:id', getArea);
 router.post('/', createArea);
 router.put('/:id', updateArea);
 router.delete('/:id', deleteArea);
+router.get('/Nom_Area/:Nom_Area', getQueryArea);
 
 // Manejo de errores
 router.use(logError);

@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Swal from 'sweetalert2';
-import FormTraslado from './formTraslado';  // Form component for Traslados
+import FormTraslado from '../Traslado/formTraslado.jsx'; // Asegúrate de crear este componente
 import Sidebar from '../Sidebar/Sidebar';
-import WriteTable from '../Tabla/Data-Table';  // Assuming you have a Data-Table component
-import ModalForm from '../Model/Model';  // Assuming a Modal component is available
-import AlertaBDVacia from '../alertas/alertaBDVacia.jsx'
-import './crudTraslados.css';
+import ModalForm from '../Model/Model';
+import Swal from 'sweetalert2';
+import { Button } from 'react-bootstrap';
+import { IoTrash, IoPencil } from "react-icons/io5";
+import WriteTable from '../Tabla/Data-Table';
 
 const URI = process.env.REACT_APP_SERVER_BACK + '/traslado/';
 
@@ -15,78 +15,137 @@ const CrudTraslado = () => {
   const [buttonForm, setButtonForm] = useState('Enviar');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [traslado, setTraslado] = useState(null);
-  const [originalTraslado, setOriginalTraslado] = useState(null);  // New state to hold the original traslado
+  const [formData, setFormData] = useState({});
+  const moduleName = "Gestionar Traslados";
+
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
-    getAllTraslado();
-  }, []);
-
-  const getAllTraslado = async () => {
-    try {
-      const response = await axios.get(URI);
-      if (Array.isArray(response.data)) {
-        if (response.data.length === 0) {
-          setTrasladoList([]);
+    const fetchTraslados = async () => {
+      try {
+        const respuesta = await axios.get(URI, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        if (Array.isArray(respuesta.data)) {
+          setTrasladoList(respuesta.data);
         } else {
-          setTrasladoList(response.data);
+          console.error("Formato de respuesta inesperado:", respuesta.data);
+          setTrasladoList([]);
         }
-      } else {
-        console.error("Unexpected response format:", response.data);
+      } catch (error) {
+        console.error("Error al obtener traslados:", error);
+        Swal.fire("Error", error.response?.data?.message || "Error al obtener traslados", "error");
         setTrasladoList([]);
       }
-    } catch (error) {
-      console.error("Error fetching traslados:", error);
-      Swal.fire("Error", error.response?.data?.message || "Error al obtener los traslados", "error");
-    }
-  };
+    };
+    fetchTraslados();
+  }, [token]);
 
   const getTraslado = async (Id_Traslado) => {
-    console.log("Id_Traslado:", Id_Traslado);
     setButtonForm('Actualizar');
     try {
-      const response = await axios.get(`${URI}${Id_Traslado}`);
-      setOriginalTraslado(response.data);  // Set the original traslado
-      setTraslado(response.data);
+      const respuesta = await axios.get(`${URI}${Id_Traslado}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setTraslado(respuesta.data);
+      setFormData(respuesta.data);
       setIsModalOpen(true);
     } catch (error) {
+      console.error("Error al obtener el traslado:", error);
       Swal.fire("Error", error.response?.data?.message || "Error al obtener el traslado", "error");
     }
   };
 
-  const handleSubmitTraslado = async (data) => {
-    if (buttonForm === 'Actualizar') {
-      if (JSON.stringify(data) === JSON.stringify(originalTraslado)) {
-        Swal.fire({
-          icon: 'warning',
-          title: 'Atención.',
-          text: 'Por favor, realice al menos una modificación antes de actualizar.',
-        });
-        return;
-      }
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const hasChanges = (data) => {
+    return Object.keys(data).some(key =>
+      data[key] !== traslado[key]
+    );
+  };
+
+  const hasSpaces = (data) => {
+    return Object.values(data).some(value =>
+      typeof value === 'string' && value.trim() === ''
+    );
+  };
+
+  const handleSubmitTraslado = async () => {
+    if (hasSpaces(formData)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se permiten campos vacíos o que contengan solo espacios.',
+        confirmButtonText: 'Aceptar',
+      });
+      return;
+    }
+
+    if (buttonForm === 'Actualizar' && !hasChanges(formData)) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Sin cambios',
+        text: 'Debes realizar cambios en al menos un campo para actualizar.',
+        confirmButtonText: 'Aceptar',
+      });
+      return;
     }
 
     try {
       if (buttonForm === 'Actualizar') {
-        await axios.put(`${URI}${traslado.Id_Traslado}`, data);
-        Swal.fire("Actualizado!", "El traslado ha sido actualizado.", "success");
+        await axios.put(`${URI}${traslado.Id_Traslado}`, formData, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        Swal.fire({
+          icon: 'success',
+          title: 'Actualización exitosa',
+          text: 'El traslado se ha actualizado exitosamente.',
+          confirmButtonText: 'Aceptar',
+        });
       } else {
-        await axios.post(URI, data);
-        Swal.fire("Creado!", "El traslado ha sido creado.", "success");
+        await axios.post(URI, formData, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        Swal.fire({
+          icon: 'success',
+          title: 'Registro exitoso',
+          text: 'El traslado se ha registrado exitosamente.',
+          confirmButtonText: 'Aceptar',
+        });
       }
-      getAllTraslado();
+      const respuesta = await axios.get(URI, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setTrasladoList(Array.isArray(respuesta.data) ? respuesta.data : []);
       setIsModalOpen(false);
       setButtonForm('Enviar');
       setTraslado(null);
-      setOriginalTraslado(null);  // Clear the original traslado
+      setFormData({});
     } catch (error) {
-      Swal.fire("Error", error.response?.data?.message || "Error al guardar el traslado", "error");
+      console.error("Error al guardar el traslado:", error);
+      Swal.fire("Error", error.response?.data?.message || "Ocurrió un error al guardar el traslado.", "error");
     }
   };
 
   const deleteTraslado = async (Id_Traslado) => {
-    console.log("Deleting traslado with ID:", Id_Traslado);
     Swal.fire({
-      title: "¿Estás seguro?",
+      title: "¿Estás seguro de borrar este registro?",
       text: "¡No podrás revertir esto!",
       icon: "warning",
       showCancelButton: true,
@@ -96,9 +155,18 @@ const CrudTraslado = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axios.delete(`${URI}${Id_Traslado}`);
+          await axios.delete(`${URI}${Id_Traslado}`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          });
           Swal.fire("¡Borrado!", "El traslado ha sido borrado.", "success");
-          getAllTraslado();  // Refresh the list after deletion
+          const respuesta = await axios.get(URI, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          });
+          setTrasladoList(respuesta.data);
         } catch (error) {
           Swal.fire("Error", error.response?.data?.message || "Error al eliminar el traslado", "error");
         }
@@ -109,89 +177,83 @@ const CrudTraslado = () => {
   const handleShowForm = () => {
     setButtonForm('Enviar');
     setTraslado(null);
-    setOriginalTraslado(null);  // Clear the original traslado when opening the form
+    setFormData({});
     setIsModalOpen(true);
   };
 
-  const titles = ['Codigo Traslado', 'Fecha Traslado', 'Descripción', 'Producto', 'Cantidad', 'Valor Unitario', 'Valor Total', 'Responsable', 'Acciones'];
-  const data = trasladoList.map(traslado => [
-    traslado.Id_Traslado,
-    traslado.Fec_Traslado,
-    traslado.Des_Traslado,
-    traslado.Id_Producto ? traslado.producto?.Nom_Producto || 'Sin Producto' : 'Sin Producto',
-    traslado.Can_Producto,
-    traslado.Val_Unitario,
-    traslado.Val_Traslado,
-    traslado.Id_Responsable ? traslado.responsable?.Nom_Responsable || 'Sin Responsable' : 'Sin Responsable',
-    <div key={traslado.Id_Traslado}>
-      <a
-        href="#!"
-        className="btn-custom me-2"
-        onClick={() => getTraslado(traslado.Id_Traslado)}
-        title="Editar"
-      >
-        <img
-          src="/pencil-square.svg"
-          alt="Editar"
-          style={{ width: '13px', height: '13px' }}
-        />
-      </a>
-      <a
-        href="#!"
-        className="btn-custom"
-        onClick={() => deleteTraslado(traslado.Id_Traslado)}
-        title="Borrar"
-      >
-        <img
-          src="/trash3.svg"
-          alt="Borrar"
-        />
-      </a>
-    </div>
-  ]);
+  const titles = ['ID Traslado', 'Fecha', 'Descripción', 'Origen', 'Destino', 'Unidad de Medida', 'Producto', 'Cantidad', 'Valor Unitario', 'Responsable', 'Acciones'];
+  const data = trasladoList.length === 0
+    ? [[
+      '', '', '', '', '', '', '', '', '', ''
+    ]]
+    : trasladoList.map(trasladoItem => [
+      trasladoItem.Id_Traslado,
+      trasladoItem.Fec_Traslado,
+      trasladoItem.Dcp_Traslado,
+      trasladoItem.Ori_Traslado,
+      trasladoItem.Des_Traslado,
+      trasladoItem.Uni_DeMedida,
+      trasladoItem.Id_Producto,
+      trasladoItem.Can_Producto,
+      trasladoItem.Val_Unitario,
+      trasladoItem.Id_Responsable,
+      <div key={trasladoItem.Id_Traslado} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <a
+          href="#!"
+          className="btn-custom me-2"
+          onClick={() => getTraslado(trasladoItem.Id_Traslado)}
+          title="Editar"
+          style={{ pointerEvents: trasladoList.length > 0 ? 'auto' : 'none', opacity: trasladoList.length > 0 ? 1 : 0.5 }}
+        >
+          <IoPencil size={20} color="blue" />
+        </a>
+        <a
+          href="#!"
+          className="btn-custom"
+          onClick={() => deleteTraslado(trasladoItem.Id_Traslado)}
+          title="Borrar"
+          style={{ pointerEvents: trasladoList.length > 0 ? 'auto' : 'none', opacity: trasladoList.length > 0 ? 1 : 0.5 }}
+        >
+          <IoTrash size={20} color="red" />
+        </a>
+      </div>
+    ]);
 
   return (
     <>
       <Sidebar />
       <div className="container mt-4">
         <center>
-          <h1>Gestionar Traslados</h1>
+          <h1>{moduleName}</h1>
         </center>
-
         <div className="d-flex justify-content-between mb-3">
-          <a
-            href="#!"
-            className="btn btn-success d-flex align-items-center"
-            onClick={handleShowForm}
-          >
+          <Button
+            style={{ backgroundColor: 'orange', borderColor: 'orange' }}
+            onClick={handleShowForm}>
             <img
-              src="/plus-circle.svg"
+              src="/plus-circle (1).svg"
               alt="Add Icon"
               style={{ width: '20px', height: '20px', marginRight: '8px', filter: 'invert(100%)' }}
             />
             Registrar
-          </a>
+          </Button>
         </div>
 
-        <WriteTable titles={titles} data={data} />
-
-        <AlertaBDVacia uri={URI} />
+        <WriteTable titles={titles} data={data} moduleName={moduleName} />
 
         <ModalForm
           isOpen={isModalOpen}
-          onClose={() => { setIsModalOpen(false); setTraslado(null); setButtonForm('Enviar'); setOriginalTraslado(null); }}
+          onClose={() => { setIsModalOpen(false); setTraslado(null); setButtonForm('Enviar'); }}
           title={buttonForm === 'Actualizar' ? "Actualizar Traslado" : "Agregar Traslado"}
         >
           <FormTraslado
             buttonForm={buttonForm}
             traslado={traslado}
-            URI={URI}
-            updateTextButton={setButtonForm}
-            setIsFormVisible={setIsModalOpen}
             onSubmit={handleSubmitTraslado}
+            onInputChange={handleInputChange}
+            formData={formData}
           />
         </ModalForm>
-
       </div>
     </>
   );

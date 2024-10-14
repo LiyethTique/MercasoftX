@@ -1,28 +1,38 @@
-// Ejemplo del modelo Carrito con Id_Cliente opcional
 import { DataTypes } from 'sequelize';
-import sequelize from '../database/db.js';
+import db from '../database/db.js';
+import Producto from './productoModel.js';
+import Cliente from './clienteModel.js'
 
-const Carrito = sequelize.define('Carrito', {
+const Carrito = db.define('carrito', {
     Id_Carrito: {
         type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
+        primaryKey: true,
+        autoIncrement: true
     },
     Id_Producto: {
         type: DataTypes.INTEGER,
-        allowNull: false
-    },
-    Can_Producto: {
-        type: DataTypes.INTEGER,
-        defaultValue: 1
+        allowNull: false,
+        references: {
+            model: Producto,
+            key: 'Id_Producto'
+        }
     },
     Id_Cliente: {
         type: DataTypes.INTEGER,
-        allowNull: true // Ahora es opcional
+        allowNull: true,  // Puede ser nulo
+        references: {
+            model: Cliente,
+            key: 'Id_Cliente'
+        }
+    },
+    Can_Producto: {
+        type: DataTypes.INTEGER,
+        allowNull: false
     }
 }, {
     tableName: 'carrito',
-    timestamps: false
+    timestamps: true  // Para manejar createdAt y updatedAt
 });
+
 
 export default Carrito;

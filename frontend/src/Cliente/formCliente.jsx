@@ -1,183 +1,298 @@
-import React, { useState, useEffect } from 'react';
-import { Button } from 'react-bootstrap';
+import React, { useState } from 'react';
+import axios from 'axios';
 import Swal from 'sweetalert2';
 
-const FormCliente = ({ buttonForm, cliente, onSubmit, onClose }) => {
-  const [formData, setFormData] = useState({
+// Definición de las URIs
+const URI_CLIENTE = process.env.REACT_APP_SERVER_BACK + '/cliente/';
+const URI_CARRITO = process.env.REACT_APP_SERVER_BACK + '/carrito/'; // Cambia a la URI correcta para el carrito
+const URI_PEDIDO = process.env.REACT_APP_SERVER_BACK + '/pedido/';
+const URI_PEDIDO_PRODUCTO = process.env.REACT_APP_SERVER_BACK + '/pedidoProducto/';
+
+// Componente ClienteForm
+const ClienteForm = ({ setShowForm, setClienteData, carrito }) => {
+  const [cliente, setCliente] = useState({
     Nom_Cliente: '',
     Cor_Cliente: '',
     Tel_Cliente: '',
+    Dir_Cliente: '',
+    Tip_Cliente: '',
   });
 
-  const [initialData, setInitialData] = useState({
-    Nom_Cliente: '',
-    Cor_Cliente: '',
-    Tel_Cliente: '',
-  });
+  const [formErrors, setFormErrors] = useState({});
 
-  const [errors, setErrors] = useState({
-    Nom_Cliente: '',
-    Cor_Cliente: '',
-    Tel_Cliente: '',
-  });
-
-  const [isSubmitting, setIsSubmitting] = useState(false); // Nuevo estado para controlar el envío
-
-  useEffect(() => {
-    if (cliente) {
-      setFormData(cliente);
-      setInitialData(cliente); // Guardar los datos iniciales
+  // Validar el formulario
+  const validateForm = () => {
+    let errors = {};
+    if (!cliente.Nom_Cliente.trim()) {
+      errors.Nom_Cliente = 'El nombre es requerido';
     }
-  }, [cliente]);
-
-  const isValidEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const validDomains = ['gmail.com', 'hotmail.com'];
-    const domain = email.split('@')[1];
-    return emailRegex.test(email) && validDomains.includes(domain);
+    if (!cliente.Tel_Cliente.trim()) {
+      errors.Tel_Cliente = 'El teléfono es requerido';
+    } else if (!/^[3]{1}[0-9]{9}$/.test(cliente.Tel_Cliente.replace(/ /g, ''))) {
+      errors.Tel_Cliente = 'El teléfono debe tener 10 dígitos y comenzar con 3';
+    }
+    if (!cliente.Dir_Cliente.trim()) {
+      errors.Dir_Cliente = 'La dirección es requerida';
+    }
+    if (!cliente.Tip_Cliente) {
+      errors.Tip_Cliente = 'El tipo de cliente es requerido';
+    }
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
   };
 
-  const isValidPhone = (phone) => {
-    const phoneRegex = /^3\d{9}$/; // Debe comenzar con 3 y tener 10 dígitos
-    return phoneRegex.test(phone);
-  };
-
-  const formatPhoneNumber = (phone) => {
-    if (!phone) return '';
-    const cleaned = phone.replace(/\D/g, ''); // Elimina todos los caracteres no numéricos
-    const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
-    if (match) {
-      return `${match[1]} ${match[2]} ${match[3]}`;
+  const formatPhoneNumber = (value) => {
+    const digits = value.replace(/\D/g, '');
+    if (digits.length > 0) {
+      const firstDigit = digits.charAt(0);
+      if (firstDigit !== '3') {
+        return '';
+      }
     }
-    return cleaned;
+    const formatted = digits.replace(/(\d{3})(\d{3})(\d{4})/, '$1 $2 $3').trim();
+    return formatted.substring(0, 12);
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    if (name === 'Tel_Cliente') {
-      const onlyNumbers = value.replace(/\D/g, '').slice(0, 10); // Limita a 10 dígitos
-      if (onlyNumbers.startsWith('3')) {
-        setFormData({ ...formData, [name]: formatPhoneNumber(onlyNumbers) });
-        if (errors.Tel_Cliente) {
-          setErrors({ ...errors, Tel_Cliente: '' });
-        }
-      } else {
-        setErrors({ ...errors, Tel_Cliente: 'El número de teléfono debe comenzar con 3.' });
-      }
-    } else {
-      setFormData({ ...formData, [name]: value });
-    }
-  };
-
-  const validateForm = () => {
-    const newErrors = {};
-
-    if (!formData.Nom_Cliente) newErrors.Nom_Cliente = 'El nombre es requerido.';
-    if (!formData.Cor_Cliente) newErrors.Cor_Cliente = 'El correo es requerido.';
-    if (!formData.Tel_Cliente) newErrors.Tel_Cliente = 'El teléfono es requerido.';
-
-    if (formData.Cor_Cliente && !isValidEmail(formData.Cor_Cliente)) {
-      newErrors.Cor_Cliente = 'Por favor, ingresa un correo electrónico válido de Gmail o Hotmail.';
-    }
-
-    const phoneOnlyNumbers = formData.Tel_Cliente.replace(/\D/g, '');
-    if (formData.Tel_Cliente && !isValidPhone(phoneOnlyNumbers)) {
-      newErrors.Tel_Cliente = 'El número de teléfono debe tener exactamente 10 dígitos y comenzar con 3.';
-    }
-
-    return newErrors;
-  };
-
-  const hasChanges = () => {
-    return Object.keys(formData).some(key => formData[key] !== initialData[key]);
+    const updatedValue = name === 'Tel_Cliente' ? formatPhoneNumber(value) : value;
+    setCliente({ ...cliente, [name]: updatedValue });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (isSubmitting) return; // Evitar múltiples envíos mientras se está procesando.
-
   
-
-    const formErrors = validateForm();
-    if (Object.keys(formErrors).length > 0) {
-      setErrors(formErrors);
-      return;
-    }
-
-    setIsSubmitting(true); // Bloquear el botón de enviar.
-
+    if (!validateForm()) return;
+  
     try {
-      await onSubmit(formData); // Realizar la solicitud al servidor.
       Swal.fire({
-        icon: 'success',
-        title: 'Cliente registrado exitosamente',
+        title: 'Enviando Cliente...',
+        showConfirmButton: false,
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
       });
+  
+      // Enviar datos del cliente
+      const responseCliente = await axios.post(URI_CLIENTE, cliente);
+      console.log("responseCliente: ", responseCliente);
+  
+      if (responseCliente.status === 201) {
+        setClienteData(responseCliente.data.cliente);
+        const clienteId = responseCliente.data.cliente?.Id_Cliente;
+  
+        // Crear carrito para cada producto en el localStorage
+        const productosParaPedido = []; // Arreglo para almacenar productos del pedido
+        for (const item of carrito) {
+          const carritoProducto = {
+            Id_Producto: item.Id_Producto,
+            Id_Cliente: clienteId,
+            Can_Producto: item.Can_Producto,
+          };
+  
+          console.log('Carrito a enviar:', carritoProducto);
+  
+          // Aquí se envía la solicitud para agregar el producto al carrito
+          const responseCarrito = await axios.post(URI_CARRITO, carritoProducto);
+          if (responseCarrito.status !== 201) {
+            throw new Error('Error al agregar el producto al carrito');
+          }
+  
+          // Agregar el producto al arreglo para el pedido
+          productosParaPedido.push({
+            Id_Producto: item.Id_Producto,
+            Can_Producto: item.Can_Producto,
+          });
+        }
+  
+        // Crear el pedido para cada producto en el carrito
+        for (const producto of productosParaPedido) {
+          const nuevoPedido = {
+            Id_Cliente: clienteId, // Asegúrate de enviar el Id_Cliente
+            Id_Producto: producto.Id_Producto, // Solo el Id_Producto
+            Fec_Pedido: new Date().toISOString(), // Fecha actual
+            Est_Pedido: 'Pendiente', // Estado del pedido
+            Val_Pedido: producto.Can_Producto * carrito.find(item => item.Id_Producto === producto.Id_Producto).Pre_Producto, // Calcula el total del producto
+          };
+          console.log("id",  producto);
+  
+          console.log('Pedido a enviar:', nuevoPedido);
+          
+          const responsePedido = await axios.post(URI_PEDIDO, nuevoPedido);
+          if (responsePedido.status !== 201) {
+            throw new Error('Error al crear el pedido');
+          }
+        
+          Swal.fire({
+            title: 'Información Enviada Exitosamente',
+            text: 'Su pedido llegará pronto',
+            icon: 'success',
+          });
+          setShowForm(false);
+        }
+      }
     } catch (error) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error al registrar el cliente',
-        text: 'Ocurrió un error al enviar los datos',
-      });
-    } finally {
-      setIsSubmitting(false); // Liberar el botón después de finalizar el envío.
+      Swal.fire('Error', 'Hubo un problema al registrar el cliente o los productos del carrito.');
+      console.error('Error al agregar al carrito:', error);
     }
   };
 
-  const handleClose = () => {
-    if (onClose) {
-      onClose(); // Llama a la función de cierre pasada por props
-    }
+  // Estilos en línea
+  const modalOverlayStyle = {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    width: '100vw',
+    height: '100vh',
+    background: 'rgba(0, 0, 0, 0.6)',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1000,
+  };
+
+  const modalStyle = {
+    backgroundColor: 'white',
+    padding: '30px',
+    borderRadius: '20px',
+    width: '500px',
+    maxWidth: '90%',
+    boxShadow: '0 5px 20px rgba(0, 0, 0, 0.2)',
+    position: 'relative',
+    animation: 'slide-down 0.3s ease-out',
+  };
+
+  const closeButtonStyle = {
+    position: 'absolute',
+    top: '20px',
+    right: '20px',
+    background: 'none',
+    border: 'none',
+    fontSize: '1.8rem',
+    cursor: 'pointer',
+    color: '#ff8c42',
+    transition: 'color 0.3s ease',
+  };
+
+  const formStyle = {
+    display: 'flex',
+    flexDirection: 'column',
+  };
+
+  const inputStyle = {
+    padding: '12px 15px',
+    marginBottom: '15px',
+    borderRadius: '8px',
+    border: '1px solid #ddd',
+    fontSize: '1rem',
+    transition: 'all 0.3s ease',
+    outline: 'none',
+  };
+
+  const selectStyle = {
+    padding: '12px 15px',
+    marginBottom: '15px',
+    borderRadius: '8px',
+    border: '1px solid #ddd',
+    fontSize: '1rem',
+    transition: 'all 0.3s ease',
+    outline: 'none',
+  };
+
+  const buttonStyle = {
+    padding: '12px 20px',
+    backgroundColor: '#ff8c42',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '8px',
+    fontSize: '1rem',
+    cursor: 'pointer',
+    transition: 'background-color 0.3s ease',
+  };
+
+  const errorMessageStyle = {
+    color: 'red',
+    fontSize: '0.875rem',
+    marginBottom: '15px',
+  };
+
+  const titleStyle = {
+    color: '#ff8c42',
+    fontSize: '1.5rem',
+    marginBottom: '20px',
+    fontWeight: 'bold',
+    textAlign: 'center',
   };
 
   return (
-    <div style={{ padding: '20px', maxWidth: '500px', margin: '0 auto' }}>
-      <div className="mb-3">
-        <label htmlFor="Nom_Cliente" className="form-label">Nombre</label>
-        <input
-          type="text"
-          className={`form-control ${errors.Nom_Cliente ? 'is-invalid' : ''}`}
-          id="Nom_Cliente"
-          name="Nom_Cliente"
-          value={formData.Nom_Cliente}
-          onChange={handleChange}
-        />
-        {errors.Nom_Cliente && <div className="invalid-feedback">{errors.Nom_Cliente}</div>}
-      </div>
-      <div className="mb-3">
-        <label htmlFor="Cor_Cliente" className="form-label">Correo</label>
-        <input
-          type="email"
-          className={`form-control ${errors.Cor_Cliente ? 'is-invalid' : ''}`}
-          id="Cor_Cliente"
-          name="Cor_Cliente"
-          value={formData.Cor_Cliente}
-          onChange={handleChange}
-        />
-        {errors.Cor_Cliente && <div className="invalid-feedback">{errors.Cor_Cliente}</div>}
-      </div>
-      <div className="mb-3">
-        <label htmlFor="Tel_Cliente" className="form-label">Teléfono</label>
-        <input
-          type="text"
-          className={`form-control ${errors.Tel_Cliente ? 'is-invalid' : ''}`}
-          id="Tel_Cliente"
-          name="Tel_Cliente"
-          value={formData.Tel_Cliente}
-          onChange={handleChange}
-          inputMode="numeric"
-          pattern="\d*"
-        />
-        {errors.Tel_Cliente && <div className="invalid-feedback">{errors.Tel_Cliente}</div>}
-      </div>
-      <div className="mb-3 text-center">
-        <Button variant="primary" onClick={handleSubmit} disabled={isSubmitting}>
-          {isSubmitting ? 'Enviando...' : buttonForm}
-        </Button>
+    <div style={modalOverlayStyle}>
+      <div style={modalStyle}>
+        <button style={closeButtonStyle} onClick={() => setShowForm(false)}>&times;</button>
+        <center>
+          <h2 style={titleStyle}>Completa tus Datos</h2>
+        </center>
+        <form style={formStyle} onSubmit={handleSubmit}>
+          <input
+            type="text"
+            name="Nom_Cliente"
+            placeholder="Nombre"
+            value={cliente.Nom_Cliente}
+            onChange={handleChange}
+            style={inputStyle}
+          />
+          {formErrors.Nom_Cliente && <p style={errorMessageStyle}>{formErrors.Nom_Cliente}</p>}
+
+          <input
+            type="email"
+            name="Cor_Cliente"
+            placeholder="Correo (opcional)" // Agregamos un campo opcional
+            value={cliente.Cor_Cliente}
+            onChange={handleChange}
+            style={inputStyle}
+          />
+
+          <input
+            type="text"
+            name="Tel_Cliente"
+            placeholder="Teléfono"
+            value={cliente.Tel_Cliente}
+            onChange={handleChange}
+            style={inputStyle}
+          />
+          {formErrors.Tel_Cliente && <p style={errorMessageStyle}>{formErrors.Tel_Cliente}</p>}
+
+          <input
+            type="text"
+            name="Dir_Cliente"
+            placeholder="Dirección"
+            value={cliente.Dir_Cliente}
+            onChange={handleChange}
+            style={inputStyle}
+          />
+          {formErrors.Dir_Cliente && <p style={errorMessageStyle}>{formErrors.Dir_Cliente}</p>}
+
+          <select
+            name="Tip_Cliente"
+            value={cliente.Tip_Cliente}
+            onChange={handleChange}
+            style={selectStyle}
+          >
+                <option value="">Selecciona un tipo</option>
+            <option value="Funcionario">Funcionario</option>
+            <option value="Aprendiz">Aprendiz</option>
+            <option value="Vigilante">Vigilante</option>
+            <option value="Externo">Externo</option>
+            <option value="Otro">Otro</option>
+
+          </select>
+          {formErrors.Tip_Cliente && <p style={errorMessageStyle}>{formErrors.Tip_Cliente}</p>}
+
+          <button type="submit" style={buttonStyle}>Enviar</button>
+        </form>
       </div>
     </div>
   );
 };
 
-export default FormCliente;
+export default ClienteForm;

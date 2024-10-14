@@ -7,11 +7,23 @@ const EntradaModel = db.define('entrada', {
         primaryKey: true,
         autoIncrement: true
     },
+    Dcp_Entrada: {
+        type: Sequelize.STRING(10)
+    },
     Fec_Entrada: {
         type: Sequelize.DATE
     },
-    Hor_Entrada: {
-        type: Sequelize.TIME
+    Ori_Entrada: {
+        type: Sequelize.STRING(100)
+    },
+    Des_Entrada: {
+        type: Sequelize.STRING(100)
+    },
+    Val_Unitario: {
+        type: Sequelize.INTEGER
+    },
+    Val_Total: {
+        type: Sequelize.INTEGER
     },
     Id_Unidad: {
         type: Sequelize.INTEGER

@@ -6,29 +6,69 @@
     "auditLog": "logs\\.7ac9da1115137f5e18e8979e4980879403657a11-audit.json",
     "files": [
         {
-            "date": 1726701864539,
-            "name": "logs\\traslado-2024-09-18.log",
-            "hash": "e6bca98e78431e6d2cd5300fe5a46cd4bc0b4013a8d93c8acd9aa6273d836556"
+            "date": 1727783945218,
+            "name": "logs\\traslado-2024-10-01.log",
+            "hash": "a7f1382b41f922d90a57ed2f8403a439864d17c0a84e2eb6806f9e4a9a2c1f50"
         },
         {
-            "date": 1726801561819,
-            "name": "logs\\traslado-2024-09-19.log",
-            "hash": "8ecf22d871701141a0a3b573bd3e7d0dd41064e99c05f6a89f7940bf5ff0be74"
+            "date": 1727973986487,
+            "name": "logs\\traslado-2024-10-03.log",
+            "hash": "117fd6ccdf0d08bc090c99bc6e3c14b4bbeedf4bff286ce52553f231fed522bd"
         },
         {
-            "date": 1727100851516,
-            "name": "logs\\traslado-2024-09-23.log",
-            "hash": "ec7760fa0b2dbb82841819a839bf63f42b2296ae103d8f54ab1694c0df8180b4"
+            "date": 1728071919637,
+            "name": "logs\\traslado-2024-10-04.log",
+            "hash": "13b48ee7981a7ed9cf75144051fefe91c085ae50607f21cb5a5472464b5a59a5"
         },
         {
-            "date": 1727281325852,
-            "name": "logs\\traslado-2024-09-25.log",
-            "hash": "ddec7112d2f56430e7fb16bcb83c6ef4d70729137c63b5e4ebeab502e27ac764"
+            "date": 1728159212359,
+            "name": "logs\\traslado-2024-10-05.log",
+            "hash": "b5a403583b088a9307a68e642ad1e11bd05faf970a899124aded43675ab5b9e5"
         },
         {
-            "date": 1727470539728,
-            "name": "logs\\traslado-2024-09-27.log",
-            "hash": "55a446a63a57cd0d1e22d46d35e23eb53121b099b4bd66d72fd13d341f9122bb"
+            "date": 1728247413308,
+            "name": "logs\\traslado-2024-10-06.log",
+            "hash": "efbac7f1c9b6b67ba1052990d224a28be2609c5f7aa81d0759ce06be1496b875"
+        },
+        {
+            "date": 1728304196257,
+            "name": "logs\\traslado-2024-10-07.log",
+            "hash": "2848f2d3120cd44fae93c1a4aed02d63ad7ddec2c2a46b70920c7354250b9546"
+        },
+        {
+            "date": 1728365501433,
+            "name": "logs\\traslado-2024-10-08.log",
+            "hash": "2aa984616900d207841c54baba243d45eb2913ede5f12adacc42282f8966fd1e"
+        },
+        {
+            "date": 1728477493135,
+            "name": "logs\\traslado-2024-10-09.log",
+            "hash": "3d89e8a1b543ff61b818bbc6a8076201b30cce921d0f08fb9a772ce3c2d3a7d8"
+        },
+        {
+            "date": 1728568126084,
+            "name": "logs\\traslado-2024-10-10.log",
+            "hash": "8685b78d6867f8af1dadc62075694f8eb7b7a18566a3e0b085da0b71f4ca4391"
+        },
+        {
+            "date": 1728648004272,
+            "name": "logs\\traslado-2024-10-11.log",
+            "hash": "9319a56e8dfd6b9952d9296f2475683ff91b07136b0ad8417c85b9718dbdd301"
+        },
+        {
+            "date": 1728748306616,
+            "name": "logs\\traslado-2024-10-12.log",
+            "hash": "b471df07ea7575aa46e4571f6674e80f7f21e8684372da419f05cd9935a049b9"
+        },
+        {
+            "date": 1728875161495,
+            "name": "logs\\traslado-2024-10-13.log",
+            "hash": "531bc3baea35fb5c7fc423cd73f54bacbe7128910994c59a444a561ef69da14d"
+        },
+        {
+            "date": 1728914615405,
+            "name": "logs\\traslado-2024-10-14.log",
+            "hash": "6033a6d255df1e6df49eb4c7c2476a6b3457b2365271e02f9563bb1c1753d433"
         }
     ],
     "hashType": "sha256"

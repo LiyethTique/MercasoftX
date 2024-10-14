@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import FormVenta from './formVenta'; // Asegúrate de que el nombre del archivo sea correcto
+import FormVenta from '../Venta/formVenta'; // Asegúrate de tener este componente creado
 import Sidebar from '../Sidebar/Sidebar';
-import Swal from 'sweetalert2';
-import WriteTable from '../Tabla/Data-Table';
 import ModalForm from '../Model/Model';
-import AlertaBDVacia from '../alertas/alertaBDVacia.jsx'
+import Swal from 'sweetalert2';
+import { Button } from 'react-bootstrap';
+import WriteTable from '../Tabla/Data-Table';
 
 const URI = process.env.REACT_APP_SERVER_BACK + '/venta/';
 
@@ -14,115 +14,202 @@ const CrudVenta = () => {
   const [buttonForm, setButtonForm] = useState('Enviar');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [venta, setVenta] = useState(null);
+  const [formData, setFormData] = useState({});
+
+  const token = localStorage.getItem('token'); // Obtener el token una vez
 
   useEffect(() => {
-    getAllVenta();
-  }, []);
-
-  const getAllVenta = async () => {
-    try {
-      const respuesta = await axios.get(URI);
-      if (Array.isArray(respuesta.data)) {
-        setVentaList(respuesta.data);
-      } else {
-        console.error("Unexpected response format:", respuesta.data);
+    const fetchVentas = async () => {
+      try {
+        const respuesta = await axios.get(URI, {
+          headers: {
+            Authorization: `Bearer ${token}` // Añadir el token a la solicitud
+          }
+        });
+        if (Array.isArray(respuesta.data)) {
+          setVentaList(respuesta.data);
+        } else {
+          console.error("Formato de respuesta inesperado:", respuesta.data);
+          setVentaList([]);
+        }
+      } catch (error) {
+        console.error("Error al obtener ventas:", error);
+        Swal.fire("Error", error.response?.data?.message || "Error al obtener ventas", "error");
         setVentaList([]);
       }
-    } catch (error) {
-      console.error("Error fetching ventas:", error);
-      Swal.fire("Error", error.response?.data?.message || "Error al obtener las Ventas", "error");
-    }
-  };
+    };
+    fetchVentas();
+  }, [token]);
 
   const getVenta = async (Id_Venta) => {
     setButtonForm('Actualizar');
     try {
-      const respuesta = await axios.get(`${URI}${Id_Venta}`);
+      const respuesta = await axios.get(`${URI}${Id_Venta}`, {
+        headers: {
+          Authorization: `Bearer ${token}` // Añadir el token a la solicitud
+        }
+      });
       setVenta(respuesta.data);
+      setFormData(respuesta.data); // Inicializar el estado del formulario
       setIsModalOpen(true);
     } catch (error) {
-      Swal.fire("Error", error.response?.data?.message || "Error al obtener la Venta", "error");
+      console.error("Error al obtener la venta:", error);
+      Swal.fire("Error", error.response?.data?.message || "Error al obtener la venta", "error");
     }
   };
 
-  const handleSubmitVenta = async (data) => {
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const hasChanges = (data) => {
+    return Object.keys(data).some(key => data[key] !== venta[key]);
+  };
+
+  const hasSpaces = (data) => {
+    return Object.values(data).some(value =>
+      typeof value === 'string' && value.trim() === ''
+    );
+  };
+
+  const handleSubmitVenta = async () => {
+    if (hasSpaces(formData)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se permiten campos vacíos o que contengan solo espacios.',
+        confirmButtonText: 'Aceptar',
+      });
+      return;
+    }
+
+    if (buttonForm === 'Actualizar' && !hasChanges(formData)) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Sin cambios',
+        text: 'Debes realizar cambios en al menos un campo para actualizar.',
+        confirmButtonText: 'Aceptar',
+      });
+      return;
+    }
+
     try {
       if (buttonForm === 'Actualizar') {
-        await axios.put(`${URI}${venta.Id_Venta}`, data);
-        Swal.fire("Actualizado!", "La venta ha sido actualizada.", "success");
+        await axios.put(`${URI}${venta.Id_Venta}`, formData, {
+          headers: {
+            Authorization: `Bearer ${token}` // Añadir el token a la solicitud
+          }
+        });
+        Swal.fire({
+          icon: 'success',
+          title: 'Actualización exitosa',
+          text: 'La venta se ha actualizado exitosamente.',
+          confirmButtonText: 'Aceptar',
+        });
       } else {
-        await axios.post(URI, data);
-        Swal.fire("Creado!", "La venta ha sido creada.", "success");
+        await axios.post(URI, formData, {
+          headers: {
+            Authorization: `Bearer ${token}` // Añadir el token a la solicitud
+          }
+        });
+        Swal.fire({
+          icon: 'success',
+          title: 'Registro exitoso',
+          text: 'La venta se ha registrado exitosamente.',
+          confirmButtonText: 'Aceptar',
+        });
       }
-      getAllVenta();
+      const respuesta = await axios.get(URI, {
+        headers: {
+          Authorization: `Bearer ${token}` // Añadir el token a la solicitud
+        }
+      });
+      setVentaList(Array.isArray(respuesta.data) ? respuesta.data : []);
       setIsModalOpen(false);
       setButtonForm('Enviar');
       setVenta(null);
+      setFormData({}); // Reiniciar el estado del formulario
     } catch (error) {
-      Swal.fire("Error", error.response?.data?.message || "Error al guardar la Venta", "error");
+      console.error("Error al guardar la venta:", error);
+      Swal.fire("Error", error.response?.data?.message || "Ocurrió un error al guardar la venta.", "error");
     }
   };
 
   const deleteVenta = async (Id_Venta) => {
-    Swal.fire({
-      title: "¿Estás seguro?",
-      text: "¡No podrás revertir esto!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Sí, borrar!"
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          await axios.delete(`${URI}${Id_Venta}`);
-          Swal.fire("¡Borrado!", "El registro ha sido borrado.", "success");
-          getAllVenta();
-        } catch (error) {
-          Swal.fire("Error", error.response?.data?.message || "Error al eliminar la Venta", "error");
-        }
+    if (window.confirm("¿Estás seguro de que deseas eliminar esta venta?")) {
+      try {
+        await axios.delete(`${URI}${Id_Venta}`, {
+          headers: {
+            Authorization: `Bearer ${token}` // Añadir el token a la solicitud
+          }
+        });
+        Swal.fire({
+          icon: 'success',
+          title: 'Eliminación exitosa',
+          text: 'La venta se ha eliminado exitosamente.',
+          confirmButtonText: 'Aceptar',
+        });
+        const respuesta = await axios.get(URI, {
+          headers: {
+            Authorization: `Bearer ${token}` // Añadir el token a la solicitud
+          }
+        });
+        setVentaList(Array.isArray(respuesta.data) ? respuesta.data : []);
+      } catch (error) {
+        console.error("Error al eliminar la venta:", error);
+        Swal.fire("Error", error.response?.data?.message || "Ocurrió un error al eliminar la venta.", "error");
       }
-    });
+    }
   };
 
   const handleShowForm = () => {
     setButtonForm('Enviar');
     setVenta(null);
+    setFormData({}); // Reiniciar el estado del formulario
     setIsModalOpen(true);
   };
 
-  const titles = ['ID Venta', 'Fecha de Venta', 'Valor de Venta', 'ID Pedido', 'Acciones'];
-  const data = ventaList.map(venta => [
-    venta.Id_Venta,
-    venta.Fec_Venta,
-    venta.Val_Venta,
-    venta.Id_Pedido,
-    <div key={venta.Id_Venta}>
-      <a 
-        href="#!"
-        className="btn-custom me-2"
-        onClick={() => getVenta(venta.Id_Venta)}
-        title="Editar"
-      >
-        <img 
-          src="/pencil-square.svg" 
-          alt="Editar"
-          style={{ width: '13px', height: '13px' }}  
-        />
-      </a>
-      <a 
-        href="#!"
-        className="btn-custom"
-        onClick={() => deleteVenta(venta.Id_Venta)}
-        title="Borrar"
-      >
-        <img 
-          src="/trash3.svg" 
-          alt="Borrar" 
-        />
-      </a>
-    </div>
-  ]);
+  const titles = ['Código Venta', 'Fecha Venta', 'Valor Venta', 'Tipo Cliente', 'Pedido', 'Producto', 'Acciones'];
+  const data = ventaList.length === 0
+    ? [['', '', '', '', '', '', '']]
+    : ventaList.map(venta => [
+      venta.Id_Venta,
+      venta.Fec_Venta,
+      venta.Val_Venta,
+      venta.Tip_Cliente,
+      venta.Id_Pedido,
+      venta.producto.Nom_Producto,
+      <div key={venta.Id_Venta} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <a
+          href="#!"
+          className="btn-custom me-2"
+          onClick={() => getVenta(venta.Id_Venta)}
+          title="Editar"
+        >
+          <img
+            src="/pencil-square.svg"
+            alt="Editar"
+            style={{ width: '20px', height: '20px' }}
+          />
+        </a>
+        <a
+          href="#!"
+          className="btn-custom"
+          onClick={() => deleteVenta(venta.Id_Venta)}
+          title="Borrar"
+        >
+          <img
+            src="/trash3.svg"
+            alt="Borrar"
+            style={{ width: '20px', height: '20px' }}
+          />
+        </a>
+      </div>
+    ]);
 
   return (
     <>
@@ -131,38 +218,32 @@ const CrudVenta = () => {
         <center>
           <h1>Gestionar Ventas</h1>
         </center>
-        
         <div className="d-flex justify-content-between mb-3">
-          <a 
-            href="#!"
-            className="btn btn-success d-flex align-items-center"
-            onClick={handleShowForm}
-          >   
+          <Button
+            style={{ backgroundColor: 'orange', borderColor: 'orange' }}
+            onClick={handleShowForm}>
             <img
               src="/plus-circle (1).svg"
               alt="Add Icon"
               style={{ width: '20px', height: '20px', marginRight: '8px', filter: 'invert(100%)' }}
             />
             Registrar
-          </a>
+          </Button>
         </div>
 
-        <WriteTable titles={titles} data={data} />
-
-        <AlertaBDVacia uri={URI} />
+        <WriteTable titles={titles} data={data} fileName="Gestionar_Venta" />
 
         <ModalForm
           isOpen={isModalOpen}
           onClose={() => { setIsModalOpen(false); setVenta(null); setButtonForm('Enviar'); }}
           title={buttonForm === 'Actualizar' ? "Actualizar Venta" : "Agregar Venta"}
         >
-          <FormVenta 
+          <FormVenta
             buttonForm={buttonForm}
             venta={venta}
-            URI={URI}
-            updateTextButton={setButtonForm}
-            setIsFormVisible={setIsModalOpen}
             onSubmit={handleSubmitVenta}
+            onInputChange={handleInputChange}
+            formData={formData} // Pasar formData como prop
           />
         </ModalForm>
       </div>

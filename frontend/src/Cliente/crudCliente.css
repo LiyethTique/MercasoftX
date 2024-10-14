@@ -1,0 +1,6 @@
+/* ClienteForm.css */
+.tooltip:hover .tooltipText {
+    visibility: visible;
+    opacity: 1;
+  }
+  

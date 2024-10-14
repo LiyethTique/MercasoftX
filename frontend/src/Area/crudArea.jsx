@@ -1,5 +1,3 @@
-// src/Area/CrudArea.jsx
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import FormArea from './formArea';
@@ -19,10 +17,16 @@ const CrudArea = () => {
   const [formData, setFormData] = useState({ Nom_Area: '' }); // Inicializar Nom_Area
   const [errors, setErrors] = useState({}); // Para manejar errores de validación
 
+  const token = localStorage.getItem('token'); // Obtener el token una vez
+
   useEffect(() => {
     const fetchAreas = async () => {
       try {
-        const respuesta = await axios.get(URI);
+        const respuesta = await axios.get(URI, {
+          headers: {
+            Authorization: `Bearer ${token}` // Incluir el token en la cabecera
+          }
+        });
         if (Array.isArray(respuesta.data)) {
           setAreaList(respuesta.data);
         } else {
@@ -31,16 +35,22 @@ const CrudArea = () => {
         }
       } catch (error) {
         console.error("Error al obtener áreas:", error);
+        Swal.fire("Error", error.response?.data?.message || "Error al obtener las Áreas", "error");
         setAreaList([]);
       }
     };
+    
     fetchAreas();
-  }, []);
-
+  }, [URI, token]); // Incluir URI y token como dependencias para el efecto
+  
   const getArea = async (Id_Area) => {
     setButtonForm('Actualizar');
     try {
-      const respuesta = await axios.get(`${URI}${Id_Area}`);
+      const respuesta = await axios.get(`${URI}${Id_Area}`, {
+        headers: {
+          Authorization: `Bearer ${token}` // Incluir el token en la cabecera
+        }
+      });
       setArea(respuesta.data);
       setFormData({ Nom_Area: respuesta.data.Nom_Area }); // Inicializar el estado del formulario
       setIsModalOpen(true);
@@ -54,35 +64,7 @@ const CrudArea = () => {
       });
     }
   };
-
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-    // Limpiar errores al cambiar el input
-    if (errors[name]) {
-      setErrors({
-        ...errors,
-        [name]: '',
-      });
-    }
-  };
-
-  const validateForm = () => {
-    const newErrors = {};
-    if (!formData.Nom_Area || formData.Nom_Area.trim() === '') {
-      newErrors.Nom_Area = 'El nombre del área es obligatorio.';
-    }
-    // Añade más validaciones si es necesario
-    return newErrors;
-  };
-
-  const hasChanges = (data) => {
-    return data.Nom_Area !== area.Nom_Area;
-  };
-
+  
   const handleSubmitArea = async () => {
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length > 0) {
@@ -95,7 +77,7 @@ const CrudArea = () => {
       });
       return;
     }
-
+  
     try {
       if (buttonForm === 'Actualizar') {
         if (!hasChanges(formData)) {
@@ -107,7 +89,11 @@ const CrudArea = () => {
           });
           return;
         }
-        await axios.put(`${URI}${area.Id_Area}`, formData);
+        await axios.put(`${URI}${area.Id_Area}`, formData, {
+          headers: {
+            Authorization: `Bearer ${token}` // Incluir el token en la cabecera
+          }
+        });
         Swal.fire({
           icon: 'success',
           title: 'Actualización exitosa',
@@ -115,7 +101,11 @@ const CrudArea = () => {
           confirmButtonText: 'Aceptar',
         });
       } else {
-        await axios.post(URI, formData);
+        await axios.post(URI, formData, {
+          headers: {
+            Authorization: `Bearer ${token}` // Incluir el token en la cabecera
+          }
+        });
         Swal.fire({
           icon: 'success',
           title: 'Registro exitoso',
@@ -123,7 +113,11 @@ const CrudArea = () => {
           confirmButtonText: 'Aceptar',
         });
       }
-      const respuesta = await axios.get(URI);
+      const respuesta = await axios.get(URI, {
+        headers: {
+          Authorization: `Bearer ${token}` // Incluir el token en la cabecera
+        }
+      });
       setAreaList(Array.isArray(respuesta.data) ? respuesta.data : []);
       setIsModalOpen(false);
       setButtonForm('Enviar');
@@ -140,18 +134,26 @@ const CrudArea = () => {
       });
     }
   };
-
+  
   const deleteArea = async (Id_Area) => {
     if (window.confirm("¿Estás seguro de que deseas eliminar esta área?")) {
       try {
-        await axios.delete(`${URI}${Id_Area}`);
+        await axios.delete(`${URI}${Id_Area}`, {
+          headers: {
+            Authorization: `Bearer ${token}` // Incluir el token en la cabecera
+          }
+        });
         Swal.fire({
           icon: 'success',
           title: 'Eliminación exitosa',
           text: 'El área se ha eliminado exitosamente.',
           confirmButtonText: 'Aceptar',
         });
-        const respuesta = await axios.get(URI);
+        const respuesta = await axios.get(URI, {
+          headers: {
+            Authorization: `Bearer ${token}` // Incluir el token en la cabecera
+          }
+        });
         setAreaList(Array.isArray(respuesta.data) ? respuesta.data : []);
       } catch (error) {
         console.error("Error al eliminar el área:", error);
@@ -163,7 +165,7 @@ const CrudArea = () => {
         });
       }
     }
-  };
+  };  
 
   const handleShowForm = () => {
     setButtonForm('Enviar');
@@ -171,6 +173,21 @@ const CrudArea = () => {
     setFormData({ Nom_Area: '' }); // Reiniciar el estado del formulario
     setErrors({});
     setIsModalOpen(true);
+  };
+  
+  const validateForm = () => {
+    const validationErrors = {};
+    if (!formData.Nom_Area) {
+      validationErrors.Nom_Area = 'El nombre del área es requerido.';
+    }
+    return validationErrors;
+  };
+  
+  // Nueva función para manejar los cambios en el formulario
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setFormData({ ...formData, [name]: value });
+    setErrors({ ...errors, [name]: '' }); // Limpiar error del campo
   };
 
   const titles = ['ID', 'Nombre del Área', 'Acciones'];
@@ -241,8 +258,8 @@ const CrudArea = () => {
           <FormArea
             buttonForm={buttonForm}
             onSubmit={handleSubmitArea}
-            onInputChange={handleInputChange} // Manejar cambios en el formulario
-            formData={formData} // Pasar el estado del formulario
+            onInputChange={handleInputChange} // Pasar el manejador de cambios
+            formData={formData} // Pasar los datos del formulario
             errors={errors} // Pasar errores de validación
           />
         </ModalForm>

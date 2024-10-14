@@ -6,29 +6,69 @@
     "auditLog": "logs\\.4b1ccf24c7e641550f0275e98c8a00a9e29d88be-audit.json",
     "files": [
         {
-            "date": 1726701864512,
-            "name": "logs\\entrada-2024-09-18.log",
-            "hash": "bd30553de0847d57d471f57b524bcdda43f4cd9a2b6d4dade1ce7f25473c386c"
+            "date": 1727783944553,
+            "name": "logs\\entrada-2024-10-01.log",
+            "hash": "ddfe3f390e0b2c8bbef2f5147df2989effccb603b11b7552733e6eba8549aeef"
         },
         {
-            "date": 1726801561789,
-            "name": "logs\\entrada-2024-09-19.log",
-            "hash": "30e0a447304ca1227f1228cbc4e7972c11fff50acdf1d2d6c20119461eecc491"
+            "date": 1727973985835,
+            "name": "logs\\entrada-2024-10-03.log",
+            "hash": "8c3a71c71c1c6a428ac8c1e99e02864a9b47e8ba9b37edf07ec8c490bda9d0ac"
         },
         {
-            "date": 1727100851492,
-            "name": "logs\\entrada-2024-09-23.log",
-            "hash": "997f8bc243f874bfd5a4bbb506d724283eca75d9ccdcae7c711a7c232eaeded8"
+            "date": 1728071918769,
+            "name": "logs\\entrada-2024-10-04.log",
+            "hash": "9037f049d5ff8a1f3f0d8ae6877b9562faf54ba6a5d771387aba0004898fc124"
         },
         {
-            "date": 1727281325689,
-            "name": "logs\\entrada-2024-09-25.log",
-            "hash": "2bb6cd435c6fe8ef1a8e11291d0cf0c8ddd3a209d7b844229554b3a6591b0581"
+            "date": 1728159211489,
+            "name": "logs\\entrada-2024-10-05.log",
+            "hash": "b132be80fd54fcab774f57d68cf99e29ce4f42ad21e126fa32b0a459ba7c4035"
         },
         {
-            "date": 1727470539662,
-            "name": "logs\\entrada-2024-09-27.log",
-            "hash": "bd968a8ca62f2aa6d9c068efe733ea52840981dba665c70e006ef2e05b056767"
+            "date": 1728247410069,
+            "name": "logs\\entrada-2024-10-06.log",
+            "hash": "916473beccc04ddfc067cd3def946b7b1e04d27d68aa117eb9a81d782d532ae6"
+        },
+        {
+            "date": 1728304195694,
+            "name": "logs\\entrada-2024-10-07.log",
+            "hash": "94db9625a36cfe77de33539dcca27e88387a66711f29ff64f1471c8e17a9a317"
+        },
+        {
+            "date": 1728365499564,
+            "name": "logs\\entrada-2024-10-08.log",
+            "hash": "644bb0879f2bc62e0e3b448fb151dbe6d395c3ab58226a646268d2cba7c844a1"
+        },
+        {
+            "date": 1728477491719,
+            "name": "logs\\entrada-2024-10-09.log",
+            "hash": "535e93d66ae585ca8392009652459afadd0168d1193a9e64d8da7607b8bef1d5"
+        },
+        {
+            "date": 1728568125967,
+            "name": "logs\\entrada-2024-10-10.log",
+            "hash": "dbc91e42742b4d37159a6d772c25940677306a9e10be00448b9f92cf2dbb5784"
+        },
+        {
+            "date": 1728648004187,
+            "name": "logs\\entrada-2024-10-11.log",
+            "hash": "d05d18a695d36813528ecf457ef13725a678ed7ee6722d7110e4552fecd2c166"
+        },
+        {
+            "date": 1728748306511,
+            "name": "logs\\entrada-2024-10-12.log",
+            "hash": "064c9ec09ba5ab500ef37fd51377ae74852bddb715b27e21830ee05abf4aa050"
+        },
+        {
+            "date": 1728875161418,
+            "name": "logs\\entrada-2024-10-13.log",
+            "hash": "af9bf994223dfd60f68bbb6b57c8c25a05d2de8a4a19872b5da588a0b4587923"
+        },
+        {
+            "date": 1728914615303,
+            "name": "logs\\entrada-2024-10-14.log",
+            "hash": "2b2acc9f822f2ef643d581f4c030f2ab30e5f39455d89b69eb56d4ebec642798"
         }
     ],
     "hashType": "sha256"

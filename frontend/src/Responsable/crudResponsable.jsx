@@ -5,8 +5,8 @@ import Sidebar from '../Sidebar/Sidebar';
 import ModalForm from '../Model/Model';
 import Swal from 'sweetalert2';
 import { Button } from 'react-bootstrap';
+import { IoTrash, IoPencil } from "react-icons/io5";
 import WriteTable from '../Tabla/Data-Table';
-
 
 const URI = process.env.REACT_APP_SERVER_BACK + '/responsable/';
 
@@ -17,10 +17,16 @@ const CrudResponsable = () => {
   const [responsable, setResponsable] = useState(null);
   const [formData, setFormData] = useState({}); // Para manejar el estado del formulario
 
+  const token = localStorage.getItem('token'); // Obtener el token una vez
+
   useEffect(() => {
     const fetchResponsables = async () => {
       try {
-        const respuesta = await axios.get(URI);
+        const respuesta = await axios.get(URI, {
+          headers: {
+            Authorization: `Bearer ${token}` // Añadir el token a la solicitud
+          }
+        });
         if (Array.isArray(respuesta.data)) {
           setResponsableList(respuesta.data);
         } else {
@@ -29,27 +35,27 @@ const CrudResponsable = () => {
         }
       } catch (error) {
         console.error("Error al obtener responsables:", error);
+        Swal.fire("Error", error.response?.data?.message || "Error al obtener responsables", "error");
         setResponsableList([]);
       }
     };
     fetchResponsables();
-  }, []);
+  }, [token]);
 
   const getResponsable = async (Id_Responsable) => {
     setButtonForm('Actualizar');
     try {
-      const respuesta = await axios.get(`${URI}${Id_Responsable}`);
+      const respuesta = await axios.get(`${URI}${Id_Responsable}`, {
+        headers: {
+          Authorization: `Bearer ${token}` // Añadir el token a la solicitud
+        }
+      });
       setResponsable(respuesta.data);
       setFormData(respuesta.data); // Inicializar el estado del formulario
       setIsModalOpen(true);
     } catch (error) {
       console.error("Error al obtener el responsable:", error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'No se pudo obtener la información del responsable.',
-        confirmButtonText: 'Aceptar',
-      });
+      Swal.fire("Error", error.response?.data?.message || "Error al obtener el responsable", "error");
     }
   };
 
@@ -96,7 +102,11 @@ const CrudResponsable = () => {
 
     try {
       if (buttonForm === 'Actualizar') {
-        await axios.put(`${URI}${responsable.Id_Responsable}`, formData);
+        await axios.put(`${URI}${responsable.Id_Responsable}`, formData, {
+          headers: {
+            Authorization: `Bearer ${token}` // Añadir el token a la solicitud
+          }
+        });
         Swal.fire({
           icon: 'success',
           title: 'Actualización exitosa',
@@ -104,7 +114,11 @@ const CrudResponsable = () => {
           confirmButtonText: 'Aceptar',
         });
       } else {
-        await axios.post(URI, formData);
+        await axios.post(URI, formData, {
+          headers: {
+            Authorization: `Bearer ${token}` // Añadir el token a la solicitud
+          }
+        });
         Swal.fire({
           icon: 'success',
           title: 'Registro exitoso',
@@ -112,7 +126,11 @@ const CrudResponsable = () => {
           confirmButtonText: 'Aceptar',
         });
       }
-      const respuesta = await axios.get(URI);
+      const respuesta = await axios.get(URI, {
+        headers: {
+          Authorization: `Bearer ${token}` // Añadir el token a la solicitud
+        }
+      });
       setResponsableList(Array.isArray(respuesta.data) ? respuesta.data : []);
       setIsModalOpen(false);
       setButtonForm('Enviar');
@@ -120,35 +138,33 @@ const CrudResponsable = () => {
       setFormData({}); // Reiniciar el estado del formulario
     } catch (error) {
       console.error("Error al guardar el responsable:", error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Ocurrió un error al guardar el responsable.',
-        confirmButtonText: 'Aceptar',
-      });
+      Swal.fire("Error", error.response?.data?.message || "Ocurrió un error al guardar el responsable.", "error");
     }
   };
 
   const deleteResponsable = async (Id_Responsable) => {
     if (window.confirm("¿Estás seguro de que deseas eliminar este responsable?")) {
       try {
-        await axios.delete(`${URI}${Id_Responsable}`);
+        await axios.delete(`${URI}${Id_Responsable}`, {
+          headers: {
+            Authorization: `Bearer ${token}` // Añadir el token a la solicitud
+          }
+        });
         Swal.fire({
           icon: 'success',
           title: 'Eliminación exitosa',
           text: 'El responsable se ha eliminado exitosamente.',
           confirmButtonText: 'Aceptar',
         });
-        const respuesta = await axios.get(URI);
+        const respuesta = await axios.get(URI, {
+          headers: {
+            Authorization: `Bearer ${token}` // Añadir el token a la solicitud
+          }
+        });
         setResponsableList(Array.isArray(respuesta.data) ? respuesta.data : []);
       } catch (error) {
         console.error("Error al eliminar el responsable:", error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Ocurrió un error al eliminar el responsable.',
-          confirmButtonText: 'Aceptar',
-        });
+        Swal.fire("Error", error.response?.data?.message || "Ocurrió un error al eliminar el responsable.", "error");
       }
     }
   };
@@ -160,11 +176,10 @@ const CrudResponsable = () => {
     setIsModalOpen(true);
   };
 
-  const titles = ['ID', 'Nombre', 'Teléfono', 'Tipo Responsable', 'Género', 'Acciones'];
+  const titles = ['Código', 'Nombre', 'Teléfono', 'Tipo Responsable', 'Género', 'Acciones'];
   const data = responsableList.length === 0
     ? [[
       '', '', '', '', '',
-    
     ]]
     : responsableList.map(responsable => [
       responsable.Id_Responsable,
@@ -172,32 +187,26 @@ const CrudResponsable = () => {
       responsable.Tel_Responsable,
       responsable.Tip_Responsable,
       responsable.Tip_Genero,
-      <div key={responsable.Id_Responsable}>
+      <div key={responsable.Id_Responsable} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
         <a
           href="#!"
           className="btn-custom me-2"
           onClick={() => getResponsable(responsable.Id_Responsable)}
           title="Editar"
-          style={{ pointerEvents: responsableList.length > 0 ? 'auto' : 'none', opacity: responsableList.length > 0 ? 1 : 0.5 }} // Desactivar si no hay registros
+          style={{ pointerEvents: responsableList.length > 0 ? 'auto' : 'none', opacity: responsableList.length > 0 ? 1 : 0.5 }}
         >
-          <img
-            src="/pencil-square.svg"
-            alt="Editar"
-            style={{ width: '20px', height: '20px' }}
-          />
+           <IoPencil size={20} color="blue" />
         </a>
         <a
           href="#!"
           className="btn-custom"
           onClick={() => deleteResponsable(responsable.Id_Responsable)}
           title="Borrar"
-          style={{ pointerEvents: responsableList.length > 0 ? 'auto' : 'none', opacity: responsableList.length > 0 ? 1 : 0.5 }} // Desactivar si no hay registros
+          style={{ pointerEvents: responsableList.length > 0 ? 'auto' : 'none', opacity: responsableList.length > 0 ? 1 : 0.5 }}
         >
-          <img
-            src="/trash3.svg"
-            alt="Borrar"
-            style={{ width: '20px', height: '20px' }}
-          />
+        
+        <IoTrash size={20} color="red" />
+          
         </a>
       </div>
     ]);
@@ -220,7 +229,6 @@ const CrudResponsable = () => {
             />
             Registrar
           </Button>
-
         </div>
 
         <WriteTable titles={titles} data={data} fileName="Gestionar_Responsable" />
@@ -234,8 +242,8 @@ const CrudResponsable = () => {
             buttonForm={buttonForm}
             responsable={responsable}
             onSubmit={handleSubmitResponsable}
-            onInputChange={handleInputChange} // Manejar cambios en el formulario
-            formData={formData} // Pasar el estado del formulario
+            onInputChange={handleInputChange}
+            formData={formData} // Pasar formData como prop
           />
         </ModalForm>
       </div>

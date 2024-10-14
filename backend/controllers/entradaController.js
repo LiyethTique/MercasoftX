@@ -1,19 +1,20 @@
 import EntradaModel from "../models/entradaModel.js";
 import logger from "../logs/logger.js";
+import { Sequelize } from "sequelize";
 
 // Mostrar todos los registros
 export const getAllEntradas = async (req, res, next) => {
     try {
         const entradas = await EntradaModel.findAll();
         logger.info('Todas las entradas recuperadas');
-        console.log(entradas)
-        if(entradas.length > 0) {
+        console.log(entradas);
+        if (entradas.length > 0) {
             res.status(200).json(entradas);
-            return   
+            return;
         }
         res.status(400).json({ message: "No existen Entradas" });
     } catch (error) {
-        console.log(error)
+        console.log(error);
         res.status(500).json({ message: error.message });
         logger.error(`Error al recuperar todas las entradas: ${error.message}`);
         next(error);
@@ -40,9 +41,9 @@ export const getEntrada = async (req, res, next) => {
 // Crear una entrada
 export const createEntrada = async (req, res, next) => {
 
-    const { Fec_Entrada, Hor_Entrada, Id_Unidad, Id_Producto, Id_Responsable, Can_Entrada, Fec_Vencimiento } = req.body;
+    const { Dcp_Entrada, Fec_Entrada, Ori_Entrada, Des_Entrada, Val_Unitario, Val_Total, Id_Unidad, Id_Producto, Id_Responsable, Can_Entrada, Fec_Vencimiento } = req.body;
 
-    if (!Fec_Entrada || !Hor_Entrada || !Id_Unidad || !Id_Producto || !Id_Responsable || !Can_Entrada || !Fec_Vencimiento) {
+    if (!Dcp_Entrada || !Fec_Entrada || !Ori_Entrada || !Des_Entrada || !Val_Unitario || !Val_Total || !Id_Unidad || !Id_Producto || !Id_Responsable || !Can_Entrada || !Fec_Vencimiento) {
         logger.warn('Todos los campos son obligatorios');
         return res.status(400).json({ message: 'Todos los campos son obligatorios' });
     }
@@ -60,9 +61,9 @@ export const createEntrada = async (req, res, next) => {
 // Actualizar un registro
 export const updateEntrada = async (req, res, next) => {
 
-    const { Fec_Entrada, Hor_Entrada, Id_Unidad, Id_Producto, Id_Responsable, Can_Entrada, Fec_Vencimiento } = req.body;
+    const { Dcp_Entrada, Fec_Entrada, Ori_Entrada, Des_Entrada, Val_Unitario, Val_Total, Id_Unidad, Id_Producto, Id_Responsable, Can_Entrada, Fec_Vencimiento } = req.body;
 
-    if (!Fec_Entrada || !Hor_Entrada || !Id_Unidad || !Id_Producto || !Id_Responsable || !Can_Entrada || !Fec_Vencimiento) {
+    if (!Dcp_Entrada || !Fec_Entrada || !Ori_Entrada || !Des_Entrada || !Val_Unitario || !Val_Total || !Id_Unidad || !Id_Producto || !Id_Responsable || !Can_Entrada || !Fec_Vencimiento) {
         logger.warn('Todos los campos son obligatorios');
         return res.status(400).json({ message: 'Todos los campos son obligatorios' });
     }
@@ -103,21 +104,22 @@ export const deleteEntrada = async (req, res, next) => {
     }
 };
 
+// Consultar por fecha
 export const getQueryEntrada = async (req, res) => {
     try {
-        const entrada = await EntradasModel.findAll({
+        const entradas = await EntradaModel.findAll({
             where: {
                 Fec_Entrada: {
                     [Sequelize.Op.like]: `%${req.params.Fec_Entrada}%`
                 }
             }
-        })
-        if(entrada.length > 0){
-            res.status(200).json(entrada)
+        });
+        if (entradas.length > 0) {
+            res.status(200).json(entradas);
         } else {
-            res.status(404).json({ message: "No se encontraron registros para la fecha especificada" })
+            res.status(404).json({ message: "No se encontraron registros para la fecha especificada" });
         }
     } catch (error) {
-        res.status(500).json({ message: error.message })
+        res.status(500).json({ message: error.message });
     }
-}
+};

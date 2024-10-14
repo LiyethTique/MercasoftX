@@ -1,22 +1,60 @@
+/* Estilo para la tarjeta del producto */
 .product-card {
-    max-width: 18rem;
-    margin: 10px;
-  }
-  
-  .card-img-top {
-    height: 200px;
-    object-fit: cover;
-  }
-  
-  .btn-outline-secondary {
-    width: 40px;
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  span.mx-3 {
-    font-size: 1.25rem;
-    font-weight: bold;
-  }  
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #fff;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.product-image {
+  height: 200px;
+  object-fit: cover;
+}
+
+.product-name {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.product-description {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.product-price span {
+  color: #ff8c42;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.product-stock {
+  color: #777;
+  font-size: 0.85rem;
+}
+
+/* Botón naranja */
+.btn-orange {
+  background-color: #FFA500; /* Tono naranja */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 0.9rem; /* Tamaño de fuente ajustado */
+  font-weight: bold;
+  border-radius: 25px; /* Borde redondeado */
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Transición añadida */
+}
+
+.btn-orange:hover {
+  background-color: #ff6f00; /* Tono más oscuro de naranja */
+}
+
+.btn-orange:active {
+  transform: scale(0.95); /* Animación de clic */
+}

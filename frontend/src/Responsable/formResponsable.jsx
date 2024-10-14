@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { Button, Row, Col } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import Swal from 'sweetalert2';
-import "./FormResponsable.css";
 
 const FormResponsable = ({ buttonForm, responsable, onSubmit, onInputChange, formData }) => {
   const [errors, setErrors] = useState({});
@@ -24,6 +23,7 @@ const FormResponsable = ({ buttonForm, responsable, onSubmit, onInputChange, for
   const handleChange = (e) => {
     const { name, value } = e.target;
 
+    // Formateo de número de teléfono
     if (name === 'Tel_Responsable') {
       const onlyNumbers = value.replace(/\D/g, '').slice(0, 10);
       if (onlyNumbers.startsWith('3')) {
@@ -45,16 +45,25 @@ const FormResponsable = ({ buttonForm, responsable, onSubmit, onInputChange, for
 
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.Nom_Responsable.trim()) newErrors.Nom_Responsable = 'Ingrese un nombre válido.';
-    if (!formData.Tel_Responsable.trim()) newErrors.Tel_Responsable = 'El teléfono es requerido.';
-    if (!formData.Tip_Responsable.trim()) newErrors.Tip_Responsable = 'El tipo de responsable es requerido.';
-    if (!formData.Tip_Genero.trim()) newErrors.Tip_Genero = 'El género es requerido.';
-
-    const phoneOnlyNumbers = formData.Tel_Responsable.replace(/\D/g, '');
+    
+    // Verificar si formData está definido
+    if (!formData) {
+      newErrors.formData = 'Los datos del formulario no están disponibles.';
+      return newErrors;
+    }
+    
+    // Validación de campos en formData
+    if (!formData.Nom_Responsable?.trim()) newErrors.Nom_Responsable = 'Ingrese un nombre válido.';
+    if (!formData.Tel_Responsable?.trim()) newErrors.Tel_Responsable = 'El teléfono es requerido.';
+    if (!formData.Tip_Responsable?.trim()) newErrors.Tip_Responsable = 'El tipo de responsable es requerido.';
+    if (!formData.Tip_Genero?.trim()) newErrors.Tip_Genero = 'El género es requerido.';
+  
+    // Validación de número de teléfono
+    const phoneOnlyNumbers = formData.Tel_Responsable?.replace(/\D/g, '');
     if (formData.Tel_Responsable && !isValidPhone(phoneOnlyNumbers)) {
       newErrors.Tel_Responsable = 'El número de teléfono debe tener exactamente 10 dígitos y comenzar con 3.';
     }
-
+  
     return newErrors;
   };
 
@@ -64,8 +73,6 @@ const FormResponsable = ({ buttonForm, responsable, onSubmit, onInputChange, for
       setErrors(formErrors);
       return;
     }
-
-    // La validación de cambios se maneja en el componente padre (CrudResponsable)
 
     try {
       await onSubmit();
@@ -94,7 +101,7 @@ const FormResponsable = ({ buttonForm, responsable, onSubmit, onInputChange, for
             className={`form-control ${errors.Nom_Responsable ? 'is-invalid' : ''}`}
             id="Nom_Responsable"
             name="Nom_Responsable"
-            value={formData.Nom_Responsable}
+            value={formData.Nom_Responsable || ''} // Asegúrate de que sea una cadena
             onChange={handleChange}
             placeholder="Ingrese el nombre"
           />
@@ -112,7 +119,7 @@ const FormResponsable = ({ buttonForm, responsable, onSubmit, onInputChange, for
             className={`form-control ${errors.Tel_Responsable ? 'is-invalid' : ''}`}
             id="Tel_Responsable"
             name="Tel_Responsable"
-            value={formData.Tel_Responsable}
+            value={formData.Tel_Responsable || ''} // Asegúrate de que sea una cadena
             onChange={handleChange}
             inputMode="numeric"
             placeholder="Ingrese el teléfono"
@@ -132,12 +139,11 @@ const FormResponsable = ({ buttonForm, responsable, onSubmit, onInputChange, for
             name="Tip_Responsable"
             id="Tip_Responsable"
             className={`form-control ${errors.Tip_Responsable ? 'is-invalid' : ''}`}
-            value={formData.Tip_Responsable}
+            value={formData.Tip_Responsable || ''} // Asegúrate de que sea una cadena
             onChange={handleChange}
           >
             <option value="">Seleccione</option>
             <option value="Administrador">Administrador</option>
-            <option value="Instructor">Instructor</option>
             <option value="Aprendiz">Aprendiz</option>
           </select>
           {errors.Tip_Responsable && (
@@ -153,7 +159,7 @@ const FormResponsable = ({ buttonForm, responsable, onSubmit, onInputChange, for
             name="Tip_Genero"
             id="Tip_Genero"
             className={`form-control ${errors.Tip_Genero ? 'is-invalid' : ''}`}
-            value={formData.Tip_Genero}
+            value={formData.Tip_Genero || ''} // Asegúrate de que sea una cadena
             onChange={handleChange}
           >
             <option value="">Seleccione</option>

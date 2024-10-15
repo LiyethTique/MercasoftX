@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import FormUnidad from '../Unidad/formUnidad.jsx'; // Asegúrate de tener este componente creado
+import FormUnidad from './formUnidad.jsx'; // Asegúrate de tener este componente creado
 import Sidebar from '../Sidebar/Sidebar';
 import ModalForm from '../Model/Model';
 import Swal from 'sweetalert2';

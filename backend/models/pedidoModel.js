@@ -16,15 +16,6 @@ const Pedido = db.define('pedido', {
             key: 'Id_Cliente',
         },
     },
-    Id_Producto: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-            model: Cliente,
-            key: 'Id_Cliente',
-        },
-        // Aquí puedes agregar una referencia a la tabla de productos si es necesario
-    },
     Fec_Pedido: {
         type: DataTypes.DATE,
         allowNull: false,

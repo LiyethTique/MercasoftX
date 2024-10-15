@@ -1,170 +1,154 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from 'react-bootstrap';
+import { Button, Row, Col } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 import Swal from 'sweetalert2';
 
-const FormPedido = ({ buttonForm, pedido, onSubmit, onClose }) => {
+const FormPedido = ({ buttonForm, pedido, onSubmit }) => {
   const [formData, setFormData] = useState({
     Fec_Pedido: '',
-    Id_Cliente: '',
     Est_Pedido: '',
-    Val_Pedido: ''
+    Val_Pedido: 0,
   });
 
-  const [initialData, setInitialData] = useState({
-    Fec_Pedido: '',
-    Id_Cliente: '',
-    Est_Pedido: '',
-    Val_Pedido: ''
-  });
-
-  const [errors, setErrors] = useState({
-    Fec_Pedido: '',
-    Id_Cliente: '',
-    Est_Pedido: '',
-    Val_Pedido: ''
-  });
-
-  const [isSubmitting, setIsSubmitting] = useState(false); // Controlar envío de formulario
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
+    // Si hay un pedido, carga sus datos en formData
     if (pedido) {
-      setFormData(pedido);
-      setInitialData(pedido); // Guardar los datos iniciales
+      setFormData({
+        Fec_Pedido: pedido.Fec_Pedido || '',
+        Est_Pedido: pedido.Est_Pedido || '',
+        Val_Pedido: pedido.Val_Pedido || 0,
+      });
+      setErrors({}); // Resetear errores al cargar nuevo pedido
     }
-  }, [pedido]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+  }, [pedido]); // Solo dependemos de `pedido`
 
   const validateForm = () => {
     const newErrors = {};
-
+    
+    // Validación de campos en formData
     if (!formData.Fec_Pedido) newErrors.Fec_Pedido = 'La fecha es requerida.';
-    if (formData.Id_Cliente <= 0) newErrors.Id_Cliente = 'El nombre del cliente debe ser mayor a 0.';
-    if (formData.Val_Pedido <= 0) newErrors.Val_Pedido = 'El valor del pedido debe ser mayor a 0.';
-    if (!formData.Est_Pedido) newErrors.Est_Pedido = 'El estado del pedido es requerido.';
-    if (!formData.Val_Pedido) newErrors.Val_Pedido = 'El valor del pedido es requerido.';
-    if (!formData.Id_Cliente) newErrors.Id_Cliente = 'El nombre del cliente es requerido.';
+    if (!formData.Est_Pedido?.trim()) newErrors.Est_Pedido = 'El estado del pedido es requerido.';
+    if (formData.Val_Pedido === undefined || formData.Val_Pedido < 0) newErrors.Val_Pedido = 'El valor del pedido debe ser un número válido.';
 
     return newErrors;
   };
 
-  const hasChanges = () => {
-    return Object.keys(formData).some(key => formData[key] !== initialData[key]);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (isSubmitting) return; // Evitar múltiples envíos mientras se procesa
-
+  const handleSubmit = async () => {
     const formErrors = validateForm();
     if (Object.keys(formErrors).length > 0) {
       setErrors(formErrors);
       return;
     }
 
-    if (!hasChanges()) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Sin Cambios',
-        text: 'Debe realizar al menos un cambio para enviar el formulario.',
-      });
-      return;
-    }
-
-    setIsSubmitting(true); // Bloquear el botón de enviar
-
     try {
-      await onSubmit(formData); // Enviar datos al servidor
-      Swal.fire({
-        icon: 'success',
-        title: 'Pedido registrado exitosamente',
-      });
+      await onSubmit(formData); // Pasa formData a la función onSubmit
+      setErrors({}); // Resetear el formulario después de una operación exitosa
     } catch (error) {
+      console.error('Error al guardar el pedido:', error);
       Swal.fire({
         icon: 'error',
-        title: 'Error al registrar el pedido',
-        text: 'Ocurrió un error al enviar los datos',
+        title: 'Error',
+        text: error.response?.data?.message || 'Error desconocido. Intente de nuevo.',
+        confirmButtonText: 'Aceptar',
       });
-    } finally {
-      setIsSubmitting(false); // Liberar el botón después de finalizar
     }
   };
 
-  const handleClose = () => {
-    if (onClose) {
-      onClose(); // Llama a la función de cierre pasada por props
-    }
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prevState => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
 
   return (
-    <div style={{ padding: '20px', maxWidth: '500px', margin: '0 auto' }}>
-      <div className="mb-3">
-        <label htmlFor="Fec_Pedido" className="form-label">Fecha del Pedido</label>
-        <input
-          type="date"
-          className={`form-control ${errors.Fec_Pedido ? 'is-invalid' : ''}`}
-          id="Fec_Pedido"
-          name="Fec_Pedido"
-          value={formData.Fec_Pedido}
-          onChange={handleChange}
-        />
-        {errors.Fec_Pedido && <div className="invalid-feedback">{errors.Fec_Pedido}</div>}
-      </div>
-      <div className="mb-3">
-        <label htmlFor="Id_Cliente" className="form-label">Nombre del Cliente</label>
-        <input
-          type="number"
-          className={`form-control ${errors.Id_Cliente ? 'is-invalid' : ''}`}
-          id="Id_Cliente"
-          name="Id_Cliente"
-          value={formData.Id_Cliente}
-          onChange={handleChange}
-        />
-        {errors.Id_Cliente && <div className="invalid-feedback">{errors.Id_Cliente}</div>}
-      </div>
-      <div className="mb-3">
-        <label htmlFor="Est_Pedido" className="form-label">Estado del Pedido</label>
-        <select
-          className={`form-control ${errors.Est_Pedido ? 'is-invalid' : ''}`}
-          id="Est_Pedido"
-          name="Est_Pedido"
-          value={formData.Est_Pedido}
-          onChange={handleChange}
-        >
-          <option value="">Seleccionar estado</option>
-          <option value="Pendiente">Pendiente</option>
-          <option value="En espera">En espera</option>
-          <option value="Fallido">Fallido</option>
-          <option value="Cancelado">Cancelado</option>
-          <option value="Procesando">Procesando</option>
-          <option value="Completado">Completado</option>
-        </select>
-        {errors.Est_Pedido && <div className="invalid-feedback">{errors.Est_Pedido}</div>}
-      </div>
-      <div className="mb-3">
-        <label htmlFor="Val_Pedido" className="form-label">Valor del Pedido</label>
-        <input
-          type="number"
-          className={`form-control ${errors.Val_Pedido ? 'is-invalid' : ''}`}
-          id="Val_Pedido"
-          name="Val_Pedido"
-          value={formData.Val_Pedido}
-          onChange={handleChange}
-          step="0.01"
-        />
-        {errors.Val_Pedido && <div className="invalid-feedback">{errors.Val_Pedido}</div>}
-      </div>
-      <div className="mb-3 text-center">
-        <Button variant="primary" onClick={handleSubmit} disabled={isSubmitting}>
-          {isSubmitting ? 'Enviando...' : buttonForm}
-        </Button>
-      </div>
+    <div className="form-pedido">
+      <Row>
+        <Col md={6} className="mb-3">
+          <label htmlFor="Fec_Pedido" className="form-label">Fecha de Pedido:</label>
+          <input
+            type="date"
+            className={`form-control ${errors.Fec_Pedido ? 'is-invalid' : ''}`}
+            id="Fec_Pedido"
+            name="Fec_Pedido"
+            value={formData.Fec_Pedido || ''}
+            onChange={handleInputChange} // Cambié a handleInputChange
+            disabled={!!pedido} // Deshabilitar si estamos editando
+          />
+          {errors.Fec_Pedido && (
+            <div className="invalid-feedback">
+              {errors.Fec_Pedido}
+            </div>
+          )}
+        </Col>
+
+        <Col md={6} className="mb-3">
+          <label htmlFor="Est_Pedido" className="form-label">Estado del Pedido:</label>
+          <select
+            className={`form-select ${errors.Est_Pedido ? 'is-invalid' : ''}`}
+            id="Est_Pedido"
+            name="Est_Pedido"
+            value={formData.Est_Pedido || ''}
+            onChange={handleInputChange} // Cambié a handleInputChange
+          >
+            <option value="">Seleccione el estado</option>
+    <option value="Entregado">Entregado</option>
+    <option value="No entregado">No entregado</option>
+    <option value="En espera">En Espera</option>
+    <option value="Confirmado">Confirmado</option>
+    <option value="Cancelado">Cancelado</option>
+          </select>
+          {errors.Est_Pedido && (
+            <div className="invalid-feedback">
+              {errors.Est_Pedido}
+            </div>
+          )}
+        </Col>
+      </Row>
+
+      <Row>
+        <Col md={6} className="mb-3">
+          <label htmlFor="Val_Pedido" className="form-label">Valor del Pedido:</label>
+          <input
+            type="number"
+            className={`form-control ${errors.Val_Pedido ? 'is-invalid' : ''}`}
+            id="Val_Pedido"
+            name="Val_Pedido"
+            value={formData.Val_Pedido || ''}
+            onChange={handleInputChange} // Cambié a handleInputChange
+            placeholder="Ingrese el valor del pedido"
+            disabled={!!pedido} // Deshabilitar si estamos editando
+          />
+          {errors.Val_Pedido && (
+            <div className="invalid-feedback">
+              {errors.Val_Pedido}
+            </div>
+          )}
+        </Col>
+      </Row>
+
+      <Row className="justify-content-center">
+        <Col md={6} className="text-center">
+          <Button variant="primary" onClick={handleSubmit}>
+            {buttonForm}
+          </Button>
+        </Col>
+      </Row>
     </div>
   );
+};
+
+FormPedido.propTypes = {
+  buttonForm: PropTypes.string.isRequired,
+  pedido: PropTypes.shape({
+    Fec_Pedido: PropTypes.string,
+    Est_Pedido: PropTypes.string,
+    Val_Pedido: PropTypes.number,
+  }),
+  onSubmit: PropTypes.func.isRequired,
 };
 
 export default FormPedido;

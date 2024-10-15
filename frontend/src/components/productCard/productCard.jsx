@@ -79,7 +79,7 @@ const ProductCard = ({ name, description, price, stock, imageUrl, onAddToCart })
           onClick={stock > 0 ? onAddToCart : null} // Solo llama a la función si hay stock
           disabled={stock === 0} // Desactiva el botón si está agotado
         >
-          Añadir Producto
+          Añadir Producto al Carrito
         </button>
       </div>
     </div>

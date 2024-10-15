@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import FormEntrada from '../Entrada/formEntrada'; // Asegúrate de tener este componente creado
+import FormEntrada from '../Entrada/formEntrada.jsx'; // Asegúrate de tener este componente creado
 import Sidebar from '../Sidebar/Sidebar';
 import ModalForm from '../Model/Model';
 import Swal from 'sweetalert2';
 import { Button } from 'react-bootstrap';
-import WriteTable from '../Tabla/Data-Table';
 import { IoTrash, IoPencil } from "react-icons/io5";
+import WriteTable from '../Tabla/Data-Table';
 
 const URI = process.env.REACT_APP_SERVER_BACK + '/entrada/';
 
@@ -16,6 +16,7 @@ const CrudEntrada = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [entrada, setEntrada] = useState(null);
   const [formData, setFormData] = useState({});
+  const moduleName = "Gestionar Entradas";
 
   const token = localStorage.getItem('token'); // Obtener el token una vez
 
@@ -61,14 +62,19 @@ const CrudEntrada = () => {
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+  
+    // Verifica que name corresponda a los campos correctos del formData
+    setFormData(prevState => ({
+      ...prevState,
+      [name]: value.trim(),  // Asegúrate de eliminar espacios en blanco no deseados
+    }));
   };
+  
 
   const hasChanges = (data) => {
-    return Object.keys(data).some(key => data[key] !== entrada[key]);
+    return Object.keys(data).some(key =>
+      data[key] !== entrada[key]
+    );
   };
 
   const hasSpaces = (data) => {
@@ -133,7 +139,7 @@ const CrudEntrada = () => {
       setIsModalOpen(false);
       setButtonForm('Enviar');
       setEntrada(null);
-      setFormData({}); // Reiniciar el estado del formulario
+      setFormData({});
     } catch (error) {
       console.error("Error al guardar la entrada:", error);
       Swal.fire("Error", error.response?.data?.message || "Ocurrió un error al guardar la entrada.", "error");
@@ -141,76 +147,79 @@ const CrudEntrada = () => {
   };
 
   const deleteEntrada = async (Id_Entrada) => {
-    if (window.confirm("¿Estás seguro de que deseas eliminar esta entrada?")) {
-      try {
-        await axios.delete(`${URI}${Id_Entrada}`, {
-          headers: {
-            Authorization: `Bearer ${token}` // Añadir el token a la solicitud
-          }
-        });
-        Swal.fire({
-          icon: 'success',
-          title: 'Eliminación exitosa',
-          text: 'La entrada se ha eliminado exitosamente.',
-          confirmButtonText: 'Aceptar',
-        });
-        const respuesta = await axios.get(URI, {
-          headers: {
-            Authorization: `Bearer ${token}` // Añadir el token a la solicitud
-          }
-        });
-        setEntradaList(Array.isArray(respuesta.data) ? respuesta.data : []);
-      } catch (error) {
-        console.error("Error al eliminar la entrada:", error);
-        Swal.fire("Error", error.response?.data?.message || "Ocurrió un error al eliminar la entrada.", "error");
+    Swal.fire({
+      title: "¿Estás seguro de borrar este registro?",
+      text: "¡No podrás revertir esto!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, borrar!"
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await axios.delete(`${URI}${Id_Entrada}`, {
+            headers: {
+              Authorization: `Bearer ${token}`, // Añadir el token a la solicitud
+            }
+          });
+          Swal.fire("¡Borrado!", "La entrada ha sido borrada.", "success");
+          const respuesta = await axios.get(URI, {
+            headers: {
+              Authorization: `Bearer ${token}` // Añadir el token a la solicitud
+            }
+          });
+          setEntradaList(respuesta.data);
+        } catch (error) {
+          Swal.fire("Error", error.response?.data?.message || "Error al eliminar la entrada", "error");
+        }
       }
-    }
+    });
   };
 
   const handleShowForm = () => {
     setButtonForm('Enviar');
     setEntrada(null);
-    setFormData({}); // Reiniciar el estado del formulario
+    setFormData({});
     setIsModalOpen(true);
   };
 
-  const titles = [
-    'Código Entrada', 'Descripción', 'Fecha Entrada', 'Origen', 'Destino', 
-    'Valor Unitario', 'Valor Total', 'Unidad', 'Producto', 'Responsable', 
-    'Cantidad', 'Fecha Vencimiento', 'Acciones'
-  ];
-
+  const titles = ['ID', 'Descripción', 'Fecha Entrada', 'Origen', 'Destino', 'Val Unitario', 'Val Total', 'Unidad', 'Producto', 'Responsable', 'Cantidad', 'Fec Vencimiento', 'Acciones'];
   const data = entradaList.length === 0
-    ? [['', '', '', '', '', '', '', '', '', '', '', '']]
-    : entradaList.map(entrada => [
-      entrada.Id_Entrada,
-      entrada.Dcp_Entrada,
-      entrada.Fec_Entrada,
-      entrada.Ori_Entrada,
-      entrada.Des_Entrada,
-      entrada.Val_Unitario,
-      entrada.Val_Total,
-      entrada.unidad?.Nom_Unidad || 'Sin unidad', // Encadenamiento opcional
-      entrada.producto?.Nom_Producto || 'Sin producto', // Encadenamiento opcional
-      entrada.responsable?.Nom_Responsable || 'Sin responsable', // Encadenamiento opcional
-      entrada.Can_Entrada,
-      entrada.Fec_Vencimiento,
-      <div key={entrada.Id_Entrada} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+    ? [[
+      '', '', '', '', '', '', '', '', '', '', '', '',
+    ]]
+    : entradaList.map(entradaItem => [
+      entradaItem.Id_Entrada,
+      entradaItem.Dcp_Entrada,
+      entradaItem.Fec_Entrada,
+      entradaItem.Ori_Entrada,
+      entradaItem.Des_Entrada,
+      entradaItem.Val_Unitario,
+      entradaItem.Val_Total,
+      entradaItem.Id_Unidad,
+      entradaItem.Id_Producto,
+      entradaItem.Id_Responsable,
+      entradaItem.Can_Entrada,
+      entradaItem.Fec_Vencimiento,
+      <div key={entradaItem.Id_Entrada} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
         <a
           href="#!"
           className="btn-custom me-2"
-          onClick={() => getEntrada(entrada.Id_Entrada)}
+          onClick={() => getEntrada(entradaItem.Id_Entrada)}
           title="Editar"
+          style={{ pointerEvents: entradaList.length > 0 ? 'auto' : 'none', opacity: entradaList.length > 0 ? 1 : 0.5 }}
         >
           <IoPencil size={20} color="blue" />
         </a>
         <a
           href="#!"
           className="btn-custom"
-          onClick={() => deleteEntrada(entrada.Id_Entrada)}
+          onClick={() => deleteEntrada(entradaItem.Id_Entrada)}
           title="Borrar"
+          style={{ pointerEvents: entradaList.length > 0 ? 'auto' : 'none', opacity: entradaList.length > 0 ? 1 : 0.5 }}
         >
-           <IoTrash size={20} color="red" />
+          <IoTrash size={20} color="red" />
         </a>
       </div>
     ]);
@@ -220,7 +229,7 @@ const CrudEntrada = () => {
       <Sidebar />
       <div className="container mt-4">
         <center>
-          <h1>Gestionar Entradas</h1>
+          <h1>{moduleName}</h1>
         </center>
         <div className="d-flex justify-content-between mb-3">
           <Button
@@ -235,7 +244,7 @@ const CrudEntrada = () => {
           </Button>
         </div>
 
-        <WriteTable titles={titles} data={data} fileName="Gestionar_Entrada" />
+        <WriteTable titles={titles} data={data} moduleName={moduleName} />
 
         <ModalForm
           isOpen={isModalOpen}
@@ -247,12 +256,12 @@ const CrudEntrada = () => {
             entrada={entrada}
             onSubmit={handleSubmitEntrada}
             onInputChange={handleInputChange}
-            formData={formData} // Pasar formData como prop
+            formData={formData} // Pasar el estado del formulario
           />
         </ModalForm>
       </div>
     </>
   );
-};
+}
 
 export default CrudEntrada;

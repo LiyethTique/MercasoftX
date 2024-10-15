@@ -101,7 +101,7 @@ const LoginForm = () => {
 
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
-        navigate('/Producto');
+        navigate('/pedido');
       }
     } catch (error) {
       // Cerrar la alerta de carga en caso de error

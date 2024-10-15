@@ -52,7 +52,11 @@ const FormVenta = ({ buttonForm, venta, onSubmit, onInputChange, formData }) => 
   const validateForm = () => {
     const newErrors = {};
     if (!formData.Fec_Venta) newErrors.Fec_Venta = 'Seleccione una fecha de venta.';
-    if (!formData.Val_Venta || isNaN(formData.Val_Venta)) newErrors.Val_Venta = 'Ingrese un valor válido.';
+    if (!formData.Val_Venta || isNaN(formData.Val_Venta)) {
+      newErrors.Val_Venta = 'Ingrese un valor válido.';
+    } else if (formData.Val_Venta < 0) {
+      newErrors.Val_Venta = 'El valor de venta no puede ser negativo.';
+    }
     if (!formData.Tip_Cliente.trim()) newErrors.Tip_Cliente = 'Ingrese un tipo de cliente válido.';
     if (!formData.Id_Pedido) newErrors.Id_Pedido = 'Seleccione un pedido.';
     if (!formData.Id_Producto) newErrors.Id_Producto = 'Seleccione un producto.';

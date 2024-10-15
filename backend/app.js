@@ -62,7 +62,7 @@ app.use("/auth", authRoutes);
 app.use("/users", verifyToken, userRoutes);
 app.use("/carrito", carritoRoutes);
 app.use("/cliente", clienteRoutes);
-app.use("/entrada", verifyToken, entradasRoutes);
+app.use("/entrada", entradasRoutes);
 app.use("/pedido",  pedidoRoutes);
 app.use("/pedidoProducto", pedidoProductoRoutes);
 app.use("/producto", productoRoutes);
@@ -118,6 +118,16 @@ Entrada.belongsTo(Producto, { foreignKey: "Id_Producto", as: "producto"} )
 
 Responsable.hasMany(Entrada, { foreignKey: "Id_Responsable", as: "entradas"})
 Entrada.belongsTo(Responsable, { foreignKey: "Id_Responsable", as: "responsable" })
+
+Pedido.hasMany(PedidoProducto, { foreignKey: 'Id_Pedido', sourceKey: 'Id_Pedido', as: 'productos' });
+PedidoProducto.belongsTo(Pedido, { foreignKey: 'Id_Pedido', targetKey: 'Id_Pedido', as: 'pedido' });
+
+Producto.hasMany(PedidoProducto, { foreignKey: 'Id_Producto', sourceKey: 'Id_Producto', as: 'pedidoProductos' });
+PedidoProducto.belongsTo(Producto, { foreignKey: 'Id_Producto', targetKey: 'Id_Producto', as: 'producto' });
+
+Producto.hasMany(Venta, { foreignKey: 'Id_Producto', sourceKey: 'Id_Producto', as: 'ventas' });
+Venta.belongsTo(Producto, { foreignKey: 'Id_Producto', targetKey: 'Id_Producto', as: 'producto' });
+
 
 // Ruta principal
 app.get("/", (req, res) => {

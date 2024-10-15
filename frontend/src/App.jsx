@@ -4,7 +4,7 @@ import { default as jwt_decode } from 'jwt-decode';
 
 
 import Carrito from './Carrito/crudCarrito.jsx';
-import Cliente from './Cliente/formCliente.jsx';
+import Cliente from './Cliente/crudCliente.jsx';
 import Entrada from './Entrada/crudEntrada.jsx';
 import Pedido from './Pedido/crudPedido.jsx';
 import PedidoProducto from './PedidoProducto/crudPedidoProducto.jsx';

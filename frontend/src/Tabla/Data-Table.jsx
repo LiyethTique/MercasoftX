@@ -3,22 +3,19 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import Swal from 'sweetalert2';
-import 'sweetalert2/dist/sweetalert2.min.css'; // Importa los estilos de SweetAlert2
-import './WriteTable.css'; // Importa el archivo CSS
+import 'sweetalert2/dist/sweetalert2.min.css';
+import './WriteTable.css';
 
-const WriteTable = ({ titles, data, fileName }) => {
+const WriteTable = ({ titles, data, moduleName }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState('');
-    const rowsPerPage = 5; // Número de filas por página
+    const rowsPerPage = 5;
+    const [hasRecords, setHasRecords] = useState(false); 
 
-    // Filtrar datos basado en el término de búsqueda
     const filteredData = data.filter(row =>
         row.some(cell => cell.toString().toLowerCase().includes(searchTerm.toLowerCase()))
     );
 
-    const [hasRecords, setHasRecords] = useState(filteredData.length > 0);
-
-    // Actualizar el estado de hasRecords cada vez que filteredData cambia
     useEffect(() => {
         setHasRecords(filteredData.length > 0);
         const totalPages = Math.ceil(filteredData.length / rowsPerPage);
@@ -27,15 +24,8 @@ const WriteTable = ({ titles, data, fileName }) => {
         }
     }, [filteredData, currentPage, rowsPerPage]);
 
-    // Depuración para verificar el valor de fileName
-    useEffect(() => {
-        console.log('Nombre del archivo:', fileName);
-    }, [fileName]);
-
-    // Calcular los datos a mostrar en la página actual
     const paginatedData = filteredData.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
 
-    // Función para mostrar alerta de no hay registros
     const showNoRecordsAlert = () => {
         Swal.fire({
             icon: 'warning',
@@ -44,7 +34,6 @@ const WriteTable = ({ titles, data, fileName }) => {
         });
     };
 
-    // Excluir la columna "Acciones" para exportaciones
     const excludeActionsColumn = (titlesArray, dataArray) => {
         const actionsIndex = titlesArray.indexOf('Acciones');
         if (actionsIndex > -1) {
@@ -55,74 +44,42 @@ const WriteTable = ({ titles, data, fileName }) => {
         return { newTitles: titlesArray, newData: dataArray };
     };
 
-    // Función para exportar a PDF
     const exportToPDF = () => {
-        if (!hasRecords) {
-            showNoRecordsAlert();
-            return;
-        }
+        if (!hasRecords) return showNoRecordsAlert();
         const { newTitles, newData } = excludeActionsColumn(titles, filteredData);
         const doc = new jsPDF();
-        const pageWidth = doc.internal.pageSize.getWidth();
-        const title = `${fileName.replace(/_/g, ' ')}`;
-        doc.text(title, pageWidth / 2, 10, { align: 'center' });
-        doc.autoTable({
-            startY: 20,
-            head: [newTitles],
-            body: newData,
-        });
-        doc.save(`${fileName}.pdf`);
+        const title = moduleName ? moduleName.replace(/_/g, ' ') : 'Sin título';
+        doc.text(title, doc.internal.pageSize.getWidth() / 2, 10, { align: 'center' });
+        doc.autoTable({ startY: 20, head: [newTitles], body: newData });
+        doc.save(`${moduleName || 'default'}.pdf`);
     };
 
-    // Función para exportar a Excel
     const exportToExcel = () => {
-        if (!hasRecords) {
-            showNoRecordsAlert();
-            return;
-        }
+        if (!hasRecords) return showNoRecordsAlert();
         const { newTitles, newData } = excludeActionsColumn(titles, filteredData);
-        const titleRow = [fileName.replace(/_/g, ' ')];
-        const ws = XLSX.utils.aoa_to_sheet([
-            titleRow,
-            [],
-            newTitles,
-            ...newData
-        ]);
+        const ws = XLSX.utils.aoa_to_sheet([[moduleName.replace(/_/g, ' ')], [], newTitles, ...newData]);
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-        XLSX.writeFile(wb, `${fileName}.xlsx`);
+        XLSX.writeFile(wb, `${moduleName}.xlsx`);
     };
 
-    // Función para exportar a SQL
     const exportToSQL = () => {
-        if (!hasRecords) {
-            showNoRecordsAlert();
-            return;
-        }
+        if (!hasRecords) return showNoRecordsAlert();
         const { newTitles, newData } = excludeActionsColumn(titles, filteredData);
-        let sql = `-- Exportado desde: ${fileName.replace(/_/g, ' ')}\n\n`;
-        sql += 'CREATE TABLE table_name (\n';
-        sql += newTitles.map(title => `  \`${title}\` VARCHAR(255)`).join(',\n');
-        sql += '\n);\n\n';
-
+        let sql = `-- Exportado desde: ${moduleName.replace(/_/g, ' ')}\n\nCREATE TABLE table_name (\n`;
+        sql += newTitles.map(title => `  \`${title}\` VARCHAR(255)`).join(',\n') + '\n);\n\n';
         newData.forEach(row => {
             const values = row.map(value => `'${value}'`).join(', ');
-            sql += `INSERT INTO table_name (${newTitles.map(title => `\`${title}\``).join(', ')}) VALUES (${values});\n`;
+            sql += `INSERT INTO table_name (${newTitles.map(t => `\`${t}\``).join(', ')}) VALUES (${values});\n`;
         });
-
         const blob = new Blob([sql], { type: 'text/sql' });
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
-        link.download = `${fileName}.sql`;
+        link.download = `${moduleName}.sql`;
         link.click();
     };
 
-    // Función para manejar el cambio de página
-    const handlePageChange = (newPage) => {
-        setCurrentPage(newPage);
-    };
-
-    // Función para manejar el cambio en el campo de búsqueda
+    const handlePageChange = (newPage) => setCurrentPage(newPage);
     const handleSearchChange = (e) => {
         setSearchTerm(e.target.value);
         setCurrentPage(1);
@@ -132,26 +89,17 @@ const WriteTable = ({ titles, data, fileName }) => {
         <div>
             <div className="d-flex justify-content-between mb-3 align-items-center">
                 <div className="d-flex align-items-center">
-                    <button
-                        className="action-button me-2"
-                        onClick={exportToPDF}
-                        disabled={!hasRecords}
-                    >
-                        <img src="/pdf.png" alt="Export to PDF" />
+                    <button className={`action-button me-2" ${!hasRecords ? 'disabled' : ''}`}
+                            onClick={exportToPDF}>
+                        <img src="/pdf.png" alt="Export to PDF" width="55px" />
                     </button>
-                    <button
-                        className="action-button me-2"
-                        onClick={exportToExcel}
-                        disabled={!hasRecords}
-                    >
-                        <img src="/excel.png" alt="Export to Excel" />
+                    <button className={`action-button me-2" ${!hasRecords ? 'disabled' : ''}`}
+                            onClick={exportToExcel}>
+                        <img src="/excel.png" alt="Export to Excel" width="75px" />
                     </button>
-                    <button
-                        className="action-button me-2"
-                        onClick={exportToSQL}
-                        disabled={!hasRecords}
-                    >
-                        <img src="/sql.png" alt="Export to SQL" />
+                    <button className={`action-button me-2" ${!hasRecords ? 'disabled' : ''}`}
+                            onClick={exportToSQL}>
+                        <img src="/sql.png" alt="Export to SQL" width="50px" />
                     </button>
                 </div>
                 <input
@@ -175,9 +123,7 @@ const WriteTable = ({ titles, data, fileName }) => {
                     {paginatedData.length > 0 ? (
                         paginatedData.map((row, index) => (
                             <tr key={index}>
-                                {row.map((cell, idx) => (
-                                    <td key={idx}>{cell}</td>
-                                ))}
+                                {row.map((cell, idx) => <td key={idx}>{cell}</td>)}
                             </tr>
                         ))
                     ) : (
@@ -190,25 +136,13 @@ const WriteTable = ({ titles, data, fileName }) => {
             <nav aria-label="Page navigation">
                 <ul className="pagination justify-content-center">
                     <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                        <button
-                            className="page-link"
-                            onClick={() => handlePageChange(currentPage > 1 ? currentPage - 1 : 1)}
-                            disabled={currentPage === 1}
-                        >
-                            Anterior
-                        </button>
+                        <button className="page-link" onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>Anterior</button>
                     </li>
                     <li className="page-item disabled">
                         <span className="page-link">{currentPage}</span>
                     </li>
                     <li className={`page-item ${currentPage * rowsPerPage >= filteredData.length ? 'disabled' : ''}`}>
-                        <button
-                            className="page-link"
-                            onClick={() => handlePageChange(currentPage * rowsPerPage < filteredData.length ? currentPage + 1 : currentPage)}
-                            disabled={currentPage * rowsPerPage >= filteredData.length}
-                        >
-                            Siguiente
-                        </button>
+                        <button className="page-link" onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage * rowsPerPage >= filteredData.length}>Siguiente</button>
                     </li>
                 </ul>
             </nav>

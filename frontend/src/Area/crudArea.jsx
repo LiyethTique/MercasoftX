@@ -6,6 +6,7 @@ import ModalForm from '../Model/Model';
 import Swal from 'sweetalert2';
 import { Button } from 'react-bootstrap';
 import WriteTable from '../Tabla/Data-Table';
+import { IoTrash, IoPencil } from "react-icons/io5";
 
 const URI = process.env.REACT_APP_SERVER_BACK + '/area/';
 
@@ -39,10 +40,10 @@ const CrudArea = () => {
         setAreaList([]);
       }
     };
-    
+
     fetchAreas();
   }, [URI, token]); // Incluir URI y token como dependencias para el efecto
-  
+
   const getArea = async (Id_Area) => {
     setButtonForm('Actualizar');
     try {
@@ -64,7 +65,7 @@ const CrudArea = () => {
       });
     }
   };
-  
+
   const handleSubmitArea = async () => {
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length > 0) {
@@ -77,7 +78,7 @@ const CrudArea = () => {
       });
       return;
     }
-  
+
     try {
       if (buttonForm === 'Actualizar') {
         if (!hasChanges(formData)) {
@@ -134,7 +135,19 @@ const CrudArea = () => {
       });
     }
   };
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setFormData({ ...formData, [name]: value });
+    setErrors({ ...errors, [name]: '' }); // Limpiar error del campo
+  };
+
+  const hasChanges = (newData) => {
+    if (!area) return false; // Si no hay área, no hay cambios
+    return newData.Nom_Area !== area.Nom_Area; // Compara el nombre del área
+  };
   
+
   const deleteArea = async (Id_Area) => {
     if (window.confirm("¿Estás seguro de que deseas eliminar esta área?")) {
       try {
@@ -165,7 +178,7 @@ const CrudArea = () => {
         });
       }
     }
-  };  
+  };
 
   const handleShowForm = () => {
     setButtonForm('Enviar');
@@ -174,20 +187,13 @@ const CrudArea = () => {
     setErrors({});
     setIsModalOpen(true);
   };
-  
+
   const validateForm = () => {
     const validationErrors = {};
     if (!formData.Nom_Area) {
       validationErrors.Nom_Area = 'El nombre del área es requerido.';
     }
     return validationErrors;
-  };
-  
-  // Nueva función para manejar los cambios en el formulario
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setFormData({ ...formData, [name]: value });
-    setErrors({ ...errors, [name]: '' }); // Limpiar error del campo
   };
 
   const titles = ['ID', 'Nombre del Área', 'Acciones'];
@@ -206,11 +212,7 @@ const CrudArea = () => {
           title="Editar"
           style={{ pointerEvents: areaList.length > 0 ? 'auto' : 'none', opacity: areaList.length > 0 ? 1 : 0.5 }} // Desactivar si no hay registros
         >
-          <img
-            src="/pencil-square.svg"
-            alt="Editar"
-            style={{ width: '20px', height: '20px' }}
-          />
+          <IoPencil size={20} color="blue" />
         </a>
         <a
           href="#!"
@@ -219,11 +221,7 @@ const CrudArea = () => {
           title="Borrar"
           style={{ pointerEvents: areaList.length > 0 ? 'auto' : 'none', opacity: areaList.length > 0 ? 1 : 0.5 }} // Desactivar si no hay registros
         >
-          <img
-            src="/trash3.svg"
-            alt="Borrar"
-            style={{ width: '20px', height: '20px' }}
-          />
+          <IoTrash size={20} color="red" />
         </a>
       </div>
     ]);

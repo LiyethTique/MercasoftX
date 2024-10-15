@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 
-// URIs de las API para productos, unidades y responsables
 const URI_PRODUCTO = process.env.REACT_APP_SERVER_BACK + '/producto';
 const URI_UNIDAD = process.env.REACT_APP_SERVER_BACK + '/unidad';
 const URI_RESPONSABLE = process.env.REACT_APP_SERVER_BACK + '/responsable';
@@ -15,14 +14,12 @@ const FormEntrada = ({ buttonForm, entrada, onSubmit, onInputChange, formData })
   const [unidades, setUnidades] = useState([]);
   const [responsables, setResponsables] = useState([]);
 
-  // Limpiar errores al cambiar la entrada o formData
   useEffect(() => {
     setErrors({});
   }, [entrada, formData]);
 
-  const token = localStorage.getItem('token'); // Recuperar token del almacenamiento local
+  const token = localStorage.getItem('token');
 
-  // Obtener datos de productos, unidades y responsables
   useEffect(() => {
     const fetchProductos = async () => {
       try {
@@ -66,9 +63,8 @@ const FormEntrada = ({ buttonForm, entrada, onSubmit, onInputChange, formData })
     fetchProductos();
     fetchUnidades();
     fetchResponsables();
-  }, [token]);
+  }, []);
 
-  // Validar el formulario antes de enviarlo
   const validateForm = () => {
     const newErrors = {};
     if (!formData.Dcp_Entrada.trim()) newErrors.Dcp_Entrada = 'Ingrese una descripción válida.';
@@ -86,7 +82,6 @@ const FormEntrada = ({ buttonForm, entrada, onSubmit, onInputChange, formData })
     return newErrors;
   };
 
-  // Manejar el envío del formulario
   const handleSubmit = async () => {
     const formErrors = validateForm();
     if (Object.keys(formErrors).length > 0) {
@@ -95,7 +90,7 @@ const FormEntrada = ({ buttonForm, entrada, onSubmit, onInputChange, formData })
     }
 
     try {
-      await onSubmit(); // Llamar a la función de envío de datos
+      await onSubmit();
       if (buttonForm !== 'Actualizar') {
         // Reseteo de los campos de entrada aquí si es necesario
       }
@@ -112,7 +107,6 @@ const FormEntrada = ({ buttonForm, entrada, onSubmit, onInputChange, formData })
 
   return (
     <div className="form-entrada">
-      {/* Fila 1: Descripción de la entrada y fecha */}
       <Row>
         <Col md={6} className="mb-3">
           <label htmlFor="Dcp_Entrada" className="form-label">Descripción de la Entrada:</label>
@@ -141,7 +135,6 @@ const FormEntrada = ({ buttonForm, entrada, onSubmit, onInputChange, formData })
         </Col>
       </Row>
 
-      {/* Fila 2: Origen y destino */}
       <Row>
         <Col md={6} className="mb-3">
           <label htmlFor="Ori_Entrada" className="form-label">Origen:</label>
@@ -170,7 +163,6 @@ const FormEntrada = ({ buttonForm, entrada, onSubmit, onInputChange, formData })
         </Col>
       </Row>
 
-      {/* Fila 3: Valor unitario y valor total */}
       <Row>
         <Col md={6} className="mb-3">
           <label htmlFor="Val_Unitario" className="form-label">Valor Unitario:</label>
@@ -199,7 +191,6 @@ const FormEntrada = ({ buttonForm, entrada, onSubmit, onInputChange, formData })
         </Col>
       </Row>
 
-      {/* Fila 4: Unidad y producto */}
       <Row>
         <Col md={6} className="mb-3">
           <label htmlFor="Id_Unidad" className="form-label">Unidad:</label>
@@ -240,7 +231,6 @@ const FormEntrada = ({ buttonForm, entrada, onSubmit, onInputChange, formData })
         </Col>
       </Row>
 
-      {/* Fila 5: Responsable y cantidad */}
       <Row>
         <Col md={6} className="mb-3">
           <label htmlFor="Id_Responsable" className="form-label">Responsable:</label>
@@ -262,7 +252,7 @@ const FormEntrada = ({ buttonForm, entrada, onSubmit, onInputChange, formData })
         </Col>
 
         <Col md={6} className="mb-3">
-          <label htmlFor="Can_Entrada" className="form-label">Cantidad:</label>
+          <label htmlFor="Can_Entrada" className="form-label">Cantidad de Entrada:</label>
           <input
             type="number"
             name="Can_Entrada"
@@ -275,7 +265,6 @@ const FormEntrada = ({ buttonForm, entrada, onSubmit, onInputChange, formData })
         </Col>
       </Row>
 
-      {/* Fila 6: Fecha de vencimiento */}
       <Row>
         <Col md={6} className="mb-3">
           <label htmlFor="Fec_Vencimiento" className="form-label">Fecha de Vencimiento:</label>
@@ -291,21 +280,51 @@ const FormEntrada = ({ buttonForm, entrada, onSubmit, onInputChange, formData })
         </Col>
       </Row>
 
-      {/* Botón de enviar */}
-      <Button variant="primary" onClick={handleSubmit}>
-        {buttonForm}
-      </Button>
+      <div className="text-center">
+        <Button
+          variant="primary"
+          onClick={handleSubmit}
+        >
+          {buttonForm}
+        </Button>
+      </div>
     </div>
   );
 };
 
-// Proptypes para validar props
 FormEntrada.propTypes = {
   buttonForm: PropTypes.string.isRequired,
-  entrada: PropTypes.object,
+  entrada: PropTypes.shape({
+    Id_Entrada: PropTypes.number,
+    Dcp_Entrada: PropTypes.string,
+    Fec_Entrada: PropTypes.string,
+    Ori_Entrada: PropTypes.string,
+    Des_Entrada: PropTypes.string,
+    Val_Unitario: PropTypes.number,
+    Val_Total: PropTypes.number,
+    Id_Unidad: PropTypes.number,
+    Id_Producto: PropTypes.number,
+    Id_Responsable: PropTypes.number,
+    Can_Entrada: PropTypes.number,
+    Fec_Vencimiento: PropTypes.string,
+  }),
   onSubmit: PropTypes.func.isRequired,
   onInputChange: PropTypes.func.isRequired,
-  formData: PropTypes.object.isRequired,
+  formData: PropTypes.shape({
+    Id_Entrada: PropTypes.number,
+    Dcp_Entrada: PropTypes.string.isRequired,
+    Fec_Entrada: PropTypes.string.isRequired,
+    Ori_Entrada: PropTypes.string.isRequired,
+    Des_Entrada: PropTypes.string.isRequired,
+    Val_Unitario: PropTypes.number.isRequired,
+    Val_Total: PropTypes.number.isRequired,
+    Id_Unidad: PropTypes.number.isRequired,
+    Id_Producto: PropTypes.number.isRequired,
+    Id_Responsable: PropTypes.number.isRequired,
+    Can_Entrada: PropTypes.number.isRequired,
+    Fec_Vencimiento: PropTypes.string.isRequired,
+  }).isRequired,
 };
+
 
 export default FormEntrada;

@@ -11,14 +11,17 @@ const CartModal = ({ children }) => (
       padding: '30px',
       borderRadius: '20px',
       width: '729px',
-      maxWidth: '100%',
+      maxWidth: '400%',
       position: 'relative',
       animation: 'slide-down 0.3s ease-out',
+      maxHeight: '80vh', // Altura máxima para el modal
+      overflowY: 'auto', // Permitir desplazamiento en todo el modal
     }}
   >
     {children}
   </div>
 );
+
 
 const CloseButton = ({ onClick }) => (
   <button
@@ -31,15 +34,16 @@ const CloseButton = ({ onClick }) => (
       border: 'none',
       fontSize: '1.8rem',
       cursor: 'pointer',
-      color: '#ff8c42',
+      color: '#003366', // Cambia el color aquí
       transition: 'color 0.3s ease',
     }}
-    onMouseOver={(e) => (e.currentTarget.style.color = '#ff5200')}
-    onMouseOut={(e) => (e.currentTarget.style.color = '#ff8c42')}
+    onMouseOver={(e) => (e.currentTarget.style.color = '#00509e')} // Color al pasar el mouse
+    onMouseOut={(e) => (e.currentTarget.style.color = '#003366')} // Color al salir el mouse
   >
     &times; {/* Close icon */}
   </button>
 );
+;
 
 const CartTitle = () => (
   <h2
@@ -232,10 +236,63 @@ const Cart = ({ carrito = [], setCarrito }) => {
               <CartItem key={item.Id_Producto}>
                 <ItemTitle title={item.Nom_Producto} />
                 <ItemQuantity quantity={item.Can_Producto} />
-                <div>
-                  <ItemButton onClick={() => disminuirCantidad(item.Id_Producto)}>-</ItemButton>
-                  <ItemButton onClick={() => aumentarCantidad(item.Id_Producto, item.Exi_Producto)}>+</ItemButton>
-                  <ItemButton onClick={() => eliminarDelCarrito(item.Id_Producto)}>Eliminar</ItemButton>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-around',
+                    alignItems: 'center',
+                    gap: '10px', // Espacio entre botones
+                    marginTop: '10px',
+                  }}
+                >
+                  <ItemButton
+                    onClick={() => disminuirCantidad(item.Id_Producto)}
+                    style={{
+                      padding: '10px 15px',
+                      backgroundColor: '#f0ad4e',
+                      color: '#fff',
+                      border: 'none',
+                      borderRadius: '8px',
+                      cursor: 'pointer',
+                      transition: 'background-color 0.3s',
+                    }}
+                    onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#ec971f')}
+                    onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#f0ad4e')}
+                  >
+                    -
+                  </ItemButton>
+                  <ItemButton
+                    onClick={() => aumentarCantidad(item.Id_Producto, item.Exi_Producto)}
+                    style={{
+                      padding: '10px 15px',
+                      backgroundColor: '#5bc0de',
+                      color: '#fff',
+                      border: 'none',
+                      borderRadius: '8px',
+                      cursor: 'pointer',
+                      transition: 'background-color 0.3s',
+                    }}
+                    onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#31b0d5')}
+                    onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#5bc0de')}
+                  >
+                    +
+                  </ItemButton>
+                  <ItemButton
+                    onClick={() => eliminarDelCarrito(item.Id_Producto)}
+                    style={{
+                      padding: '10px 15px',
+                      backgroundColor: '#d9534f',
+                      color: '#fff',
+                      border: 'none',
+                      borderRadius: '8px',
+                      cursor: 'pointer',
+                      transition: 'background-color 0.3s',
+                    }}
+                    onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#c9302c')}
+                    onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#d9534f')}
+                  >
+                    Eliminar
+                  </ItemButton>
                 </div>
               </CartItem>
             ))}

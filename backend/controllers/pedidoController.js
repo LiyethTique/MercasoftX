@@ -1,7 +1,6 @@
 import Pedido from '../models/pedidoModel.js';
 import PedidoProducto from '../models/pedidoProducto.js';
 import Cliente from '../models/clienteModel.js'; // Asegúrate de que la ruta sea correcta
-import Producto from '../models/productoModel.js'; // Asegúrate de que la ruta sea correcta
 import winston from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';
 
@@ -23,12 +22,11 @@ const logger = winston.createLogger({
 
 // Crear un nuevo pedido
 export const createPedido = async (req, res) => {
-    const { Id_Cliente, Id_Producto, Val_Pedido } = req.body;
+    const { Id_Cliente, Val_Pedido } = req.body;
 
     try {
         const pedido = await Pedido.create({
             Id_Cliente,
-            Id_Producto,
             Fec_Pedido: new Date(),
             Est_Pedido: 'Pendiente',
             Val_Pedido,
@@ -54,10 +52,7 @@ export const getAllPedido = async (req, res) => {
                 {
                     model: PedidoProducto, // Incluir productos en el pedido
                     as: 'productos', // Alias para el modelo PedidoProducto
-                    include: {
-                        model: Producto, // Incluir información del producto
-                        as: 'producto' // Alias para el modelo Producto
-                    }
+                  
                 }
             ]
         });
@@ -85,10 +80,7 @@ export const getPedido = async (req, res) => {
                 {
                     model: PedidoProducto, // Incluir productos en el pedido
                     as: 'productos', // Alias para el modelo PedidoProducto
-                    include: {
-                        model: Producto, // Incluir información del producto
-                        as: 'producto' // Alias para el modelo Producto
-                    }
+                  
                 }
             ]
         });
@@ -106,15 +98,26 @@ export const getPedido = async (req, res) => {
 
 // Actualizar un pedido por ID
 export const updatePedido = async (req, res) => {
-    const { Id_Cliente, Id_Producto, Val_Pedido } = req.body;
+    const { Est_Pedido } = req.body; // Solo obtenemos el estado del pedido
+
+    // Validaciones básicas
+    if (typeof Est_Pedido === 'undefined') {
+        return res.status(400).json({ message: 'El campo Est_Pedido es requerido.' });
+    }
 
     try {
+        // Actualizar solo el campo Est_Pedido y updatedAT
         const updated = await Pedido.update(
-            { Id_Cliente, Id_Producto, Val_Pedido, updatedAT: new Date() },
+            { 
+                Est_Pedido, 
+                updatedAT: new Date() // Actualizamos la fecha de modificación
+            },
             { where: { Id_Pedido: req.params.id } }
         );
 
+        // Verificar si la actualización fue exitosa
         if (updated[0]) {
+            // Obtener el pedido actualizado con sus relaciones
             const updatedPedido = await Pedido.findByPk(req.params.id, {
                 include: [
                     {
@@ -124,22 +127,21 @@ export const updatePedido = async (req, res) => {
                     {
                         model: PedidoProducto, // Incluir productos en el pedido
                         as: 'productos', // Alias para el modelo PedidoProducto
-                        include: {
-                            model: Producto, // Incluir información del producto
-                            as: 'producto' // Alias para el modelo Producto
-                        }
                     }
                 ]
             });
-            res.status(200).json({ message: 'Pedido actualizado exitosamente', updatedPedido });
+            res.status(200).json({ message: 'Estado del pedido actualizado exitosamente', updatedPedido });
         } else {
             res.status(404).json({ message: 'Pedido no encontrado' });
         }
     } catch (error) {
-        logger.error(`Error al actualizar pedido: ${error.message}\nStack: ${error.stack}`);
-        res.status(500).json({ message: 'Error interno al actualizar el pedido', error: error.message });
+        // Registrar el error y devolver una respuesta de error
+        logger.error(`Error al actualizar el estado del pedido: ${error.message}\nStack: ${error.stack}`);
+        res.status(500).json({ message: 'Error interno al actualizar el estado del pedido', error: error.message });
     }
 };
+
+
 
 // Eliminar un pedido por ID
 export const deletePedido = async (req, res) => {

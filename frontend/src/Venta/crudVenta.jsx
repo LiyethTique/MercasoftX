@@ -6,6 +6,7 @@ import ModalForm from '../Model/Model';
 import Swal from 'sweetalert2';
 import { Button } from 'react-bootstrap';
 import WriteTable from '../Tabla/Data-Table';
+import { IoTrash, IoPencil } from "react-icons/io5";
 
 const URI = process.env.REACT_APP_SERVER_BACK + '/venta/';
 
@@ -82,6 +83,17 @@ const CrudVenta = () => {
         icon: 'error',
         title: 'Error',
         text: 'No se permiten campos vacíos o que contengan solo espacios.',
+        confirmButtonText: 'Aceptar',
+      });
+      return;
+    }
+
+    // Validación para no permitir valores negativos
+    if (formData.Val_Venta < 0) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'El valor de la venta no puede ser negativo.',
         confirmButtonText: 'Aceptar',
       });
       return;
@@ -190,11 +202,7 @@ const CrudVenta = () => {
           onClick={() => getVenta(venta.Id_Venta)}
           title="Editar"
         >
-          <img
-            src="/pencil-square.svg"
-            alt="Editar"
-            style={{ width: '20px', height: '20px' }}
-          />
+         <IoPencil size={20} color="blue" />
         </a>
         <a
           href="#!"
@@ -202,11 +210,7 @@ const CrudVenta = () => {
           onClick={() => deleteVenta(venta.Id_Venta)}
           title="Borrar"
         >
-          <img
-            src="/trash3.svg"
-            alt="Borrar"
-            style={{ width: '20px', height: '20px' }}
-          />
+            <IoTrash size={20} color="red" />
         </a>
       </div>
     ]);
@@ -242,8 +246,8 @@ const CrudVenta = () => {
             buttonForm={buttonForm}
             venta={venta}
             onSubmit={handleSubmitVenta}
-            onInputChange={handleInputChange}
-            formData={formData} // Pasar formData como prop
+            formData={formData}
+            onInputChange={handleInputChange} // Cambiado aquí
           />
         </ModalForm>
       </div>

@@ -83,7 +83,7 @@ const ClienteForm = ({ setShowForm, setClienteData, carrito }) => {
         const clienteId = responseCliente.data.cliente?.Id_Cliente;
   
         // Crear carrito para cada producto en el localStorage
-        const productosParaPedido = []; // Arreglo para almacenar productos del pedido
+        const productosParaPedido = [];
         for (const item of carrito) {
           const carritoProducto = {
             Id_Producto: item.Id_Producto,
@@ -93,7 +93,7 @@ const ClienteForm = ({ setShowForm, setClienteData, carrito }) => {
   
           console.log('Carrito a enviar:', carritoProducto);
   
-          // Aquí se envía la solicitud para agregar el producto al carrito
+          // Enviar solicitud para agregar el producto al carrito
           const responseCarrito = await axios.post(URI_CARRITO, carritoProducto);
           if (responseCarrito.status !== 201) {
             throw new Error('Error al agregar el producto al carrito');
@@ -103,40 +103,63 @@ const ClienteForm = ({ setShowForm, setClienteData, carrito }) => {
           productosParaPedido.push({
             Id_Producto: item.Id_Producto,
             Can_Producto: item.Can_Producto,
+            Pre_Producto: item.Pre_Producto,
           });
         }
   
-        // Crear el pedido para cada producto en el carrito
+        // Crear el pedido general
+        const nuevoPedido = {
+          Id_Cliente: clienteId,
+          Fec_Pedido: new Date().toISOString(),
+          Est_Pedido: 'Pendiente',
+          Val_Pedido: productosParaPedido.reduce((total, producto) => total + producto.Can_Producto * producto.Pre_Producto, 0),
+        };
+  
+        const responsePedido = await axios.post(URI_PEDIDO, nuevoPedido);
+        if (responsePedido.status !== 201) {
+          throw new Error('Error al crear el pedido');
+        }
+  
+        const pedidoId = responsePedido.data.pedido?.Id_Pedido;
+  
+        // Enviar los productos a la tabla PedidoProducto
         for (const producto of productosParaPedido) {
-          const nuevoPedido = {
-            Id_Cliente: clienteId, // Asegúrate de enviar el Id_Cliente
-            Id_Producto: producto.Id_Producto, // Solo el Id_Producto
-            Fec_Pedido: new Date().toISOString(), // Fecha actual
-            Est_Pedido: 'Pendiente', // Estado del pedido
-            Val_Pedido: producto.Can_Producto * carrito.find(item => item.Id_Producto === producto.Id_Producto).Pre_Producto, // Calcula el total del producto
+          const pedidoProducto = {
+            Id_Pedido: pedidoId,
+            Id_Producto: producto.Id_Producto,
+            Can_Producto: producto.Can_Producto,
           };
-          console.log("id",  producto);
   
-          console.log('Pedido a enviar:', nuevoPedido);
-          
-          const responsePedido = await axios.post(URI_PEDIDO, nuevoPedido);
-          if (responsePedido.status !== 201) {
-            throw new Error('Error al crear el pedido');
+          console.log('PedidoProducto a enviar:', pedidoProducto);
+  
+          // Enviar la solicitud para agregar el producto a la tabla PedidoProducto
+          const responsePedidoProducto = await axios.post(URI_PEDIDO_PRODUCTO, pedidoProducto);
+          if (responsePedidoProducto.status !== 201) {
+            throw new Error('Error al agregar el producto a la tabla PedidoProducto');
           }
-        
-          Swal.fire({
-            title: 'Información Enviada Exitosamente',
-            text: 'Su pedido llegará pronto',
-            icon: 'success',
-          });
-          setShowForm(false);
         }
+  
+        Swal.fire({
+          title: 'Pedido Confirmado Exitasomente',
+          text: 'Su pedido llegará pronto...',
+          icon: 'success',
+        }).then(() => {
+          // Vaciar el localStorage y redirigir a la página principal al cerrar la alerta
+          localStorage.clear();
+          window.location.replace('/');
+        });
       }
     } catch (error) {
       Swal.fire('Error', 'Hubo un problema al registrar el cliente o los productos del carrito.');
       console.error('Error al agregar al carrito:', error);
+    } finally {
+      // Aseguramos que el formulario se cierre, tanto si hubo éxito o error
+      setShowForm(false);
     }
   };
+  
+  
+  
 
   // Estilos en línea
   const modalOverlayStyle = {
@@ -173,7 +196,11 @@ const ClienteForm = ({ setShowForm, setClienteData, carrito }) => {
     cursor: 'pointer',
     color: '#ff8c42',
     transition: 'color 0.3s ease',
+    pointerEvents: 'auto', // Asegúrate de que se puedan registrar los eventos de clic
   };
+  
+  // Resto del código...
+  
 
   const formStyle = {
     display: 'flex',
@@ -265,7 +292,8 @@ const ClienteForm = ({ setShowForm, setClienteData, carrito }) => {
           <input
             type="text"
             name="Dir_Cliente"
-            placeholder="Dirección"
+            placeholder="Dependencia del Centro"
+            title='Lugar donde te encuentres, solo se hacen envios dentro del Centro Agropecuario la Granja SENA'
             value={cliente.Dir_Cliente}
             onChange={handleChange}
             style={inputStyle}
@@ -288,7 +316,7 @@ const ClienteForm = ({ setShowForm, setClienteData, carrito }) => {
           </select>
           {formErrors.Tip_Cliente && <p style={errorMessageStyle}>{formErrors.Tip_Cliente}</p>}
 
-          <button type="submit" style={buttonStyle}>Enviar</button>
+          <button type="submit" style={buttonStyle} >Enviar</button>
         </form>
       </div>
     </div>

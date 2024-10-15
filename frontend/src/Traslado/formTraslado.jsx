@@ -6,19 +6,27 @@ import axios from 'axios';
 
 const URI_RESPONSABLE = process.env.REACT_APP_SERVER_BACK + '/responsable';
 const URI_PRODUCTO = process.env.REACT_APP_SERVER_BACK + '/producto';
-const URI_UBICACION = process.env.REACT_APP_SERVER_BACK + '/ubicacion'; // Asume que hay una API para ubicaciones
+
+// Opciones de unidad de medida (añade las unidades que necesites)
+const UNIDADES_DE_MEDIDA = [
+  { id: 'kg', nombre: 'Kilogramos' },
+  { id: 'g', nombre: 'Gramos' },
+  { id: 'l', nombre: 'Litros' },
+  { id: 'ml', nombre: 'Mililitros' },
+  { id: 'unidad', nombre: 'Unidades' },
+  // Agrega más unidades según sea necesario
+];
 
 const FormTraslado = ({ buttonForm, traslado, onSubmit, onInputChange, formData }) => {
   const [errors, setErrors] = useState({});
   const [responsable, setResponsables] = useState([]);
   const [producto, setProductos] = useState([]);
-  const [ubicacion, setUbicaciones] = useState([]); // Para las ubicaciones de origen y destino
-
-  const token = localStorage.getItem('token'); // Obtener el token una vez
 
   useEffect(() => {
     setErrors({});
   }, [traslado, formData]);
+
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
     const fetchResponsable = async () => {
@@ -47,34 +55,22 @@ const FormTraslado = ({ buttonForm, traslado, onSubmit, onInputChange, formData 
       }
     };
 
-    const fetchUbicacion = async () => {
-      try {
-        const response = await axios.get(URI_UBICACION, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setUbicaciones(response.data);
-      } catch (error) {
-        console.error('Error al obtener ubicaciones:', error);
-      }
-    };
-
     fetchResponsable();
     fetchProducto();
-    fetchUbicacion();
-  }, [token]);
+  }, []);
 
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.Fec_Traslado) newErrors.Fec_Traslado = 'Ingrese la fecha del traslado.';
-    if (!formData.Ori_Traslado) newErrors.Ori_Traslado = 'Ingrese la ubicación de origen.';
-    if (!formData.Des_Traslado) newErrors.Des_Traslado = 'Ingrese la ubicación de destino.';
+    if (!formData.Fec_Traslado) newErrors.Fec_Traslado = 'Ingrese la fecha de traslado.';
+    if (!formData.Dcp_Traslado) newErrors.Dcp_Traslado = 'Ingrese la descripción del traslado.';
+    if (!formData.Ori_Traslado) newErrors.Ori_Traslado = 'Ingrese el origen del traslado.';
+    if (!formData.Des_Traslado) newErrors.Des_Traslado = 'Ingrese el destino del traslado.';
+    if (!formData.Uni_DeMedida) newErrors.Uni_DeMedida = 'Ingrese la unidad de medida.';
     if (!formData.Id_Producto) newErrors.Id_Producto = 'Seleccione un producto.';
     if (!formData.Can_Producto || formData.Can_Producto <= 0) newErrors.Can_Producto = 'Ingrese una cantidad válida.';
-    if (!formData.Id_Responsable) newErrors.Id_Responsable = 'Seleccione un responsable.';
     if (!formData.Val_Unitario || formData.Val_Unitario <= 0) newErrors.Val_Unitario = 'Ingrese un valor unitario válido.';
-    if (!formData.Uni_DeMedida.trim()) newErrors.Uni_DeMedida = 'Ingrese una unidad de medida válida.';
+    if (!formData.Id_Responsable) newErrors.Id_Responsable = 'Seleccione un responsable.';
+
     return newErrors;
   };
 
@@ -87,6 +83,9 @@ const FormTraslado = ({ buttonForm, traslado, onSubmit, onInputChange, formData 
 
     try {
       await onSubmit();
+      if (buttonForm !== 'Actualizar') {
+        // Reseteo de los campos de entrada aquí si es necesario
+      }
     } catch (error) {
       console.error('Error al guardar el traslado:', error);
       Swal.fire({
@@ -102,7 +101,7 @@ const FormTraslado = ({ buttonForm, traslado, onSubmit, onInputChange, formData 
     <div className="form-traslado">
       <Row>
         <Col md={6} className="mb-3">
-          <label htmlFor="Fec_Traslado" className="form-label">Fecha del Traslado:</label>
+          <label htmlFor="Fec_Traslado" className="form-label">Fecha de Traslado:</label>
           <input
             type="date"
             name="Fec_Traslado"
@@ -115,7 +114,7 @@ const FormTraslado = ({ buttonForm, traslado, onSubmit, onInputChange, formData 
         </Col>
 
         <Col md={6} className="mb-3">
-          <label htmlFor="Dcp_Traslado" className="form-label">Descripción:</label>
+          <label htmlFor="Dcp_Traslado" className="form-label">Descripción del Traslado:</label>
           <input
             type="text"
             name="Dcp_Traslado"
@@ -158,6 +157,25 @@ const FormTraslado = ({ buttonForm, traslado, onSubmit, onInputChange, formData 
 
       <Row>
         <Col md={6} className="mb-3">
+          <label htmlFor="Uni_DeMedida" className="form-label">Unidad de Medida:</label>
+          <select
+            name="Uni_DeMedida"
+            id="Uni_DeMedida"
+            className={`form-control ${errors.Uni_DeMedida ? 'is-invalid' : ''}`}
+            value={formData.Uni_DeMedida}
+            onChange={onInputChange}
+          >
+            <option value="">Seleccione una unidad de medida</option>
+            {UNIDADES_DE_MEDIDA.map((unidad) => (
+              <option key={unidad.id} value={unidad.id}>
+                {unidad.nombre}
+              </option>
+            ))}
+          </select>
+          {errors.Uni_DeMedida && <div className="invalid-feedback">{errors.Uni_DeMedida}</div>}
+        </Col>
+
+        <Col md={6} className="mb-3">
           <label htmlFor="Id_Producto" className="form-label">Producto:</label>
           <select
             name="Id_Producto"
@@ -166,18 +184,20 @@ const FormTraslado = ({ buttonForm, traslado, onSubmit, onInputChange, formData 
             value={formData.Id_Producto}
             onChange={onInputChange}
           >
-            <option value="">Seleccione el producto</option>
-            {producto.map((prod) => (
-              <option key={prod.Id_Producto} value={prod.Id_Producto}>
-                {prod.Nom_Producto}
+            <option value="">Seleccione un producto</option>
+            {producto.map((producto) => (
+              <option key={producto.Id_Producto} value={producto.Id_Producto}>
+                {producto.Nom_Producto}
               </option>
             ))}
           </select>
           {errors.Id_Producto && <div className="invalid-feedback">{errors.Id_Producto}</div>}
         </Col>
+      </Row>
 
+      <Row>
         <Col md={6} className="mb-3">
-          <label htmlFor="Can_Producto" className="form-label">Cantidad de Producto:</label>
+          <label htmlFor="Can_Producto" className="form-label">Cantidad del Producto:</label>
           <input
             type="number"
             name="Can_Producto"
@@ -187,21 +207,6 @@ const FormTraslado = ({ buttonForm, traslado, onSubmit, onInputChange, formData 
             onChange={onInputChange}
           />
           {errors.Can_Producto && <div className="invalid-feedback">{errors.Can_Producto}</div>}
-        </Col>
-      </Row>
-
-      <Row>
-        <Col md={6} className="mb-3">
-          <label htmlFor="Uni_DeMedida" className="form-label">Unidad de Medida:</label>
-          <input
-            type="text"
-            name="Uni_DeMedida"
-            id="Uni_DeMedida"
-            className={`form-control ${errors.Uni_DeMedida ? 'is-invalid' : ''}`}
-            value={formData.Uni_DeMedida}
-            onChange={onInputChange}
-          />
-          {errors.Uni_DeMedida && <div className="invalid-feedback">{errors.Uni_DeMedida}</div>}
         </Col>
 
         <Col md={6} className="mb-3">
@@ -229,7 +234,7 @@ const FormTraslado = ({ buttonForm, traslado, onSubmit, onInputChange, formData 
             value={formData.Id_Responsable}
             onChange={onInputChange}
           >
-            <option value="">Seleccione el responsable</option>
+            <option value="">Seleccione un responsable</option>
             {responsable.map((resp) => (
               <option key={resp.Id_Responsable} value={resp.Id_Responsable}>
                 {resp.Nom_Responsable}
@@ -240,7 +245,7 @@ const FormTraslado = ({ buttonForm, traslado, onSubmit, onInputChange, formData 
         </Col>
       </Row>
 
-      <Button onClick={handleSubmit} className="btn btn-primary">
+      <Button variant="primary" onClick={handleSubmit}>
         {buttonForm}
       </Button>
     </div>

@@ -104,6 +104,32 @@ export const getProductosEnPedido = async (req, res) => {
     }
 };
 
+export const getAllProductosPedido = async (req, res) => {
+    try {
+        // Obtener todos los productos relacionados con un pedido específico
+        const productos = await PedidoProducto.findAll({
+            where: { Id_Pedido: req.params.id },
+            include: [
+                {
+                    model: Producto,
+                    as: 'producto', // Alias para Producto
+                    attributes: ['Nom_Producto', 'Pre_Producto', 'Exi_Producto', 'Car_Producto', 'Ima_Producto'] // Ajustar los campos que necesitas
+                }
+            ]
+        });
+
+        // Verificar si existen productos en el pedido
+        if (productos.length > 0) {
+            res.status(200).json(productos);
+        } else {
+            res.status(404).json({ message: 'No hay productos en este pedido' });
+        }
+    } catch (error) {
+        logger.error(`Error al obtener productos en pedido: ${error.message}\nStack: ${error.stack}`);
+        res.status(500).json({ message: 'Error interno al obtener productos en el pedido', error: error.message });
+    }
+};
+
 // Eliminar un producto de un pedido
 export const eliminarProductoDePedido = async (req, res) => {
     try {

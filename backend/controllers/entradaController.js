@@ -1,30 +1,66 @@
 import EntradaModel from "../models/entradaModel.js";
 import logger from "../logs/logger.js";
 import { Sequelize } from "sequelize";
+import { Responsable, Producto, Unidad } from '../app.js';
 
 // Mostrar todos los registros
 export const getAllEntradas = async (req, res, next) => {
     try {
-        const entradas = await EntradaModel.findAll();
+        const entradas = await EntradaModel.findAll({
+            include: [
+                {
+                    model: Unidad,
+                    as: 'unidad'
+                },
+                {
+                    model: Producto,
+                    as: 'producto'
+                },
+                {
+                    model: Responsable,
+                    as: 'responsable'
+                }
+            ]
+        });
+
         logger.info('Todas las entradas recuperadas');
         console.log(entradas);
-        if (entradas.length > 0) {
-            res.status(200).json(entradas);
-            return;
-        }
-        res.status(400).json({ message: "No existen Entradas" });
+
+        // Returning an empty array if no entries are found
+        res.status(200).json(entradas.length > 0 ? entradas : []);
     } catch (error) {
-        console.log(error);
+        console.error(error); // Use console.error for errors
         res.status(500).json({ message: error.message });
         logger.error(`Error al recuperar todas las entradas: ${error.message}`);
         next(error);
     }
 };
 
+
 // Mostrar un registro
 export const getEntrada = async (req, res, next) => {
     try {
-        const entrada = await EntradaModel.findByPk(req.params.id);
+        const entrada = await EntradaModel.findByPk(req.params.id, {
+            include: [
+                {
+                    model: Unidad,
+                    as: 'unidad'
+                }
+            ],
+            include: [
+                {
+                    model: Producto,
+                    as: 'producto'
+                }
+            ],
+            include: [
+                {
+                    model: Responsable,
+                    as: 'responsable'
+                }
+            ]
+
+        });
         if (entrada) {
             logger.info(`Entrada recuperada: ${entrada.Id_Entrada}`);
             res.status(200).json(entrada);

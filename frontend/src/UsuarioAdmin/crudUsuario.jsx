@@ -14,6 +14,7 @@ const CrudUsuario = () => {
   const [buttonForm, setButtonForm] = useState('Enviar');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [usuario, setUsuario] = useState(null);
+  const moduleName = "Gestionar Usuarios"
 
   const token = localStorage.getItem('token'); // Obtener el token una vez
 
@@ -153,7 +154,7 @@ const CrudUsuario = () => {
       <Sidebar />
       <div className="container mt-4">
         <center>
-          <h1>Gestionar Usuarios</h1>
+          <h1>{moduleName}</h1>
         </center>
         
         <div className="d-flex justify-content-between mb-3">
@@ -179,7 +180,7 @@ const CrudUsuario = () => {
           </a>
         </div>
 
-        <WriteTable titles={titles} data={data} />
+        <WriteTable titles={titles} data={data} moduleName={moduleName} />
 
         <ModalForm
           isOpen={isModalOpen}

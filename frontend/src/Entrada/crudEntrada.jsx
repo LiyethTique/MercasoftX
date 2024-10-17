@@ -62,14 +62,14 @@ const CrudEntrada = () => {
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-  
+
     // Verifica que name corresponda a los campos correctos del formData
     setFormData(prevState => ({
       ...prevState,
       [name]: value.trim(),  // Asegúrate de eliminar espacios en blanco no deseados
     }));
   };
-  
+
 
   const hasChanges = (data) => {
     return Object.keys(data).some(key =>
@@ -184,6 +184,10 @@ const CrudEntrada = () => {
     setIsModalOpen(true);
   };
 
+  const formatNumber = (value) => {
+    return new Intl.NumberFormat('es-CO').format(value);
+  };
+
   const titles = ['ID', 'Descripción', 'Fecha Entrada', 'Origen', 'Destino', 'Val Unitario', 'Val Total', 'Unidad', 'Producto', 'Responsable', 'Cantidad', 'Fec Vencimiento', 'Acciones'];
   const data = entradaList.length === 0
     ? [[
@@ -195,8 +199,8 @@ const CrudEntrada = () => {
       entradaItem.Fec_Entrada,
       entradaItem.Ori_Entrada,
       entradaItem.Des_Entrada,
-      entradaItem.Val_Unitario,
-      entradaItem.Val_Total,
+      formatNumber(pedido.Val_Unitario),
+      formatNumber(pedido.Val_Total),
       entradaItem.Id_Unidad,
       entradaItem.Id_Producto,
       entradaItem.Id_Responsable,

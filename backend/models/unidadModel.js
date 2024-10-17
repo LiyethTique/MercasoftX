@@ -7,7 +7,6 @@ const Unidad = db.define('unidad', {
     Id_Unidad: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
     },
     Id_Area: {
         type: DataTypes.INTEGER,

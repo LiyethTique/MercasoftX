@@ -6,11 +6,6 @@
     "auditLog": "logs\\.4b1ccf24c7e641550f0275e98c8a00a9e29d88be-audit.json",
     "files": [
         {
-            "date": 1727783944553,
-            "name": "logs\\entrada-2024-10-01.log",
-            "hash": "ddfe3f390e0b2c8bbef2f5147df2989effccb603b11b7552733e6eba8549aeef"
-        },
-        {
             "date": 1727973985835,
             "name": "logs\\entrada-2024-10-03.log",
             "hash": "8c3a71c71c1c6a428ac8c1e99e02864a9b47e8ba9b37edf07ec8c490bda9d0ac"
@@ -74,6 +69,16 @@
             "date": 1728970994785,
             "name": "logs\\entrada-2024-10-15.log",
             "hash": "49859548c911d00328cb1cf43ab572e497ba7e1d2d14043fac2444167589b069"
+        },
+        {
+            "date": 1729130594386,
+            "name": "logs\\entrada-2024-10-16.log",
+            "hash": "ca2bba8a54028391386b881cb6047c796fd517546068e26bc11a7ea7bf11beb2"
+        },
+        {
+            "date": 1729143192169,
+            "name": "logs\\entrada-2024-10-17.log",
+            "hash": "1a3f8e5084fe18601c5141834ff94e29d4bd901dd2784e64ee5374b805c20d1c"
         }
     ],
     "hashType": "sha256"

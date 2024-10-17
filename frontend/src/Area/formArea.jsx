@@ -21,6 +21,22 @@ const FormArea = ({ formData, onInputChange, onSubmit, buttonForm, errors }) => 
 
   return (
     <>
+      {/* Campo para Id_Area */}
+      <div className="mb-3">
+        <label htmlFor="Id_Area" className="form-label">ID del Área</label>
+        <input
+          type="number"
+          id="Id_Area"
+          name="Id_Area"
+          value={formData.Id_Area || ''}
+          onChange={onInputChange}
+          className={`form-control ${errors.Id_Area ? 'is-invalid' : ''}`}
+          required
+        />
+        {errors.Id_Area && <div className="invalid-feedback">{errors.Id_Area}</div>}
+      </div>
+
+      {/* Campo para Nom_Area */}
       <div className="mb-3">
         <label htmlFor="Nom_Area" className="form-label">Nombre del Área</label>
         <div className={`select-container ${errors.Nom_Area ? 'is-invalid' : ''}`} onClick={() => setIsOpen(!isOpen)}>
@@ -44,6 +60,7 @@ const FormArea = ({ formData, onInputChange, onSubmit, buttonForm, errors }) => 
         </div>
         {errors.Nom_Area && <div className="invalid-feedback">{errors.Nom_Area}</div>}
       </div>
+
       <div className="text-center">
         <Button variant="primary" onClick={onSubmit}>
           {buttonForm}

@@ -15,12 +15,10 @@ const NavPub = ({ cartItemCount, carrito, setCarrito }) => {
         setIsCartVisible(false);
     };
 
-    // Define los estilos directamente en JSX
     const navStyle = {
         backgroundColor: '#343a40',
-     // Ocupa todo el ancho
-        height: '68px', // Altura de la barra de navegación
-        width: "1100px",
+        height: '68px',
+        width: "100%",
     };
 
     const linkStyle = {
@@ -53,8 +51,16 @@ const NavPub = ({ cartItemCount, carrito, setCarrito }) => {
                     <Link className="navbar-brand" to="/" style={linkStyle}>
                         <img src="/Logo-Icono.svg" alt="Logo" style={{ height: '70px', marginLeft: '15px' }} />
                     </Link>
-                    
-                    <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+
+                    <button
+                        className="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarNav"
+                        aria-controls="navbarNav"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation"
+                    >
                         <span className="navbar-toggler-icon" style={{ backgroundColor: '#fff' }}></span>
                     </button>
 
@@ -66,28 +72,30 @@ const NavPub = ({ cartItemCount, carrito, setCarrito }) => {
                                 </Link>
                             </li>
                             <li className="nav-item">
-                                <div style={{ position: 'relative' }} onClick={toggleCartVisibility}>
-                                    <FontAwesomeIcon icon={faShoppingCart} style={iconStyle} title="Carrito de compras" />
+                                <Link
+                                    className="nav-link"
+                                    to="#"
+                                    onClick={toggleCartVisibility}
+                                    style={{ ...linkStyle, position: 'relative' }}
+                                    title="Carrito de compras"
+                                >
+                                    <FontAwesomeIcon icon={faShoppingCart} style={iconStyle} />
                                     {cartItemCount > 0 && (
-                                        <span style={badgeStyle}>
-                                            {cartItemCount}
-                                        </span>
+                                        <span style={badgeStyle}>{cartItemCount}</span>
                                     )}
-                                </div>
+                                </Link>
                             </li>
                             <li className="nav-item">
                                 <Link
                                     className="nav-link"
                                     to="/login"
                                     style={linkStyle}
-                                    onMouseOver={(e) => e.currentTarget.style.color = '#ddd'}
-                                    onMouseOut={(e) => e.currentTarget.style.color = '#fff'}
-                                    title="Iniciar Sesion"
+                                    title="Iniciar Sesión"
                                 >
-                                    <FontAwesomeIcon 
-                                        icon={faSignInAlt} 
-                                        className="me-2" 
-                                        style={{ fontSize: '1.8rem' }} 
+                                    <FontAwesomeIcon
+                                        icon={faSignInAlt}
+                                        className="me-2"
+                                        style={{ fontSize: '1.8rem' }}
                                     />
                                 </Link>
                             </li>
@@ -107,6 +115,6 @@ const NavPub = ({ cartItemCount, carrito, setCarrito }) => {
             )}
         </React.Fragment>
     );
-}
+};
 
 export default NavPub;

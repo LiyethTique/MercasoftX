@@ -156,6 +156,10 @@ const CrudProducto = () => {
     setIsModalOpen(true);
   };
 
+  const formatNumber = (value) => {
+    return new Intl.NumberFormat('es-CO').format(value);
+  };
+
   const titles = ['ID', 'Nombre', 'Características', 'Existencias', 'Imagen', 'Fecha de Vencimiento', 'Nombre de Unidad', 'Unidad de Medida', 'Precio', 'Acciones'];
   const data = productoList.length === 0
     ? [[
@@ -175,7 +179,7 @@ const CrudProducto = () => {
         productoItem.Fec_Vencimiento,
         productoItem.unidad.Nom_Unidad,
         productoItem.Uni_DeMedida,
-        productoItem.Pre_Producto,
+        formatNumber(productoItem.Pre_Producto),
         <div key={productoItem.Id_Producto} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <a
             href="#!"

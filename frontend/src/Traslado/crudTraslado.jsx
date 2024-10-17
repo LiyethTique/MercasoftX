@@ -30,11 +30,11 @@ const CrudTraslado = () => {
           }
         });
         if (Array.isArray(respuesta.data)) {
-        setTrasladoList(respuesta.data);
-      } else {
-        console.error("Formato de respuesta inesperado:", respuesta.data);
-        setTrasladoList([]);
-      }
+          setTrasladoList(respuesta.data);
+        } else {
+          console.error("Formato de respuesta inesperado:", respuesta.data);
+          setTrasladoList([]);
+        }
 
       } catch (error) {
         console.error("Error al obtener traslados:", error);
@@ -148,45 +148,45 @@ const CrudTraslado = () => {
 
   // Eliminar un traslado
   // Eliminar un traslado
-const deleteTraslado = async (Id_Traslado) => {
-  Swal.fire({
-    title: "¿Estás seguro de borrar este registro?",
-    text: "¡No podrás revertir esto!",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
-    confirmButtonText: "Sí, borrar!",
-    cancelButtonText: "Cancelar"
-  }).then(async (result) => {
-    if (result.isConfirmed) {
-      try {
-        await axios.delete(`${URI}${Id_Traslado}`, {
-          headers: {
-            Authorization: `Bearer ${token}`, // Añadir el token a la solicitud
-          }
-        });
+  const deleteTraslado = async (Id_Traslado) => {
+    Swal.fire({
+      title: "¿Estás seguro de borrar este registro?",
+      text: "¡No podrás revertir esto!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, borrar!",
+      cancelButtonText: "Cancelar"
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await axios.delete(`${URI}${Id_Traslado}`, {
+            headers: {
+              Authorization: `Bearer ${token}`, // Añadir el token a la solicitud
+            }
+          });
 
-        Swal.fire({
-          icon: "success",
-          title: "¡Borrado!",
-          text: "El traslado ha sido borrado.",
-          confirmButtonText: "Aceptar",
-        });
+          Swal.fire({
+            icon: "success",
+            title: "¡Borrado!",
+            text: "El traslado ha sido borrado.",
+            confirmButtonText: "Aceptar",
+          });
 
-        // Actualizar la lista de traslados
-        const respuesta = await axios.get(URI, {
-          headers: {
-            Authorization: `Bearer ${token}` // Añadir el token a la solicitud
-          }
-        });
-        setTrasladoList(Array.isArray(respuesta.data) ? respuesta.data : []);
-      } catch (error) {
-        Swal.fire("Error", error.response?.data?.message || "Error al eliminar el traslado", "error");
+          // Actualizar la lista de traslados
+          const respuesta = await axios.get(URI, {
+            headers: {
+              Authorization: `Bearer ${token}` // Añadir el token a la solicitud
+            }
+          });
+          setTrasladoList(Array.isArray(respuesta.data) ? respuesta.data : []);
+        } catch (error) {
+          Swal.fire("Error", error.response?.data?.message || "Error al eliminar el traslado", "error");
+        }
       }
-    }
-  });
-};
+    });
+  };
 
 
   // Mostrar el formulario para registrar un nuevo traslado
@@ -195,6 +195,10 @@ const deleteTraslado = async (Id_Traslado) => {
     setTraslado(null);
     setFormData({}); // Reiniciar el estado del formulario
     setIsModalOpen(true);
+  };
+
+  const formatNumber = (value) => {
+    return new Intl.NumberFormat('es-CO').format(value);
   };
 
   // Títulos de las columnas de la tabla
@@ -213,7 +217,7 @@ const deleteTraslado = async (Id_Traslado) => {
       trasladoItem.Des_Traslado,
       trasladoItem.producto.Nom_Producto,
       trasladoItem.Can_Producto,
-      trasladoItem.Val_Unitario,
+      formatNumber(trasladoItem.Val_Unitario),
       trasladoItem.responsable.Nom_Responsable,
       <div key={trasladoItem.Id_Traslado} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
         <a
@@ -257,7 +261,7 @@ const deleteTraslado = async (Id_Traslado) => {
           </Button>
         </div>
 
-        <WriteTable titles={titles} data={data} moduleName={moduleName}/>
+        <WriteTable titles={titles} data={data} moduleName={moduleName} />
 
         <ModalForm
           isOpen={isModalOpen}
@@ -271,7 +275,7 @@ const deleteTraslado = async (Id_Traslado) => {
             onInputChange={handleInputChange}
             formData={formData} // Pasar formData como prop
           />
-         
+
         </ModalForm>
       </div>
     </>

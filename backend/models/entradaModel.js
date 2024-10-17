@@ -12,7 +12,7 @@ const EntradaModel = db.define('entrada', {
         autoIncrement: true
     },
     Dcp_Entrada: {
-        type: DataTypes.STRING(10),
+        type: DataTypes.STRING(100),
         allowNull: false
     },
     Fec_Entrada: {

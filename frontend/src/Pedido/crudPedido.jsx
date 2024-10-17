@@ -13,7 +13,7 @@ const token = localStorage.getItem('token'); // Obtener el token una vez
 const URI = process.env.REACT_APP_SERVER_BACK + '/pedido/';
 const URI_PRODUCTOS = process.env.REACT_APP_SERVER_BACK + '/pedidoProducto/';
 const URI_DETALLE_PRODUCTO = process.env.REACT_APP_SERVER_BACK + '/producto/';
-const URI_CLIENTES = process.env.REACT_APP_SERVER_BACK + '/cliente/'; 
+const URI_CLIENTES = process.env.REACT_APP_SERVER_BACK + '/cliente/';
 
 const CrudPedido = () => {
   const [pedidoList, setPedidoList] = useState([]);
@@ -21,7 +21,7 @@ const CrudPedido = () => {
   const [buttonForm, setButtonForm] = useState('Enviar');
   const [pedido, setPedido] = useState(null);
   const [Idpedido, setIdpedido] = useState(null);
-  const moduleName = "Gestionar Pedidos"; 
+  const moduleName = "Gestionar Pedidos";
 
   useEffect(() => {
     getAllPedidos();
@@ -44,7 +44,7 @@ const CrudPedido = () => {
   const getClienteById = async (id) => {
     try {
       const response = await axios.get(`${URI_CLIENTES}${id}`);
-      return response.data; 
+      return response.data;
     } catch (error) {
       console.error(`Error fetching cliente with id ${id}:`, error);
       return { Nom_Cliente: 'Desconocido', Dir_Cliente: 'No disponible' };
@@ -65,20 +65,20 @@ const CrudPedido = () => {
   };
 
   const handleShowForm = () => {
-    setPedido(null); 
-    setButtonForm('Enviar'); 
-    setIsModalOpen(true); 
+    setPedido(null);
+    setButtonForm('Enviar');
+    setIsModalOpen(true);
   };
 
   const hasSpaces = (data) => {
     // Verifica si hay algún campo en el objeto 'data' que esté vacío o contenga solo espacios.
     return Object.values(data).some(value => typeof value === 'string' && value.trim().length === 0);
   };
-  
+
   const hasChanges = (pedidoData) => {
     // Asegúrate de que 'pedido' sea la variable que contiene el pedido existente.
     if (!pedido) return true; // Si no hay un pedido existente, consideramos que hay cambios
-  
+
     // Comparamos cada campo del pedidoData con el pedido existente
     return (
       pedidoData.Fec_Pedido !== pedido.Fec_Pedido ||
@@ -86,49 +86,49 @@ const CrudPedido = () => {
       pedidoData.Val_Pedido !== pedido.Val_Pedido
     );
   };
-  
-  
+
+
 
   const handleSubmitPedido = async (pedidoData) => {
     console.log("Datos del pedido:", pedidoData); // Para depuración
     if (hasSpaces(pedidoData)) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'No se permiten campos vacíos o que contengan solo espacios.',
-            confirmButtonText: 'Aceptar',
-        });
-        return;
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se permiten campos vacíos o que contengan solo espacios.',
+        confirmButtonText: 'Aceptar',
+      });
+      return;
     }
 
     if (buttonForm === 'Actualizar' && !hasChanges(pedidoData)) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Sin cambios',
-            text: 'Debes realizar cambios en al menos un campo para actualizar.',
-            confirmButtonText: 'Aceptar',
-        });
-        return;
+      Swal.fire({
+        icon: 'warning',
+        title: 'Sin cambios',
+        text: 'Debes realizar cambios en al menos un campo para actualizar.',
+        confirmButtonText: 'Aceptar',
+      });
+      return;
     }
 
     try {
       console.log("pedidoData: ", pedidoData)
       console.log("pedidoData: ", Idpedido)
-        const url = buttonForm === 'Actualizar' ? `${URI}${Idpedido}` : URI;
-        const headers = {
-            headers: {
-                Authorization: `Bearer ${token}` // Asegurarse de enviar el token de autorización
-            }
-        };
-        const res = await (buttonForm === 'Actualizar' ? axios.put(url, pedidoData, headers) : axios.post(URI, pedidoData, headers));
-        console.log(res);
-        Swal.fire("Éxito", `Pedido ${buttonForm === 'Actualizar' ? 'actualizado' : 'creado'} correctamente`, "success");
-        setIsModalOpen(false);
-        getAllPedidos();
+      const url = buttonForm === 'Actualizar' ? `${URI}${Idpedido}` : URI;
+      const headers = {
+        headers: {
+          Authorization: `Bearer ${token}` // Asegurarse de enviar el token de autorización
+        }
+      };
+      const res = await (buttonForm === 'Actualizar' ? axios.put(url, pedidoData, headers) : axios.post(URI, pedidoData, headers));
+      console.log(res);
+      Swal.fire("Éxito", `Pedido ${buttonForm === 'Actualizar' ? 'actualizado' : 'creado'} correctamente`, "success");
+      setIsModalOpen(false);
+      getAllPedidos();
     } catch (error) {
-        handleError(error, "No se pudo enviar el pedido. Asegúrate de que todos los campos estén correctos y prueba de nuevo.");
+      handleError(error, "No se pudo enviar el pedido. Asegúrate de que todos los campos estén correctos y prueba de nuevo.");
     }
-};
+  };
 
 
   const getPedido = async (id) => {
@@ -174,6 +174,11 @@ const CrudPedido = () => {
     Swal.fire("Error", errorMessage, "error");
   };
 
+  // Función para formatear el valor con comas (separador de miles)
+  const formatNumber = (value) => {
+    return new Intl.NumberFormat('es-CO').format(value);
+  };
+
   const titles = ['Código', 'Fecha', 'Nombre del Cliente', 'Lugar de entrega', 'Estado', 'Valor', 'Acciones', 'Productos Pedidos'];
 
   const data = pedidoList.map(pedido => [
@@ -182,7 +187,7 @@ const CrudPedido = () => {
     pedido.Nom_Cliente,
     pedido.Dir_Cliente,
     pedido.Est_Pedido,
-    pedido.Val_Pedido,
+    formatNumber(pedido.Val_Pedido), // Aplica el formato aquí
     <div key={pedido.Id_Pedido} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
       <a
         href="#!"
@@ -227,7 +232,7 @@ const CrudPedido = () => {
           <h1>{moduleName}</h1>
         </center>
         <div className="d-flex justify-content-between mb-3">
-          
+
         </div>
 
         <WriteTable titles={titles} data={data} moduleName={moduleName} />

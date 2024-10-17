@@ -5,7 +5,6 @@ const Area = db.define('area', {
     Id_Area: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
     },
     Nom_Area: {
         type: DataTypes.STRING(100),

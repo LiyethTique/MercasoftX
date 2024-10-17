@@ -25,7 +25,7 @@ const Pedido = db.define('pedido', {
         allowNull: false,
     },
     Val_Pedido: {
-        type: DataTypes.DECIMAL(10, 2),
+        type: DataTypes.INTEGER,
         allowNull: false,
     },
     createdAT: {

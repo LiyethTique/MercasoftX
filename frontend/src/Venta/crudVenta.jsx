@@ -185,13 +185,17 @@ const CrudVenta = () => {
     setIsModalOpen(true);
   };
 
+  const formatNumber = (value) => {
+    return new Intl.NumberFormat('es-CO').format(value);
+  };
+
   const titles = ['Código Venta', 'Fecha Venta', 'Valor Venta', 'Tipo Cliente', 'Pedido', 'Producto', 'Acciones'];
   const data = ventaList.length === 0
     ? [['', '', '', '', '', '', '']]
     : ventaList.map(venta => [
       venta.Id_Venta,
       venta.Fec_Venta,
-      venta.Val_Venta,
+      formatNumber(venta.Val_Venta),
       venta.Tip_Cliente,
       venta.Id_Pedido,
       venta.producto.Nom_Producto,
@@ -202,7 +206,7 @@ const CrudVenta = () => {
           onClick={() => getVenta(venta.Id_Venta)}
           title="Editar"
         >
-         <IoPencil size={20} color="blue" />
+          <IoPencil size={20} color="blue" />
         </a>
         <a
           href="#!"
@@ -210,7 +214,7 @@ const CrudVenta = () => {
           onClick={() => deleteVenta(venta.Id_Venta)}
           title="Borrar"
         >
-            <IoTrash size={20} color="red" />
+          <IoTrash size={20} color="red" />
         </a>
       </div>
     ]);

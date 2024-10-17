@@ -176,7 +176,7 @@ const CrudCliente = () => {
     setIsModalOpen(true);
   };
 
-  const titles = ['Código Cliente', 'Nombre', 'Email', 'Teléfono'];
+  const titles = ['Código Cliente', 'Nombre', 'Email', 'Teléfono', 'Tipo de Cliente'];
   const data = clienteList.length === 0
     ? [['', '', '', '', '']]
     : clienteList.map(cliente => [
@@ -184,13 +184,7 @@ const CrudCliente = () => {
       cliente.Nom_Cliente,
       cliente.Cor_Cliente,
       cliente.Tel_Cliente,
-      <div key={cliente.Id_Cliente} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-        
-         
-        
-       
-          
-      </div>
+      cliente.Tip_Cliente
     ]);
 
   return (

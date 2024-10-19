@@ -1,7 +1,8 @@
 import Unidad from "../models/unidadModel.js";
 import winston from "winston";
 import DailyRotateFile from "winston-daily-rotate-file";
-import { Area,Responsable } from "../app.js";
+import { Area, Responsable } from "../app.js";
+import Sequelize from "sequelize";
 
 const logger = winston.createLogger({
     level: "error",
@@ -31,22 +32,21 @@ export const getAllUnidades = async (req, res) => {
                     as: 'responsable'
                 }
             ]
-            
         });
         if (unidades.length > 0) {
             res.status(200).json(unidades);
             return;
         }
-        res.status(200).json([]);
+        res.status(200).json([]); // Retornar un array vacío si no hay unidades
     } catch (error) {
-        logger.error(error.message);
-        res.status(500).json({ message: 'Error al obtener unidades' });
+        logger.error(`Error al obtener unidades: ${error.message}`);
+        res.status(500).json({ message: 'Error interno del servidor al intentar obtener las unidades. Por favor, inténtelo más tarde.' });
     }
 };
 
 export const getUnidad = async (req, res) => {
     try {
-        const unidad = await Unidad.findByPk(req.params.id,{
+        const unidad = await Unidad.findByPk(req.params.id, {
             include: [
                 {
                     model: Area,
@@ -57,15 +57,15 @@ export const getUnidad = async (req, res) => {
                     as: 'responsable'
                 }
             ]
-    });
+        });
         if (unidad) {
             res.status(200).json(unidad);
         } else {
-            res.status(200).json({ message: 'Unidad no encontrada' });
+            res.status(404).json({ message: 'Unidad no encontrada. Verifique que el ID proporcionado sea correcto.' });
         }
     } catch (error) {
-        logger.error(error.message);
-        res.status(500).json({ message: 'Error al obtener la unidad' });
+        logger.error(`Error al obtener la unidad con ID ${req.params.id}: ${error.message}`);
+        res.status(500).json({ message: 'Error interno del servidor al intentar obtener la unidad. Por favor, inténtelo más tarde.' });
     }
 };
 
@@ -73,16 +73,16 @@ export const createUnidad = async (req, res) => {
     const { Id_Area, Id_Responsable, Nom_Unidad } = req.body;
 
     if (!Id_Area || !Id_Responsable || !Nom_Unidad) {
-        logger.warn('Todos los campos son obligatorios');
-        return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+        logger.warn('Intento de crear unidad fallido: todos los campos son obligatorios.');
+        return res.status(400).json({ message: 'Todos los campos son obligatorios. Por favor, complete toda la información necesaria.' });
     }
 
     try {
         const unidad = await Unidad.create(req.body);
         res.status(201).json({ message: 'Unidad creada exitosamente', unidad });
     } catch (error) {
-        logger.error(error.message);
-        res.status(500).json({ message: 'Error al crear la unidad' });
+        logger.error(`Error al crear unidad: ${error.message}`);
+        res.status(500).json({ message: 'Error interno del servidor al intentar crear la unidad. Por favor, inténtelo más tarde.' });
     }
 };
 
@@ -90,8 +90,8 @@ export const updateUnidad = async (req, res) => {
     const { Id_Area, Id_Responsable, Nom_Unidad } = req.body;
 
     if (!Id_Area || !Id_Responsable || !Nom_Unidad) {
-        logger.warn('Todos los campos son obligatorios');
-        return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+        logger.warn('Intento de actualizar unidad fallido: todos los campos son obligatorios.');
+        return res.status(400).json({ message: 'Todos los campos son obligatorios. Por favor, complete toda la información necesaria.' });
     }
 
     try {
@@ -102,11 +102,11 @@ export const updateUnidad = async (req, res) => {
             const updatedUnidad = await Unidad.findByPk(req.params.id);
             res.status(200).json({ message: 'Unidad actualizada exitosamente', updatedUnidad });
         } else {
-            res.status(404).json({icon: 'warning', message: 'Debe modificar al menos un campo.' });
+            res.status(404).json({ message: 'Unidad no encontrada o no se modificó ningún campo. Verifique que el ID sea correcto.' });
         }
     } catch (error) {
-        logger.error(error.message);
-        res.status(500).json({ message: 'Error al actualizar la unidad' });
+        logger.error(`Error al actualizar la unidad con ID ${req.params.id}: ${error.message}`);
+        res.status(500).json({ message: 'Error interno del servidor al intentar actualizar la unidad. Por favor, inténtelo más tarde.' });
     }
 };
 
@@ -118,11 +118,11 @@ export const deleteUnidad = async (req, res) => {
         if (deleted) {
             res.status(200).json({ message: 'Unidad eliminada exitosamente' });
         } else {
-            res.status(404).json({ message: 'Unidad no encontrada' });
+            res.status(404).json({ message: 'Unidad no encontrada. Verifique que el ID proporcionado sea correcto.' });
         }
     } catch (error) {
-        logger.error(error.message);
-        res.status(500).json({ message: 'Error al eliminar la unidad' });
+        logger.error(`Error al eliminar la unidad con ID ${req.params.id}: ${error.message}`);
+        res.status(500).json({ message: 'Error interno del servidor al intentar eliminar la unidad. Por favor, inténtelo más tarde.' });
     }
 };
 
@@ -138,10 +138,10 @@ export const getQueryUnidad = async (req, res) => {
         if (unidades.length > 0) {
             res.status(200).json(unidades);
         } else {
-            res.status(404).json({ message: "No se encontraron registros para el nombre especificado" });
+            res.status(404).json({ message: "No se encontraron registros para el nombre especificado. Por favor, intente con otro criterio." });
         }
     } catch (error) {
-       
-        res.status(500).json({ message: error.message });
+        logger.error(`Error al realizar la consulta de unidades: ${error.message}`);
+        res.status(500).json({ message: 'Error interno del servidor al intentar realizar la consulta. Por favor, inténtelo más tarde.' });
     }
 };

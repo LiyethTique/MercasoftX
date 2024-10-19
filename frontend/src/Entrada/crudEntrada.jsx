@@ -15,7 +15,19 @@ const CrudEntrada = () => {
   const [buttonForm, setButtonForm] = useState('Enviar');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [entrada, setEntrada] = useState(null);
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    Dcp_Entrada: '',
+    Fec_Entrada: '',
+    Ori_Entrada: 0,
+    Des_Entrada: 0,
+    Val_Unitario: 0,
+    Val_Total: 0,
+    Id_Unidad: 0,
+    Id_Producto: 0,
+    Id_Responsable: 0,
+    Can_Entrada: 0,
+    Fec_Vencimiento: '',
+  });
   const moduleName = "Gestionar Entradas";
 
   const token = localStorage.getItem('token'); // Obtener el token una vez
@@ -199,8 +211,8 @@ const CrudEntrada = () => {
       entradaItem.Fec_Entrada,
       entradaItem.Ori_Entrada,
       entradaItem.Des_Entrada,
-      formatNumber(pedido.Val_Unitario),
-      formatNumber(pedido.Val_Total),
+      formatNumber(entradaItem.Val_Unitario),
+      formatNumber(entradaItem.Val_Total),
       entradaItem.Id_Unidad,
       entradaItem.Id_Producto,
       entradaItem.Id_Responsable,

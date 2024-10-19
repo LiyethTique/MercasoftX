@@ -82,21 +82,15 @@ const LoginForm = () => {
         allowEscapeKey: false,
         timer: 2000, // Duración de 2 segundos
         timerProgressBar: true,
-        // didOpen: () => {
-        //   Swal.showLoading();
-        // },
       });
 
-      // Esperar 2 segundos antes de hacer la solicitud
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      // Enviar solicitud de inicio de sesión
       const response = await axios.post(URI, {
         Cor_Usuario: formData.email,
         Password_Usuario: formData.password,
       });
 
-      // Cerrar la alerta de carga
       Swal.close();
 
       if (response.data.token) {
@@ -104,7 +98,6 @@ const LoginForm = () => {
         navigate('/pedido');
       }
     } catch (error) {
-      // Cerrar la alerta de carga en caso de error
       Swal.close();
 
       if (error.response && error.response.status === 404) {
@@ -120,59 +113,66 @@ const LoginForm = () => {
   return (
     <>
       <NavPub />
-      <div className="login-container">
-        <form className="login-form" onSubmit={handleSubmit}>
-          <center>
-            <h2>Iniciar Sesión</h2>
-            <img src="/Logo-Icono.svg" width="150px" alt="Logo" />
-          </center>
+      <div className="login-page-container">
+        <div className="login-left">
+          <h1>Bienvenido a Mercasoft X</h1>
+          <p>Accede a la plataforma para gestionar pedidos, administrar productos y mucho más. ¡Estamos encantados de tenerte de vuelta!</p>
+        </div>
 
-          <div className="mb-3">
-            {errors.email && <div className="error-message">{errors.email}</div>}
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="Ingrese su correo"
-              className={`form-control ${errors.email ? 'input-error' : ''}`}
-              required
-            />
-          </div>
+        <div className="login-right">
+          <form className="login-form" onSubmit={handleSubmit}>
+            <center>
+              <h2 className='h2'>Iniciar Sesión</h2>
+              <img src="/Logo-Icono.svg" width="150px" alt="Logo" />
+            </center>
 
-          <div className="mb-3">
-            {errors.password && <div className="error-message">{errors.password}</div>}
-            <div className="password-container">
+            <div className="mb-3">
+              {errors.email && <div className="error-message">{errors.email}</div>}
               <input
-                type={showPassword ? 'text' : 'password'}
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handlePasswordChange}
-                placeholder="Ingrese su contraseña"
-                className={`form-control ${errors.password ? 'input-error' : ''}`}
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="Ingrese su correo"
+                className={`form-control ${errors.email ? 'input-error' : ''}`}
                 required
               />
-              <button
-                type="button"
-                className="password-toggle"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? <FaEyeSlash /> : <FaEye />}
-              </button>
             </div>
-          </div>
 
-          {errors.general && <p className="error-message general-error">{errors.general}</p>}
+            <div className="mb-3">
+              {errors.password && <div className="error-message">{errors.password}</div>}
+              <div className="password-container">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  id="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handlePasswordChange}
+                  placeholder="Ingrese su contraseña"
+                  className={`form-control ${errors.password ? 'input-error' : ''}`}
+                  required
+                />
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </button>
+              </div>
+            </div>
 
-          <button type="submit" className="login-button">Iniciar Sesión</button>
+            {errors.general && <p className="error-message general-error">{errors.general}</p>}
 
-          <div className="mt-3 text-center">
-            <a href="/recuperar-contrasena" className="forgot-password-link">¿Olvidaste tu contraseña?</a>
-          </div>
-      
-        </form>
+            <button type="submit" className="login-button">Iniciar Sesión</button>
+
+            <div className="mt-3 text-center">
+              <a href="/recuperar-contrasena" className="forgot-password-link">¿Olvidaste tu contraseña?</a>
+            </div>
+
+          </form>
+        </div>
       </div>
     </>
   );

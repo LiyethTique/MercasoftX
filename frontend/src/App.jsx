@@ -2,11 +2,12 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { default as jwt_decode } from 'jwt-decode';
 
-
+// Importación de componentes
 import Carrito from './Carrito/crudCarrito.jsx';
-import Cliente from './Cliente/crudCliente.jsx';
+import CrudPedido from './Pedido/crudPedido.jsx';
+import ForCliente from './Cliente/formCliente.jsx';
+import Cliente from './cliente/crudCliente.jsx';
 import Entrada from './Entrada/crudEntrada.jsx';
-import Pedido from './Pedido/crudPedido.jsx';
 import PedidoProducto from './PedidoProducto/crudPedidoProducto.jsx';
 import Producto from './Producto/crudProducto.jsx';
 import Responsable from './Responsable/crudResponsable.jsx';
@@ -20,8 +21,8 @@ import RecuperarContrasena from './Recuperar Contraseña/recuperar_contraseña.j
 import ResetPassword from './Recuperar Contraseña/resetPassword.jsx';
 import CatalogPage from './components/catalogPage/catalogPage.jsx';
 import UsuarioAdmin from './UsuarioAdmin/crudUsuario.jsx';
-import Area from './Area/crudArea.jsx'
-import Home from './Home/Home.jsx';
+import Area from './Area/crudArea.jsx';
+import NotFound from './error404/NotFound.jsx'; // Importar el componente NotFound
 
 // Función para verificar si el usuario está autenticado
 const isAuthenticated = () => {
@@ -35,7 +36,6 @@ const isAdmin = () => {
 
   try {
     const decodedToken = jwt_decode(token); // Usamos jwt_decode para decodificar el token
-    console.log('Token decodificado:', decodedToken); // Depuración: muestra el token decodificado en consola
     return decodedToken.Tip_Responsable === 'Administrador'; // Verifica si el rol es "Administrador"
   } catch (error) {
     console.error('Error al decodificar el token', error);
@@ -57,117 +57,40 @@ const AdminProtectedRoute = ({ children }) => {
     console.log("Acceso denegado. Redirigiendo a /cliente"); // Log de acceso denegado
     return <Navigate to="/cliente" replace />;
   }
-  console.log("Acceso permitido. Usuario es administrador.");
   return children;
 };
-
 
 function App() {
   return (
     <>
       <Routes>
-
-        <Route path="/" element={<CatalogPage />} />
-
         {/* Rutas públicas */}
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<CatalogPage />} />
         <Route path="/team-presentation" element={<TeamPresentation />} />
         <Route path="/contacto" element={<ContactPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/recuperar-contrasena" element={<RecuperarContrasena />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
-        <Route path='/carrito' element={<Carrito />}/>
+        <Route path="/carrito" element={<Carrito />} />
+        <Route path="/ForCliente" element={<ForCliente />} />
+
         {/* Rutas protegidas */}
-        
-        <Route
-          path="/cliente"
-          element={
-           
-              <Cliente />
-          }
-        />
-        <Route
-          path="/entrada"
-          element={
-            <ProtectedRoute>
-              <Entrada />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/pedido"
-          element={
-            <ProtectedRoute>
-              <Pedido />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/pedidoProducto"
-          element={
-            <ProtectedRoute>
-              <PedidoProducto />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/producto"
-          element={
-            <ProtectedRoute>
-              <Producto />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/traslado"
-          element={
-            <ProtectedRoute>
-              <Traslado />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/unidad"
-          element={
-            <ProtectedRoute>
-              <Unidad />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/venta"
-          element={
-            <ProtectedRoute>
-              <Venta />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/area"
-          element={
-            <ProtectedRoute>
-              <Area />
-            </ProtectedRoute>
-          }
-        />
+        <Route path='/cliente' element={<ProtectedRoute><Cliente/></ProtectedRoute>}></Route>
+        <Route path="/entrada" element={<ProtectedRoute><Entrada /></ProtectedRoute>} />
+        <Route path="/pedido" element={<ProtectedRoute><CrudPedido /></ProtectedRoute>} />
+        <Route path="/pedidoProducto" element={<ProtectedRoute><PedidoProducto /></ProtectedRoute>} />
+        <Route path="/producto" element={<ProtectedRoute><Producto /></ProtectedRoute>} />
+        <Route path="/traslado" element={<ProtectedRoute><Traslado /></ProtectedRoute>} />
+        <Route path="/unidad" element={<ProtectedRoute><Unidad /></ProtectedRoute>} />
+        <Route path="/venta" element={<ProtectedRoute><Venta /></ProtectedRoute>} />
+        <Route path="/area" element={<ProtectedRoute><Area /></ProtectedRoute>} />
 
         {/* Rutas protegidas solo para administradores */}
-        <Route
-          path="/responsable"
-          element={
-            <AdminProtectedRoute>
-              <Responsable />
-            </AdminProtectedRoute>
-          }
-        />
-        <Route
-          path="/users"
-          element={
-            <AdminProtectedRoute>
-              <UsuarioAdmin />
-            </AdminProtectedRoute>
-          }
-        />
+        <Route path="/responsable" element={<AdminProtectedRoute><Responsable /></AdminProtectedRoute>} />
+        <Route path="/users" element={<AdminProtectedRoute><UsuarioAdmin /></AdminProtectedRoute>} />
+
+        {/* Ruta "catch-all" para manejar rutas inexistentes */}
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </>
   );

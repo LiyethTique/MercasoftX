@@ -5,8 +5,8 @@ import Sidebar from '../Sidebar/Sidebar';
 import ModalForm from '../Model/Model';
 import Swal from 'sweetalert2';
 import { Button } from 'react-bootstrap';
-import WriteTable from '../Tabla/Data-Table';
 import { IoTrash, IoPencil } from "react-icons/io5";
+import WriteTable from '../Tabla/Data-Table';
 
 const URI = process.env.REACT_APP_SERVER_BACK + '/area/';
 
@@ -15,19 +15,21 @@ const CrudArea = () => {
   const [buttonForm, setButtonForm] = useState('Enviar');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [area, setArea] = useState(null);
-  const [formData, setFormData] = useState({ Id_Area: null, Nom_Area: '' }); // Inicializar Nom_Area
-  const [errors, setErrors] = useState({}); // Para manejar errores de validación
+  const [formData, setFormData] = useState({ Nom_Area: '' });
+  const [errors, setErrors] = useState({});
+  const moduleName = "Gestionar Áreas"
 
-  const token = localStorage.getItem('token'); // Obtener el token una vez
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
     const fetchAreas = async () => {
       try {
         const respuesta = await axios.get(URI, {
           headers: {
-            Authorization: `Bearer ${token}` // Incluir el token en la cabecera
+            Authorization: `Bearer ${token}`
           }
         });
+        // console.log("Respuesta del servidor:", respuesta.data);
         if (Array.isArray(respuesta.data)) {
           setAreaList(respuesta.data);
         } else {
@@ -36,13 +38,11 @@ const CrudArea = () => {
         }
       } catch (error) {
         console.error("Error al obtener áreas:", error);
-        Swal.fire("Error", error.response?.data?.message || "Error al obtener las Áreas", "error");
         setAreaList([]);
       }
     };
-
     fetchAreas();
-  }, [URI, token]); // Incluir URI y token como dependencias para el efecto
+  }, [token]); // Agregar token como dependencia
 
   const getArea = async (Id_Area) => {
     setButtonForm('Actualizar');
@@ -52,9 +52,9 @@ const CrudArea = () => {
           Authorization: `Bearer ${token}`
         }
       });
+      console.log("Área obtenida:", respuesta.data);
       setArea(respuesta.data);
-      setFormData({ Id_Area: respuesta.data.Id_Area, Nom_Area: respuesta.data.Nom_Area }); // Establecer Id_Area
-      console.log('ID del área obtenido:', respuesta.data.Id_Area); // Verificar el ID
+      setFormData({ Nom_Area: respuesta.data.Nom_Area });
       setIsModalOpen(true);
     } catch (error) {
       console.error("Error al obtener el área:", error);
@@ -67,19 +67,33 @@ const CrudArea = () => {
     }
   };
 
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+    if (errors[name]) {
+      setErrors({
+        ...errors,
+        [name]: '',
+      });
+    }
+  };
 
-  const handleSubmitArea = async (e) => {
-    e.preventDefault(); // Previene el comportamiento por defecto del formulario
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.Nom_Area || formData.Nom_Area.trim() === '') {
+      newErrors.Nom_Area = 'El nombre del área es obligatorio.';
+    }
+    return newErrors;
+  };
 
-    // Asegúrate de que formData tenga el formato correcto
-    const dataToUpdate = {
-      Id_Area: formData.Id_Area, // Asegúrate de que este valor sea el correcto
-      Nom_Area: formData.Nom_Area,
-    };
+  const hasChanges = (data) => {
+    return data.Nom_Area !== area.Nom_Area;
+  };
 
-    console.log('ID del área a actualizar:', dataToUpdate.Id_Area); // Verifica que sea el ID correcto
-
-    // Validación del formulario
+  const handleSubmitArea = async () => {
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
@@ -92,159 +106,107 @@ const CrudArea = () => {
       return;
     }
 
-    // Verifica si se están haciendo cambios antes de actualizar
-    if (buttonForm === 'Actualizar') {
-      // Asegúrate de que formData.Id_Area contenga un valor válido
-      if (!formData.Id_Area) {
-        Swal.fire({
-          icon: 'warning',
-          title: 'ID inválido',
-          text: 'El ID del área es inválido.',
-          confirmButtonText: 'Aceptar',
-        });
-        return;
-      }
-
-      try {
-        // Realiza la solicitud PUT para actualizar
-        const response = await axios.put(`${URI}${formData.Id_Area}`, dataToUpdate, {
+    try {
+      if (buttonForm === 'Actualizar') {
+        if (!hasChanges(formData)) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Sin cambios',
+            text: 'Debes realizar cambios en al menos un campo para actualizar.',
+            confirmButtonText: 'Aceptar',
+          });
+          return;
+        }
+        await axios.put(`${URI}${area.Id_Area}`, formData, {
           headers: {
             Authorization: `Bearer ${token}`
           }
         });
-        console.log('Área actualizada:', response.data);
-
         Swal.fire({
           icon: 'success',
           title: 'Actualización exitosa',
           text: 'El área se ha actualizado exitosamente.',
           confirmButtonText: 'Aceptar',
         });
-
-      } catch (error) {
-        console.log(`${URI}${formData.Id_Area}`); // Verificar URL
-        console.log('ID del área:', formData.Id_Area);
-        console.error('Error al guardar el área:', error.response?.data || error.message);
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Ocurrió un error al actualizar el área. Asegúrate de que el área exista.',
-          confirmButtonText: 'Aceptar',
-        });
-      }
-    } else {
-      // Maneja la creación de un nuevo área
-      try {
-        const response = await axios.post(URI, formData, {
+      } else {
+        await axios.post(URI, formData, {
           headers: {
             Authorization: `Bearer ${token}`
           }
         });
-        console.log('Área registrada:', response.data);
-
         Swal.fire({
           icon: 'success',
           title: 'Registro exitoso',
           text: 'El área se ha registrado exitosamente.',
           confirmButtonText: 'Aceptar',
         });
-      } catch (error) {
-        console.error("Error al guardar el área:", error.response?.data || error.message);
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Ocurrió un error al guardar el área.',
-          confirmButtonText: 'Aceptar',
-        });
       }
-    }
 
-    // Actualiza la lista de áreas
-    try {
+      // Actualizar la lista de áreas después de enviar el formulario
       const respuesta = await axios.get(URI, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
+      console.log("Datos después de enviar el formulario:", respuesta.data);
       setAreaList(Array.isArray(respuesta.data) ? respuesta.data : []);
       setIsModalOpen(false);
       setButtonForm('Enviar');
       setArea(null);
-      setFormData({ Id_Area: null, Nom_Area: '' }); // Reiniciar el estado del formulario
+      setFormData({ Nom_Area: '' });
       setErrors({});
     } catch (error) {
-      console.error("Error al obtener la lista de áreas:", error);
+      console.error("Error al guardar el área:", error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Ocurrió un error al guardar el área.',
+        confirmButtonText: 'Aceptar',
+      });
     }
   };
-
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setFormData({ ...formData, [name]: value });
-    setErrors({ ...errors, [name]: '' }); // Limpiar error del campo
-  };
-
-  const hasChanges = (newData) => {
-    if (!area) return false; // Si no hay área, no hay cambios
-    return newData.Nom_Area !== area.Nom_Area || newData.Id_Area !== area.Id_Area; // Compara ambos campos
-  };
-
 
   const deleteArea = async (Id_Area) => {
-    if (window.confirm("¿Estás seguro de que deseas eliminar esta área?")) {
-      try {
-        await axios.delete(`${URI}${Id_Area}`, {
-          headers: {
-            Authorization: `Bearer ${token}` // Incluir el token en la cabecera
-          }
-        });
-        Swal.fire({
-          icon: 'success',
-          title: 'Eliminación exitosa',
-          text: 'El área se ha eliminado exitosamente.',
-          confirmButtonText: 'Aceptar',
-        });
-        const respuesta = await axios.get(URI, {
-          headers: {
-            Authorization: `Bearer ${token}` // Incluir el token en la cabecera
-          }
-        });
-        setAreaList(Array.isArray(respuesta.data) ? respuesta.data : []);
-      } catch (error) {
-        console.error("Error al eliminar el área:", error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Ocurrió un error al eliminar el área.',
-          confirmButtonText: 'Aceptar',
-        });
+    Swal.fire({
+      title: "¿Estás seguro de borrar este registro?",
+      text: "¡No podrás revertir esto!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, borrar!"
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await axios.delete(`${URI}${Id_Area}`, {
+            headers: {
+              Authorization: `Bearer ${token}`, // Añadir el token a la solicitud
+            }
+          });
+          // Mostrar alerta de éxito
+          Swal.fire("¡Borrado!", "El área ha sido borrada exitosamente.", "success");
+  
+          // Filtrar el área eliminada de la lista local sin recargar la página
+          setAreaList(prevList => prevList.filter(area => area.Id_Area !== Id_Area));
+  
+        } catch (error) {
+          Swal.fire("Error", error.response?.data?.message || "Error al eliminar el área", "error");
+        }
       }
-    }
-  };
+    });
+  };  
 
   const handleShowForm = () => {
     setButtonForm('Enviar');
     setArea(null);
-    setFormData({ Nom_Area: '', Id_Area: '' }); // Reiniciar el estado del formulario
+    setFormData({ Nom_Area: '' });
     setErrors({});
     setIsModalOpen(true);
   };
 
-  const validateForm = () => {
-    const validationErrors = {};
-    if (!formData.Nom_Area) {
-      validationErrors.Nom_Area = 'El nombre del área es requerido.';
-    }
-    if (!formData.Id_Area) {
-      validationErrors.Id_Area = 'El nombre del área es requerido.';
-    }
-    return validationErrors;
-  };
-
   const titles = ['ID', 'Nombre del Área', 'Acciones'];
   const data = areaList.length === 0
-    ? [[
-      '', '', '',
-    ]]
+    ? [['', '', '']]
     : areaList.map(areaItem => [
       areaItem.Id_Area,
       areaItem.Nom_Area,
@@ -254,7 +216,7 @@ const CrudArea = () => {
           className="btn-custom me-2"
           onClick={() => getArea(areaItem.Id_Area)}
           title="Editar"
-          style={{ pointerEvents: areaList.length > 0 ? 'auto' : 'none', opacity: areaList.length > 0 ? 1 : 0.5 }} // Desactivar si no hay registros
+          style={{ pointerEvents: areaList.length > 0 ? 'auto' : 'none', opacity: areaList.length > 0 ? 1 : 0.5 }}
         >
           <IoPencil size={20} color="blue" />
         </a>
@@ -263,19 +225,21 @@ const CrudArea = () => {
           className="btn-custom"
           onClick={() => deleteArea(areaItem.Id_Area)}
           title="Borrar"
-          style={{ pointerEvents: areaList.length > 0 ? 'auto' : 'none', opacity: areaList.length > 0 ? 1 : 0.5 }} // Desactivar si no hay registros
+          style={{ pointerEvents: areaList.length > 0 ? 'auto' : 'none', opacity: areaList.length > 0 ? 1 : 0.5 }}
         >
           <IoTrash size={20} color="red" />
         </a>
       </div>
     ]);
 
+  // console.log("Renderizando datos en la tabla:", data);
+
   return (
     <>
       <Sidebar />
       <div className="container mt-4">
         <center>
-          <h1>Gestionar Áreas</h1>
+          <h1>{moduleName}</h1>
         </center>
         <div className="d-flex justify-content-between mb-3">
           <Button
@@ -290,7 +254,7 @@ const CrudArea = () => {
           </Button>
         </div>
 
-        <WriteTable titles={titles} data={data} fileName="Gestionar_Area" />
+        <WriteTable titles={titles} data={data} moduleName={moduleName} />
 
         <ModalForm
           isOpen={isModalOpen}
@@ -300,9 +264,9 @@ const CrudArea = () => {
           <FormArea
             buttonForm={buttonForm}
             onSubmit={handleSubmitArea}
-            onInputChange={handleInputChange} // Pasar el manejador de cambios
-            formData={formData} // Pasar los datos del formulario
-            errors={errors} // Pasar errores de validación
+            onInputChange={handleInputChange}
+            formData={formData}
+            errors={errors}
           />
         </ModalForm>
       </div>

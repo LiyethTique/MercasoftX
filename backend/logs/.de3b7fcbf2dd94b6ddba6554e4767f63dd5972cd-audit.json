@@ -6,16 +6,6 @@
     "auditLog": "logs\\.de3b7fcbf2dd94b6ddba6554e4767f63dd5972cd-audit.json",
     "files": [
         {
-            "date": 1727973986452,
-            "name": "logs\\producto-2024-10-03.log",
-            "hash": "8eab954fb9c4a4c37663beb226d5c1303edf0eed9d948bd42341626f54c1a2e1"
-        },
-        {
-            "date": 1728071919597,
-            "name": "logs\\producto-2024-10-04.log",
-            "hash": "50a7e4ab6a35dfc0a7ebcc9e40d92248de18d03c1f9be00db95f9ee8b7cad6fa"
-        },
-        {
             "date": 1728159212300,
             "name": "logs\\producto-2024-10-05.log",
             "hash": "396f4630fe8661e3d6b8f0a83cf654c512ef1c4cf306766ec2f38bf42cf8338a"
@@ -79,6 +69,16 @@
             "date": 1729143192229,
             "name": "logs\\producto-2024-10-17.log",
             "hash": "9c228cbefc736c1506043bc4b6bf8a4e61e967a3af602d84229c910287187c00"
+        },
+        {
+            "date": 1729230235313,
+            "name": "logs\\producto-2024-10-18.log",
+            "hash": "fbb5e5fffd755b54b4e60580d3bb71865cb7b190b0c1d8d29654205a23cb2c86"
+        },
+        {
+            "date": 1729366318218,
+            "name": "logs\\producto-2024-10-19.log",
+            "hash": "f098633656be8834c25aed6a0d826f6e8e3bfbd052afd01524c94320c216a445"
         }
     ],
     "hashType": "sha256"

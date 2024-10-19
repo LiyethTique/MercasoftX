@@ -5,6 +5,8 @@ import Sidebar from '../Sidebar/Sidebar';
 import Swal from 'sweetalert2';
 import WriteTable from '../Tabla/Data-Table';
 import ModalForm from '../Model/Model';
+import { IoTrash, IoPencil } from "react-icons/io5";
+import { Button } from 'react-bootstrap';
 
 const URI = `${process.env.REACT_APP_SERVER_BACK}/users/`;
 const URI_REGISTER = `${process.env.REACT_APP_SERVER_BACK}/auth/register/`
@@ -120,34 +122,24 @@ const CrudUsuario = () => {
     usuario.Cor_Usuario,
     usuario.Id_Responsable ?  usuario.responsable?.Tip_Responsable || 'Sin Responsable' : 'Sin Responsable',
     <div className='botones-img' key={usuario.Id_Usuario} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-      <a 
-        href="#!"
-        className="btn-custom me-2"
-        onClick={() => getUsuario(usuario.Id_Usuario)}
-        title="Editar"
-        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-      >
-        <img 
-          src="/pencil-square.svg" 
-          alt="Editar"
-          style={{ width: '20px', height: '20px' }}  
-        />
-      </a>
-      <a 
-        href="#!"
-        className="btn-custom"
-        onClick={() => deleteUsuario(usuario.Id_Usuario)}
-        title="Borrar"
-        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-      >
-        <img 
-          src="/trash3.svg" 
-          alt="Borrar" 
-          style={{ width: '20px', height: '20px' }}  
-        />
-      </a>
-    </div>
-  ]);
+    <a 
+      href="#!"
+      className="btn-custom me-2"
+      onClick={() => getUsuario(usuario.Id_Usuario)}
+      title="Editar"
+    >
+      <IoPencil size={20} color="blue" />
+    </a>
+    <a 
+      href="#!"
+      className="btn-custom"
+      onClick={() => deleteUsuario(usuario.Id_Usuario)}
+      title="Borrar"
+    >
+      <IoTrash size={20} color="red" />
+    </a>
+  </div>
+]);
 
   return (
     <>
@@ -156,28 +148,17 @@ const CrudUsuario = () => {
         <center>
           <h1>{moduleName}</h1>
         </center>
-        
         <div className="d-flex justify-content-between mb-3">
-          <a 
-            href="#!"
-            className="btn d-flex align-items-center"
-            onClick={handleShowForm}
-            style={{
-              backgroundColor: '#ffb74d', 
-              borderColor: '#ffb74d', 
-              color: 'white', 
-              padding: '10px 20px', 
-              textDecoration: 'none', 
-              borderRadius: '5px'
-            }}
-          >   
+          <Button
+            style={{ backgroundColor: 'orange', borderColor: 'orange' }}
+            onClick={handleShowForm}>
             <img
               src="/plus-circle (1).svg"
               alt="Add Icon"
               style={{ width: '20px', height: '20px', marginRight: '8px', filter: 'invert(100%)' }}
             />
             Registrar
-          </a>
+          </Button>
         </div>
 
         <WriteTable titles={titles} data={data} moduleName={moduleName} />

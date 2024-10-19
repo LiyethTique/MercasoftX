@@ -4,12 +4,14 @@ import NavPub from '../../NavPub/NavPub.jsx';
 import ProductCard from '../productCard/productCard.jsx';
 import Swal from 'sweetalert2';
 
+
 const URI_PRODUCTO = `${process.env.REACT_APP_SERVER_BACK}/producto`;
 const IMAGE_URI = `${process.env.REACT_APP_SERVER_BACK}${process.env.REACT_APP_IMAGE_PATH}`;
 
 const CatalogPage = () => {
   const [products, setProducts] = useState([]);
   const [carrito, setCarrito] = useState([]);
+  const [cartAnimating, setCartAnimating] = useState(false); // Nuevo estado para la animación
   const [searchTerm, setSearchTerm] = useState(''); // Estado para el término de búsqueda
   const [minPrice, setMinPrice] = useState(''); // Estado para el precio mínimo
   const [maxPrice, setMaxPrice] = useState(''); // Estado para el precio máximo
@@ -54,6 +56,10 @@ const CatalogPage = () => {
       setCarrito([...carrito, { ...product, Can_Producto: 1 }]);
     }
 
+    // Activa la animación
+    setCartAnimating(true);
+    setTimeout(() => setCartAnimating(false), 600); // Desactiva la animación después de 600ms
+
     Swal.fire('¡Producto agregado!', 'El producto ha sido agregado al carrito.', 'success');
   };
 
@@ -77,9 +83,29 @@ const CatalogPage = () => {
 
   return (
     <div>
-      <NavPub cartItemCount={cartItemCount} carrito={carrito} setCarrito={setCarrito} />
-      
+      {/* El ícono del carrito que recibe la clase 'bounce' */}
+      <NavPub 
+        cartItemCount={cartItemCount} 
+        carrito={carrito} 
+        setCarrito={setCarrito} 
+        cartIconClass={cartAnimating ? 'bounce' : ''}  // Se pasa la clase de animación
+      />
+
       <div style={{ padding: '20px' }}>
+        {/* Título llamativo */}
+        <h1 style={{
+          textAlign: 'center',
+          fontSize: '2rem',
+          fontWeight: 'bold',
+          marginBottom: '20px',
+          textShadow: '1px 1px 3px rgba(0, 0, 0, 0.2)',
+          letterSpacing: '1px'
+        }}>
+          <span style={{ color: '#333' }}>¡Los mejores </span> 
+          <span style={{ color: '#ff8c42' }}>Productos, </span> 
+          <span style={{ color: '#333' }}>con Domicilio y Pago Contraentrega!</span>
+        </h1>
+
         <input
           type="text"
           placeholder="Buscar productos (nombre)..."
@@ -124,7 +150,7 @@ const CatalogPage = () => {
 
       {noResults && (
         <div style={{
-          backgroundColor: 'orange',
+          backgroundColor: 'grey',
           color: '#fff',
           padding: '10px',
           textAlign: 'center',

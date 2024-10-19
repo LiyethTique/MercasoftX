@@ -67,37 +67,25 @@ export const createArea = async (req, res) => {
 };
 
 export const updateArea = async (req, res) => {
-  const { Nom_Area, Id_Area } = req.body; // Agregamos Id_Area
-
-  if (!Id_Area) {
-    logger.warn("El ID del área es obligatorio");
-    return res.status(400).json({ message: "El ID del área es obligatorio" });
-  }
+  const { Nom_Area } = req.body;
 
   if (!Nom_Area) {
-    logger.warn("El nombre del área es obligatorio");
-    return res
-      .status(400)
-      .json({ message: "El nombre del área es obligatorio" });
+      logger.warn('El nombre del área es obligatorio');
+      return res.status(400).json({ message: 'El nombre del área es obligatorio' });
   }
 
   try {
-    const [updatedCount] = await Area.update(req.body, {
-      where: { Id_Area: req.params.id },
-    });
-
-    if (updatedCount > 0) {
-      const updatedArea = await Area.findByPk(req.params.id);
-      res
-        .status(200)
-        .json({ message: "Área actualizada exitosamente", updatedArea });
-    } else {
-      res
-        .status(404)
-        .json({ message: "El área no existe o no se han realizado cambios." });
-    }
+      const [updated] = await Area.update(req.body, {
+          where: { Id_Area: req.params.id }
+      });
+      if (updated) {
+          const updatedArea = await Area.findByPk(req.params.id);
+          res.status(200).json({ message: 'Área actualizada exitosamente', updatedArea });
+      } else {
+          res.status(404).json({ message: 'Debe modificar al menos un campo.' });
+      }
   } catch (error) {
-    handleError(res, "Error al actualizar el área: " + error.message);
+      handleError(res, 'Error al actualizar el área');
   }
 };
 

@@ -16,6 +16,7 @@ const CrudVenta = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [venta, setVenta] = useState(null);
   const [formData, setFormData] = useState({});
+  const moduleName = "Gestionar Ventas"
 
   const token = localStorage.getItem('token'); // Obtener el token una vez
 
@@ -152,19 +153,33 @@ const CrudVenta = () => {
   };
 
   const deleteVenta = async (Id_Venta) => {
-    if (window.confirm("¿Estás seguro de que deseas eliminar esta venta?")) {
+    // Usar await para manejar la respuesta de Swal.fire
+    const result = await Swal.fire({
+      title: '¿Estás seguro de que deseas eliminar esta venta?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    });
+  
+    // Verifica si el usuario confirmó la eliminación
+    if (result.isConfirmed) {
       try {
         await axios.delete(`${URI}${Id_Venta}`, {
           headers: {
             Authorization: `Bearer ${token}` // Añadir el token a la solicitud
           }
         });
+  
+        // Mensaje de éxito al eliminar la venta
         Swal.fire({
           icon: 'success',
           title: 'Eliminación exitosa',
           text: 'La venta se ha eliminado exitosamente.',
           confirmButtonText: 'Aceptar',
+          timer: 3000, // Opcional: cerrar automáticamente después de 3 segundos
         });
+  
         const respuesta = await axios.get(URI, {
           headers: {
             Authorization: `Bearer ${token}` // Añadir el token a la solicitud
@@ -173,10 +188,19 @@ const CrudVenta = () => {
         setVentaList(Array.isArray(respuesta.data) ? respuesta.data : []);
       } catch (error) {
         console.error("Error al eliminar la venta:", error);
-        Swal.fire("Error", error.response?.data?.message || "Ocurrió un error al eliminar la venta.", "error");
+        // Mensaje de error al intentar eliminar la venta
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: error.response?.data?.message || "Ocurrió un error al eliminar la venta.",
+          confirmButtonText: 'Aceptar',
+          timer: 5000, // Opcional: cerrar automáticamente después de 5 segundos
+        });
       }
     }
   };
+  
+  
 
   const handleShowForm = () => {
     setButtonForm('Enviar');
@@ -224,7 +248,7 @@ const CrudVenta = () => {
       <Sidebar />
       <div className="container mt-4">
         <center>
-          <h1>Gestionar Ventas</h1>
+          <h1>{moduleName}</h1>
         </center>
         <div className="d-flex justify-content-between mb-3">
           <Button
@@ -239,7 +263,7 @@ const CrudVenta = () => {
           </Button>
         </div>
 
-        <WriteTable titles={titles} data={data} fileName="Gestionar_Venta" />
+        <WriteTable titles={titles} data={data} moduleName={moduleName} />
 
         <ModalForm
           isOpen={isModalOpen}

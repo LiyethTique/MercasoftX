@@ -49,7 +49,7 @@ const FormUsuario = ({ buttonForm, usuario, onSubmit, onClose, isEdit }) => {
 
   // Función para validar si el email tiene un dominio permitido
   const isEmailDomainValid = (email) => {
-    const validDomains = ['gmail.com', 'hotmail.com'];
+    const validDomains = ['gmail.com', 'hotmail.com', 'misena.edu.co'];
     const emailParts = email.split('@');
     if (emailParts.length !== 2) {
       return false;

@@ -53,7 +53,7 @@ const ProductCard = ({ name, description, price, stock, imageUrl, onAddToCart })
   };
 
   const buttonStyle = {
-    backgroundColor: '#ff8c42',
+    backgroundColor: 'grey',
     color: 'white',
     border: 'none',
     padding: '10px 20px',

@@ -6,16 +6,6 @@
     "auditLog": "logs\\.a5aeb0e54576f599b53105541aea7b2edf3d0823-audit.json",
     "files": [
         {
-            "date": 1727973986552,
-            "name": "logs\\venta-2024-10-03.log",
-            "hash": "f67f4debbaeeca409daec6c8804379960a59c1f4cab3b5b49285150a6bd630e9"
-        },
-        {
-            "date": 1728071919683,
-            "name": "logs\\venta-2024-10-04.log",
-            "hash": "328fdeb69426566794ef53794ce0089d55375643c6dc00b939474002b0c166ee"
-        },
-        {
             "date": 1728159212414,
             "name": "logs\\venta-2024-10-05.log",
             "hash": "013b3a462b91f8a5c30de9f44447c462c929beefd648c0bab89321f855dbc496"
@@ -79,6 +69,16 @@
             "date": 1729143192259,
             "name": "logs\\venta-2024-10-17.log",
             "hash": "53d8f8ffc68adb4527107e0de7496c45efea29b52762a8505a2f8f7beaa681dd"
+        },
+        {
+            "date": 1729230235352,
+            "name": "logs\\venta-2024-10-18.log",
+            "hash": "b57560ef537b8cb98a9b05f3005a6780bb227ec7ab7fca113d761edb6c75e2fa"
+        },
+        {
+            "date": 1729366318246,
+            "name": "logs\\venta-2024-10-19.log",
+            "hash": "c501a1c2239fe6067c6073d41e5105d0a30f002f1f573c075b377853c0b7db97"
         }
     ],
     "hashType": "sha256"

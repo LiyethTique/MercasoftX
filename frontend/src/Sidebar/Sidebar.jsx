@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Swal from 'sweetalert2';  // Importa SweetAlert2
-import '../Sidebar/Sidebar.css';
-import jwt_decode from 'jwt-decode';
+import '../Estilos/Sidebar.css';
+import jwt_decode from 'jwt-decode'; // Corregido
 
 function Sidebar() {
     const [isVisible, setIsVisible] = useState(false); // Estado para la visibilidad del sidebar
@@ -72,8 +72,8 @@ function Sidebar() {
     return (
         <>
             {/* Botón de menú hamburguesa */}
-            <button
-                className={`hamburger ${isVisible ? 'open' : ''}`}
+            <button 
+                className={`hamburger ${isVisible ? 'open' : ''}`} 
                 onClick={toggleSidebar}
             >
                 <span className="hamburger-line"></span>
@@ -84,21 +84,20 @@ function Sidebar() {
             {/* Sidebar con clases condicionales para transiciones */}
             <div className={`sidebar ${isVisible ? 'visible' : 'hidden'}`}>
                 {/* Encabezado del Sidebar */}
-                <Link className="sidebar-header text-white text-decoration-none">
-                    <img rel="icon" type="image/svg+xml" src="/Logo-Icono.svg" alt="Logo" />
-                    <span>MERCASOFTX</span>
+                <Link className="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                    <img rel="icon" type="image/svg+xml" src="/Logo-Icono.svg" width="60px" alt="Logo" />
+                    <span className="fs-4"><b>MERCASOFTX</b></span>
                 </Link>
-
                 <hr />
 
                 <ul className="nav nav-pills flex-column mb-auto">
-                    {renderNavItem('/pedido', 'entrega.svg', 'Pedidos', selectedOption, handleOptionSelect)}
+                    {renderNavItem('/pedido/', 'entrega.svg', 'Pedido', selectedOption, handleOptionSelect)}
                     {renderNavItem('/area/', 'arae.svg', 'Area', selectedOption, handleOptionSelect)}
-                    {renderNavItem('/unidad/', 'unit.svg', 'Unidad', selectedOption, handleOptionSelect)}
                     {renderNavItem('/cliente/', 'customer.svg', 'Cliente', selectedOption, handleOptionSelect)}
                     {renderNavItem('/entrada/', 'transfer.svg', 'Entrada', selectedOption, handleOptionSelect)}
                     {renderNavItem('/producto/', 'product.svg', 'Producto', selectedOption, handleOptionSelect)}
                     {renderNavItem('/traslado/', 'entrance.svg', 'Traslado', selectedOption, handleOptionSelect)}
+                    {renderNavItem('/unidad/', 'unit.svg', 'Unidad', selectedOption, handleOptionSelect)}
                     {renderNavItem('/venta/', 'sale.svg', 'Venta', selectedOption, handleOptionSelect)}
                     {isAdmin() && renderNavItem('/responsable/', 'responsible.svg', 'Responsable', selectedOption, handleOptionSelect)}
                     {isAdmin() && renderNavItem('/users/', 'adminUser.svg', 'Usuarios', selectedOption, handleOptionSelect)} {/* Nuevo enlace para Usuarios */}
@@ -106,12 +105,17 @@ function Sidebar() {
                 <hr />
 
                 {/* Opción de cerrar sesión */}
-                <div className="logout-container">
-                    <a
-                        href="/login"
-                        onClick={handleLogout}
+                <div className="nav-item">
+                    <a 
+                        href="/login" 
+                        className="nav-link text-white" 
+                        onClick={handleLogout} 
+                        style={{ cursor: 'pointer',
+                            fontSize: '1.4rem', // Tamaño de fuente más grande para el texto
+                            fontWeight: 'bold'   // Hacer el texto en negrita
+                         }}
                     >
-                        <img src="/logout.png" alt="Cerrar Sesión" className="logout-icon" /> {/* Aplica la clase CSS */}
+                        <img src="/logout.png" alt="Cerrar Sesión" style={{ width: '30px', height: '30px', marginRight: '5px' }} />
                         Cerrar Sesión
                     </a>
                 </div>
@@ -124,14 +128,14 @@ function Sidebar() {
 function renderNavItem(href, iconSrc, text, selectedOption, handleOptionSelect) {
     return (
         <li className="nav-item">
-            <Link
-                to={href}
-                className={`nav-link text-white ${selectedOption === href ? 'active' : ''}`}
-                onClick={() => handleOptionSelect(href)}
+            <Link 
+                to={href} 
+                className={`nav-link text-white ${selectedOption === href ? 'active' : ''}`} 
+                onClick={() => handleOptionSelect(href)} 
             >
-                <img
-                    src={`/${iconSrc}`}
-                    alt={text}
+                <img 
+                    src={`/${iconSrc}`} 
+                    alt={text} 
                     style={{ marginRight: '10px' }} // Estilo en línea para separar el icono del texto
                 />
                 {text}

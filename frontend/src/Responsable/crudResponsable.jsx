@@ -16,6 +16,7 @@ const CrudResponsable = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [responsable, setResponsable] = useState(null);
   const [formData, setFormData] = useState({}); // Para manejar el estado del formulario
+  const moduleName =  "Gestionar Responsables"
 
   const token = localStorage.getItem('token'); // Obtener el token una vez
 
@@ -143,28 +144,48 @@ const CrudResponsable = () => {
   };
 
   const deleteResponsable = async (Id_Responsable) => {
-    if (window.confirm("¿Estás seguro de que deseas eliminar este responsable?")) {
+    const result = await Swal.fire({
+      title: '¿Estás seguro de que deseas eliminar esta venta?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    });
+  
+    // Verifica si el usuario confirmó la eliminación
+    if (result.isConfirmed) {
       try {
         await axios.delete(`${URI}${Id_Responsable}`, {
           headers: {
             Authorization: `Bearer ${token}` // Añadir el token a la solicitud
           }
         });
+  
+        // Mensaje de éxito al eliminar la venta
         Swal.fire({
           icon: 'success',
           title: 'Eliminación exitosa',
-          text: 'El responsable se ha eliminado exitosamente.',
+          text: 'La venta se ha eliminado exitosamente.',
           confirmButtonText: 'Aceptar',
+          timer: 3000, // Opcional: cerrar automáticamente después de 3 segundos
         });
+  
         const respuesta = await axios.get(URI, {
           headers: {
             Authorization: `Bearer ${token}` // Añadir el token a la solicitud
           }
         });
-        setResponsableList(Array.isArray(respuesta.data) ? respuesta.data : []);
+        setVentaList(Array.isArray(respuesta.data) ? respuesta.data : []);
       } catch (error) {
-        console.error("Error al eliminar el responsable:", error);
-        Swal.fire("Error", error.response?.data?.message || "Ocurrió un error al eliminar el responsable.", "error");
+        console.error("Error al eliminar la venta:", error);
+        // Mensaje de error al intentar eliminar la venta
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: error.response?.data?.message || "Ocurrió un error al eliminar la venta.",
+          confirmButtonText: 'Aceptar',
+          timer: 5000, // Opcional: cerrar automáticamente después de 5 segundos
+        });
       }
     }
   };
@@ -216,7 +237,7 @@ const CrudResponsable = () => {
       <Sidebar />
       <div className="container mt-4">
         <center>
-          <h1>Gestionar Responsables</h1>
+          <h1>{moduleName}</h1>
         </center>
         <div className="d-flex justify-content-between mb-3">
           <Button
@@ -231,7 +252,7 @@ const CrudResponsable = () => {
           </Button>
         </div>
 
-        <WriteTable titles={titles} data={data} fileName="Gestionar_Responsable" />
+        <WriteTable titles={titles} data={data} moduleName={moduleName} />
 
         <ModalForm
           isOpen={isModalOpen}

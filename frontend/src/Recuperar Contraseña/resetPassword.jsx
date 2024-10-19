@@ -19,18 +19,16 @@ const ResetPassword = () => {
   useEffect(() => {
     const verifyToken = async () => {
       try {
-        const response = await axios.get(`${URI}${token}/verify`); // Verificar el token
+        const response = await axios.get(`${URI}${token}/verify`);
         if (!response.data.valid) {
-          // Si el token no es válido, redirigir
           Swal.fire('Token no válido', 'El token que has proporcionado no es válido. Por favor, solicita un nuevo enlace de restablecimiento de contraseña.', 'error');
-          navigate('/login'); // Redirigir a la página de login o a otra que prefieras
+          navigate('/login');
         }
       } catch (error) {
         Swal.fire('Error', 'Hubo un problema al verificar el token. Inténtalo de nuevo.', 'error');
-        navigate('/login'); // Redirigir en caso de error
+        navigate('/login');
       }
     };
-
     verifyToken();
   }, [token, navigate]);
 
@@ -60,12 +58,8 @@ const ResetPassword = () => {
       Swal.fire('Contraseña restablecida', 'Tu contraseña ha sido restablecida con éxito', 'success');
       navigate('/login');
     } catch (error) {
-      if (error.response) {
-        const errorMessage = error.response.data?.message || 'Hubo un error al restablecer la contraseña. Inténtalo de nuevo.';
-        setError(errorMessage);
-      } else {
-        setError('Error de conexión. Por favor, verifica tu red e intenta nuevamente.');
-      }
+      const errorMessage = error.response?.data?.message || 'Hubo un error al restablecer la contraseña. Inténtalo de nuevo.';
+      setError(errorMessage);
     }
   };
 
@@ -79,19 +73,28 @@ const ResetPassword = () => {
       justifyContent: 'center',
       alignItems: 'center',
       height: '100vh',
-      backgroundColor: '#f7f7f7',
+      backgroundColor: '#f3f4f6',
     },
     form: {
-      background: '#ffffff',
+      background: '#fff',
       padding: '2rem',
-      borderRadius: '15px',
-      boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
-      width: '400px',
+      borderRadius: '12px',
+      boxShadow: '0 6px 20px rgba(0, 0, 0, 0.1)',
+      width: '350px',
+      fontFamily: '"Roboto", sans-serif',
     },
     title: {
       color: '#ff6600',
-      marginBottom: '1rem',
+      marginBottom: '1.5rem',
+      fontWeight: 'bold',
+      fontSize: '1.5rem',
       textAlign: 'center',
+    },
+    description: {
+      color: '#555',
+      marginBottom: '1.5rem',
+      textAlign: 'center',
+      fontSize: '1rem',
     },
     errorMessage: {
       color: '#ff3333',
@@ -106,17 +109,20 @@ const ResetPassword = () => {
       width: '100%',
       padding: '0.75rem',
       border: '1px solid #ccc',
-      borderRadius: '10px',
+      borderRadius: '8px',
       transition: 'border-color 0.3s',
+      fontSize: '1rem',
+      fontFamily: '"Roboto", sans-serif',
     },
     button: {
       backgroundColor: '#ff6600',
-      color: '#ffffff',
+      color: '#fff',
       padding: '0.75rem',
       border: 'none',
-      borderRadius: '10px',
+      borderRadius: '8px',
       cursor: 'pointer',
       width: '100%',
+      fontSize: '1rem',
       transition: 'background-color 0.3s',
     },
     buttonHover: {
@@ -129,7 +135,7 @@ const ResetPassword = () => {
       transform: 'translateY(-50%)',
       cursor: 'pointer',
       fontSize: '1.2rem',
-      color: 'black',
+      color: '#666',
     },
   };
 
@@ -137,6 +143,7 @@ const ResetPassword = () => {
     <div style={styles.container}>
       <form style={styles.form} onSubmit={handleSubmit}>
         <h2 style={styles.title}>Restablecer Contraseña</h2>
+        <p style={styles.description}>Por favor, ingresa tu nueva contraseña y confírmala para continuar.</p>
         {error && <p style={styles.errorMessage}>{error}</p>}
         <div style={styles.inputContainer}>
           <input

@@ -76,45 +76,60 @@ const RecuperarContrasena = () => {
       justifyContent: 'center',
       alignItems: 'center',
       height: '100vh',
-      backgroundColor: '#f7f7f7',
+      backgroundColor: '#f0f4f8',
+      padding: '1rem',
     },
     form: {
       background: '#ffffff',
-      padding: '2rem',
-      borderRadius: '15px',
-      boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
-      width: '400px',
+      padding: '2.5rem',
+      borderRadius: '20px',
+      boxShadow: '0 8px 20px rgba(0, 0, 0, 0.1)',
+      width: '100%',
+      maxWidth: '450px',
+      textAlign: 'center',
     },
     title: {
       color: '#ff6600',
-      marginBottom: '1rem',
+      marginBottom: '1.5rem',
+      fontSize: '1.75rem',
+      fontWeight: '600',
     },
     errorMessage: {
-      color: '#ff3333',
+      color: '#e74c3c',
       marginBottom: '0.5rem',
+      fontSize: '0.9rem',
     },
     input: {
       width: '100%',
-      padding: '0.75rem',
+      padding: '0.85rem',
+      marginBottom: '1rem',
       border: '1px solid #ccc',
       borderRadius: '10px',
+      fontSize: '1rem',
       transition: 'border-color 0.3s',
     },
     inputError: {
-      borderColor: '#ff3333',
+      borderColor: '#e74c3c',
     },
     button: {
       backgroundColor: '#ff6600',
       color: '#ffffff',
-      padding: '0.75rem',
+      padding: '0.85rem',
       border: 'none',
-      borderRadius: '10px',
+      borderRadius: '12px',
       cursor: 'pointer',
       width: '100%',
+      fontSize: '1rem',
+      fontWeight: 'bold',
       transition: 'background-color 0.3s',
     },
     buttonHover: {
       backgroundColor: '#e55a00',
+    },
+    infoText: {
+      marginTop: '1rem',
+      fontSize: '0.9rem',
+      color: '#666',
     },
   };
 
@@ -123,10 +138,8 @@ const RecuperarContrasena = () => {
       <NavPub />
       <div style={styles.container}>
         <form style={styles.form} onSubmit={handleSubmit}>
-          <center>
-            <h2 style={styles.title}>Recuperar Contraseña</h2>
-            <img src="/Logo-Icono.svg" width="150px" alt="Logo" />
-          </center>
+          <h2 style={styles.title}>Recuperar Contraseña</h2>
+          <img src="/Logo-Icono.svg" width="150px" alt="Logo" />
 
           <div className="mb-3">
             {errors.email && <div style={styles.errorMessage}>{errors.email}</div>}
@@ -147,13 +160,18 @@ const RecuperarContrasena = () => {
 
           {errors.general && <p style={styles.errorMessage}>{errors.general}</p>}
 
-          <button 
-            type="submit" 
-            style={styles.button} 
-            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = styles.buttonHover.backgroundColor)} 
-            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = styles.button.backgroundColor)}>
+          <button
+            type="submit"
+            style={styles.button}
+            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = styles.buttonHover.backgroundColor)}
+            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = styles.button.backgroundColor)}
+          >
             Recuperar Contraseña
           </button>
+
+          <p style={styles.infoText}>
+            Ingrese su correo electrónico para recibir un enlace de recuperación de contraseña.
+          </p>
         </form>
       </div>
     </>

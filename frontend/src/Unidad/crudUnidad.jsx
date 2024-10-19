@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import FormUnidad from './formUnidad.jsx'; // Asegúrate de tener este componente creado
-import Sidebar from '../Sidebar/Sidebar';
+import FormUnidad from '../Unidad/formUnidad.jsx'; // Asegúrate de tener este componente creado
+import Sidebar from '../Sidebar/Sidebar.jsx';
 import ModalForm from '../Model/Model';
 import Swal from 'sweetalert2';
 import { Button } from 'react-bootstrap';
@@ -52,7 +52,11 @@ const CrudUnidad = () => {
         }
       });
       setUnidad(respuesta.data);
-      setFormData(respuesta.data); // Inicializar el estado del formulario
+      setFormData({
+        ...respuesta.data,
+        Id_Responsable: String(respuesta.data.Id_Responsable), // Convertir a string
+        Id_Area: String(respuesta.data.Id_Area),
+      }); // Inicializar el estado del formulario
       setIsModalOpen(true);
     } catch (error) {
       console.error("Error al obtener la unidad:", error);
@@ -62,11 +66,16 @@ const CrudUnidad = () => {
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+  
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: 
+        (name === 'Id_Responsable' || name === 'Id_Area') 
+          ? parseInt(value, 10) || '' 
+          : value,  // Convertir a número solo si es necesario
+    }));
   };
+  
 
   const hasChanges = (data) => {
     return Object.keys(data).some(key =>
@@ -235,13 +244,13 @@ const CrudUnidad = () => {
           onClose={() => { setIsModalOpen(false); setUnidad(null); setButtonForm('Enviar'); }}
           title={buttonForm === 'Actualizar' ? "Actualizar Unidad" : "Agregar Unidad"}
         >
-          <FormUnidad
-            buttonForm={buttonForm}
-            unidad={unidad}
-            onSubmit={handleSubmitUnidad}
-            onInputChange={handleInputChange}
-            formData={formData} // Pasar formData como prop
-          />
+        <FormUnidad
+          buttonForm={buttonForm}
+          unidad={unidad}
+          onSubmit={handleSubmitUnidad}
+          onInputChange={handleInputChange}
+          formData={formData} // Pasar formData como prop
+        />
         </ModalForm>
       </div>
     </>

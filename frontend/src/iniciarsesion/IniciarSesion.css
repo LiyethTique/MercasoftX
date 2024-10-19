@@ -1,137 +1,121 @@
-/* Contenedor del formulario */
-.login-container {
+.login-page-container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   min-height: 100vh;
-  background: #f5f5f5; /* Fondo suave */
-  padding: 20px;
+  align-items: center;
+  justify-content: space-between;
 }
 
-/* Formulario de inicio de sesión */
-.login-form {
-  background: #ffffff; /* Fondo blanco para el formulario */
-  border-radius: 12px; /* Bordes redondeados */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
-  padding: 20px;
-  max-width: 400px; /* Ancho máximo del formulario */
-  width: 100%;
+.login-left {
+  flex: 1;
+  padding: 40px;
+  background-color: #f5f5f5;
   text-align: center;
 }
 
-/* Etiquetas del formulario */
-.login-form label {
-  display: block;
-  margin-bottom: 8px;
-  font-size: 16px;
+.login-left h1 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
   color: #333;
 }
 
-/* Campos de entrada */
-.login-form input {
+.login-left p {
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+  color: #666;
+}
+
+.welcome-image {
+  width: 80%;
+  max-width: 400px;
+}
+
+.login-right {
+  flex: 1;
+  padding: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-form {
   width: 100%;
-  padding: 12px;
-  border-radius: 8px; /* Bordes redondeados */
-  border: 1px solid #ddd;
-  margin-bottom: 16px;
-  font-size: 16px;
-  transition: border-color 0.3s, box-shadow 0.3s;
+  max-width: 400px;
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.login-form input:focus {
-  border-color: #007bff; /* Color del borde al enfocar */
-  box-shadow: 0 0 8px rgba(0, 123, 255, 0.25); /* Sombra al enfocar */
-  outline: none;
+.login-form .form-control {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
-/* Contenedor para la contraseña y el ícono */
+.password-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.password-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.login-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #ff8c42;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: background-color 0.3s;
+}
+
+.login-button:hover {
+  background-color: #ff6f00;
+}
+
+.forgot-password-link {
+  color: #ff8c42;
+  text-decoration: none;
+}
+
 .password-container {
   position: relative;
   width: 100%;
 }
 
-/* Campo de entrada de contraseña con espacio para el ícono */
 .password-container input {
-  padding-right: 40px; /* Espacio para el ícono */
+  width: 100%;
+  padding-right: 40px; /* Añadir espacio a la derecha para el ícono */
+  height: 40px; /* Asegúrate de que el input tenga una altura definida */
 }
 
-/* Botón para mostrar/ocultar contraseña */
 .password-toggle {
   position: absolute;
   right: 10px;
   top: 50%;
-  transform: translateY(-50%);
+  transform: translateY(-80%); /* Centrar verticalmente el ícono */
   background: none;
   border: none;
   cursor: pointer;
-  color: #333;
-  font-size: 18px;
-}
-
-/* Botón de inicio de sesión */
-.login-button {
-  background-color: orange; /* Color de fondo del botón */
-  color: white;
-  border: none;
-  border-radius: 8px; /* Bordes redondeados */
-  padding: 12px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s, transform 0.3s;
-}
-
-.login-button:hover {
-  background-color: orange; /* Color de fondo al pasar el cursor */
-  transform: scale(1.02); /* Efecto de escala al pasar el cursor */
-}
-
-/* Estilo para el enlace de registro */
-.register-link {
-  color: #ff8c00; /* Color del enlace anaranjado brillante */
-  text-decoration: none; /* Elimina la subrayado por defecto */
-  font-weight: bold;
-  position: relative; /* Necesario para el pseudo-elemento */
-  transition: color 0.3s ease, background-color 0.3s ease, transform 0.3s ease;
-  padding: 4px 0; /* Espacio para el efecto de fondo */
-}
-
-/* Animación del fondo del enlace */
-.register-link::before {
-  content: ""; /* Contenido vacío para el pseudo-elemento */
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 2px; /* Altura del fondo animado */
-  background-color: rgba(250, 248, 245, 0.3); /* Fondo con opacidad */
-  transform: scaleX(0); /* Comienza con la escala de la línea en 0 */
-  transform-origin: bottom left; /* Animación comienza desde la izquierda */
-  transition: transform 0.3s ease; /* Transición suave */
-}
-
-/* Estilo para el hover del enlace */
-.register-link:hover {
-  color: #ff4500; /* Un tono más intenso de anaranjado al pasar el cursor */
-  background-color: rgba(255, 140, 0, 0.1); /* Fondo con opacidad al pasar el cursor */
-  border-radius: 4px; /* Bordes redondeados para el fondo */
-}
-
-.register-link:hover::before {
-  transform: scaleX(1); /* Anima la línea al 100% al pasar el cursor */
-}
-
-/* IniciarSesion.css */
-.custom-container {
+  font-size: 1.2rem;
+  color: #666;
   display: flex;
+  align-items: center;
   justify-content: center;
-  align-items: center;
-  height: 100vh;
+  transition: color 0.3s;
 }
 
-.custom-popup {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
+.password-toggle:hover {
+  color: #333;
 }

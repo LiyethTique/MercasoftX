@@ -10,7 +10,7 @@ const WriteTable = ({ titles, data, moduleName }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState('');
     const rowsPerPage = 5;
-    const [hasRecords, setHasRecords] = useState(false); 
+    const [hasRecords, setHasRecords] = useState(false);
 
     const filteredData = data.filter(row =>
         row.some(cell => cell.toString().toLowerCase().includes(searchTerm.toLowerCase()))
@@ -89,16 +89,27 @@ const WriteTable = ({ titles, data, moduleName }) => {
         <div>
             <div className="d-flex justify-content-between mb-3 align-items-center">
                 <div className="d-flex align-items-center">
-                    <button className={`action-button me-2" ${!hasRecords ? 'disabled' : ''}`}
-                            onClick={exportToPDF}>
+                    <button
+                        className={`action-button me-2 ${!hasRecords ? 'disabled' : ''}`}
+                        onClick={exportToPDF}
+                        disabled={!hasRecords}
+                    >
                         <img src="/pdf.png" alt="Export to PDF" width="55px" />
                     </button>
-                    <button className={`action-button me-2" ${!hasRecords ? 'disabled' : ''}`}
-                            onClick={exportToExcel}>
+
+                    <button
+                        className={`action-button me-2 ${!hasRecords ? 'disabled' : ''}`}
+                        onClick={exportToExcel}
+                        disabled={!hasRecords}
+                    >
                         <img src="/excel.png" alt="Export to Excel" width="75px" />
                     </button>
-                    <button className={`action-button me-2" ${!hasRecords ? 'disabled' : ''}`}
-                            onClick={exportToSQL}>
+
+                    <button
+                        className={`action-button me-2 ${!hasRecords ? 'disabled' : ''}`}
+                        onClick={exportToSQL}
+                        disabled={!hasRecords}
+                    >
                         <img src="/sql.png" alt="Export to SQL" width="50px" />
                     </button>
                 </div>

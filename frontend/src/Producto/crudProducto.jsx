@@ -220,7 +220,7 @@ const CrudProducto = () => {
             Registrar
           </Button>
         </div>
-
+        
         <WriteTable titles={titles} data={data} moduleName={moduleName} />
         <ModalForm
           isOpen={isModalOpen}

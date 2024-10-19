@@ -164,7 +164,7 @@ const CrudPedido = () => {
         handleError(error, "No se pudo eliminar el pedido. Verifica que el pedido exista y prueba nuevamente.");
       }
     } else {
-      Swal.fire('Cancelado', 'El pedido no fue eliminado', 'info');
+      console.log('Cancelado', 'El pedido no fue eliminado', 'info');
     }
   };
 

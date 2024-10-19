@@ -100,3 +100,8 @@
   cursor: not-allowed;
   pointer-events: none; /* Bloquea la interacción */
 }
+
+button.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}

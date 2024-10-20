@@ -1,0 +1,16 @@
+2024-10-18 02:23:14: error: Error al eliminar pedido: Cannot delete or update a parent row: a foreign key constraint fails (`mercasoftx`.`venta`, CONSTRAINT `Id_Pedido` FOREIGN KEY (`Id_Pedido`) REFERENCES `pedido` (`Id_Pedido`))
+Stack: Error
+    at Query.run (C:\Users\Jesus\Documents\GitHub\MercasoftX\backend\node_modules\sequelize\lib\dialects\mysql\query.js:52:25)
+    at C:\Users\Jesus\Documents\GitHub\MercasoftX\backend\node_modules\sequelize\lib\sequelize.js:315:28
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async MySQLQueryInterface.bulkDelete (C:\Users\Jesus\Documents\GitHub\MercasoftX\backend\node_modules\sequelize\lib\dialects\abstract\query-interface.js:403:12)
+    at async pedido.destroy (C:\Users\Jesus\Documents\GitHub\MercasoftX\backend\node_modules\sequelize\lib\model.js:1838:16)
+    at async deletePedido (file:///C:/Users/Jesus/Documents/GitHub/MercasoftX/backend/controllers/pedidoController.js:149:25)
+2024-10-18 02:24:01: error: Error al eliminar pedido: Cannot delete or update a parent row: a foreign key constraint fails (`mercasoftx`.`venta`, CONSTRAINT `Id_Pedido` FOREIGN KEY (`Id_Pedido`) REFERENCES `pedido` (`Id_Pedido`))
+Stack: Error
+    at Query.run (C:\Users\Jesus\Documents\GitHub\MercasoftX\backend\node_modules\sequelize\lib\dialects\mysql\query.js:52:25)
+    at C:\Users\Jesus\Documents\GitHub\MercasoftX\backend\node_modules\sequelize\lib\sequelize.js:315:28
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async MySQLQueryInterface.bulkDelete (C:\Users\Jesus\Documents\GitHub\MercasoftX\backend\node_modules\sequelize\lib\dialects\abstract\query-interface.js:403:12)
+    at async pedido.destroy (C:\Users\Jesus\Documents\GitHub\MercasoftX\backend\node_modules\sequelize\lib\model.js:1838:16)
+    at async deletePedido (file:///C:/Users/Jesus/Documents/GitHub/MercasoftX/backend/controllers/pedidoController.js:149:25)

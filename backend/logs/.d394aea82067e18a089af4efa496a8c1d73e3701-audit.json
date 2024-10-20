@@ -1,0 +1,35 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "logs\\.d394aea82067e18a089af4efa496a8c1d73e3701-audit.json",
+    "files": [
+        {
+            "date": 1729130594483,
+            "name": "logs\\carritoProducto-2024-10-16.log",
+            "hash": "9d36e7b455ecae27a652eb6aa94be2c6dc6bef3902eabf198534467788179768"
+        },
+        {
+            "date": 1729143192265,
+            "name": "logs\\carritoProducto-2024-10-17.log",
+            "hash": "afd77e4320d0598a1f4aae722d25d191cc58a471d71a94063f1c23816e712e71"
+        },
+        {
+            "date": 1729230235364,
+            "name": "logs\\carritoProducto-2024-10-18.log",
+            "hash": "eff426ecb49a89e5bd9ac2410671a10db2631300ba7e5cef4035ac4daf38bc90"
+        },
+        {
+            "date": 1729366318253,
+            "name": "logs\\carritoProducto-2024-10-19.log",
+            "hash": "f6a0fc5dc9ce91a2dc398c647f61443a0c4c502172f9a8dba82b6fbc40d158b2"
+        },
+        {
+            "date": 1729438660330,
+            "name": "logs\\carritoProducto-2024-10-20.log",
+            "hash": "88aa7db5037351c98cae5c041899df0ba84b13b349c8e436b9ce0e9691c0be0d"
+        }
+    ],
+    "hashType": "sha256"
+}

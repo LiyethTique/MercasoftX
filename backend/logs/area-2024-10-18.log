@@ -1,0 +1,2 @@
+2024-10-18 23:03:52: error: Error al eliminar el área: Cannot delete or update a parent row: a foreign key constraint fails (`mercasoftx`.`unidad`, CONSTRAINT `fk_unidad_area` FOREIGN KEY (`Id_Area`) REFERENCES `area` (`Id_Area`))
+2024-10-18 23:04:01: error: Error al eliminar el área: Cannot delete or update a parent row: a foreign key constraint fails (`mercasoftx`.`unidad`, CONSTRAINT `fk_unidad_area` FOREIGN KEY (`Id_Area`) REFERENCES `area` (`Id_Area`))

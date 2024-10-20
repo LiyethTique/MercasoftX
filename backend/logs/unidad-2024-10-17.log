@@ -1,0 +1,14 @@
+2024-10-17 20:53:03: error: Column 'Id_Unidad' cannot be null
+2024-10-17 20:53:34: error: Column 'Id_Unidad' cannot be null
+2024-10-17 20:55:25: error: Column 'Id_Unidad' cannot be null
+2024-10-17 21:04:08: error: Column 'Id_Unidad' cannot be null
+2024-10-17 21:10:01: error: Column 'Id_Unidad' cannot be null
+2024-10-17 21:29:56: error: Column 'Id_Unidad' cannot be null
+2024-10-17 21:44:57: error: Column 'Id_Unidad' cannot be null
+2024-10-17 22:06:43: error: Column 'Id_Unidad' cannot be null
+2024-10-17 22:35:27: error: Column 'Id_Unidad' cannot be null
+2024-10-17 22:40:11: error: Column 'Id_Unidad' cannot be null
+2024-10-17 22:42:25: error: Column 'Id_Unidad' cannot be null
+2024-10-17 22:45:28: error: Column 'Id_Unidad' cannot be null
+2024-10-17 22:50:02: error: Error al crear unidad: Column 'Id_Unidad' cannot be null
+2024-10-17 22:50:33: error: Error al crear unidad: Column 'Id_Unidad' cannot be null

@@ -1,0 +1,6 @@
+2024-10-17 18:36:21: error: Error al eliminar la imagen antigua: ENOENT: no such file or directory, unlink 'C:\Users\Jesus\Documents\GitHub\MercasoftX\backend\uploads\20241012205643865-147243050.png'
+2024-10-17 18:36:27: error: Error al eliminar la imagen antigua: ENOENT: no such file or directory, unlink 'C:\Users\Jesus\Documents\GitHub\MercasoftX\backend\uploads\20241012210821586-482801372.jpg'
+2024-10-17 18:36:34: error: Error al eliminar la imagen antigua: ENOENT: no such file or directory, unlink 'C:\Users\Jesus\Documents\GitHub\MercasoftX\backend\uploads\20241012210839875-692374616.jpg'
+2024-10-17 18:36:43: error: Error al eliminar la imagen antigua: ENOENT: no such file or directory, unlink 'C:\Users\Jesus\Documents\GitHub\MercasoftX\backend\uploads\20241011144624155-814740987.jpeg'
+2024-10-17 18:36:50: error: Error al eliminar la imagen antigua: ENOENT: no such file or directory, unlink 'C:\Users\Jesus\Documents\GitHub\MercasoftX\backend\uploads\20241012210848406-640878610.jpg'
+2024-10-17 18:36:57: error: Error al eliminar la imagen antigua: ENOENT: no such file or directory, unlink 'C:\Users\Jesus\Documents\GitHub\MercasoftX\backend\uploads\20241012210855824-174674419.jpg'

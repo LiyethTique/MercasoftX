@@ -1,0 +1,7 @@
+2024-10-19 15:53:54: error: Error al crear unidad: Column 'Id_Unidad' cannot be null
+2024-10-19 15:54:05: error: Error al crear unidad: Column 'Id_Unidad' cannot be null
+2024-10-19 15:54:29: error: Error al crear unidad: Column 'Id_Unidad' cannot be null
+2024-10-19 15:55:56: error: Error al crear unidad: Column 'Id_Unidad' cannot be null
+2024-10-19 16:00:04: error: Error al crear unidad: Column 'Id_Unidad' cannot be null
+2024-10-19 16:03:45: error: Error al crear unidad: Column 'Id_Unidad' cannot be null
+2024-10-19 16:06:49: error: Error al crear unidad: Field 'Id_Unidad' doesn't have a default value

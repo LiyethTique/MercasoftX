@@ -1,0 +1,7 @@
+2024-10-17 01:17:50: error: Error al actualizar el área: Cannot delete or update a parent row: a foreign key constraint fails (`mercasoftx`.`unidad`, CONSTRAINT `fk_unidad_area` FOREIGN KEY (`Id_Area`) REFERENCES `area` (`Id_Area`))
+2024-10-17 01:46:06: error: Error al actualizar el área: Truncated incorrect INTEGER value: '[object Object]'
+2024-10-17 01:46:12: error: Error al actualizar el área: Truncated incorrect INTEGER value: '[object Object]'
+2024-10-17 01:46:44: error: Error al actualizar el área: Truncated incorrect INTEGER value: 'undefined'
+2024-10-17 02:00:45: error: Error al crear el área: Validation error
+2024-10-17 02:00:49: error: Error al crear el área: Validation error
+2024-10-17 02:03:24: error: Error al crear el área: Validation error

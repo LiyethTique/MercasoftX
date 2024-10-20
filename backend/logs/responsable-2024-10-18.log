@@ -1,0 +1,2 @@
+2024-10-18 03:04:02: error: Cannot delete or update a parent row: a foreign key constraint fails (`mercasoftx`.`entrada`, CONSTRAINT `Id_Responsable` FOREIGN KEY (`Id_Responsable`) REFERENCES `responsable` (`Id_Responsable`))
+2024-10-18 23:02:43: error: Cannot delete or update a parent row: a foreign key constraint fails (`mercasoftx`.`entrada`, CONSTRAINT `Id_Responsable` FOREIGN KEY (`Id_Responsable`) REFERENCES `responsable` (`Id_Responsable`))

@@ -1,5 +1,5 @@
 import express from 'express';
-import { agregarProductoAlCarrito, getProductosEnCarrito, eliminarProductoDelCarrito } from '../controllers/carritoProductoController.js';
+import { agregarProductoAlCarrito, getProductosEnCarrito, eliminarProductoDelCarrito } from '../controllers/CarritoProductoController.js';
 
 const router = express.Router();
 

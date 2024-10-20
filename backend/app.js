@@ -131,7 +131,7 @@ Venta.belongsTo(Producto, { foreignKey: 'Id_Producto', targetKey: 'Id_Producto',
 
 // Ruta principal
 app.get("/", (req, res) => {
-  res.send("Hola Mundo");
+  res.send("Hola Mundo, esto es ADSO");
 });
 
 // Iniciar el servidor
